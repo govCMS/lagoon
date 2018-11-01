@@ -7,7 +7,7 @@
  */
 
 // Inject Google Analytics snippet on all production sites.
-$conf['googleanalytics_codesnippet_after'] = "ga('create', 'UA-54970022-1', 'auto', {'name': 'govcms'}); ga('govcms.send', 'pageview', {'anonymizeIp': true})";
+$config['google_analytics.settings']['codesnippet']['after'] = "ga('create', 'UA-54970022-1', 'auto', {'name': 'govcms'}); ga('govcms.send', 'pageview', {'anonymizeIp': true})";
 
 // Don't show any error messages on the site (will still be shown in watchdog)
 $config['system.logging']['error_level'] = 'hide';
