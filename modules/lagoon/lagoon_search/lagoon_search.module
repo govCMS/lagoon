@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Integration between your Drupal site and Lagoon Solr.
+ */
+
+// @todo: Need a D8 version. Standard method would be install config - but we need dynamic values.
+
+/**
+ * Implements hook_default_search_api_server().
+ */
+function lagoon_search_default_search_api_server() {
+  $items = [];
+
+  $host = variable_get('lagoon_solr_host', 'solr');
+  $path = variable_get('lagoon_solr_path', '/solr/drupal');
+
+  $items['lagoon_solr'] = entity_import('search_api_server', '{
+   "name" : "Lagoon Solr",
+   "machine_name" : "lagoon_solr",
+   "description" : "",
+   "class" : "search_api_solr_service",
+   "options" : {
+     "host" : "' . $host . '",
+     "port" : "8983",
+     "path" : "' . $path . '",
+     "http_user" : "",
+     "http_pass" : "",
+     "excerpt" : 1,
+     "retrieve_data" : 1,
+     "highlight_data" : 1
+   },
+   "enabled" : "1",
+   "rdf_mapping" : []
+ }');
+
+  return $items;
+}

@@ -1,0 +1,26 @@
+FROM govcms8dev/govcms8
+
+COPY .docker/sanitize.sh /app/sanitize.sh
+
+COPY .docker/images/govcms8/scripts /usr/bin/
+
+# @code: Sanitize.sh not required; already sanitized?
+
+RUN apk add python \
+    && composer require \
+    drupal/fast_404:^1.0 \
+    drupal/lagoon_logs:1.x-dev \
+    drupal/redis:^1.0 \
+    drupal/stage_file_proxy:^1.0 \
+    drupal/clamav:^1.1 \
+    && mkdir -p /app/web/sites/default/files/private \
+    && fix-permissions /home/.drush \
+    && chmod +x /app/sanitize.sh
+    #&& /app/sanitize.sh
+
+COPY modules/ /app/web/sites/all/modules/
+
+COPY .docker/images/govcms8/settings/ /app/web/sites/default/
+
+# Define where the Drupal Root is located
+ENV WEBROOT=web

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Drutiny wrapper.
+
+APP_DIR=${APP_DIR:-/app/web}
+DRUTINY_DIR=${DRUTINY_DIR:-$APP_DIR/sites/all/drutiny}
+
+CUR_DIR=$(pwd)
+
+cd $DRUTINY_DIR
+./vendor/bin/drutiny "$@"
+result=$?
+
+cd $CUR_DIR
+
+exit $result

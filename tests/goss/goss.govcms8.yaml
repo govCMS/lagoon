@@ -1,0 +1,31 @@
+---
+gossfile:
+  sanitise.yaml: {}
+
+file:
+  /app/web/sites/all/modules/contrib:
+    exists: true
+    filetype: directory
+  /app/web/sites/all/modules/contrib/redis:
+    exists: true
+    filetype: directory
+  /app/web/sites/all/modules/contrib/stage_file_proxy:
+    exists: true
+    filetype: directory
+  /home/.drush:
+    exists: true
+    filetype: directory
+    owner: root
+    group: root
+    mode: "0775"
+  /app/web/sites/all/modules/lagoon:
+    exists: true
+    filetype: directory
+  /app/web/sites/default/settings.php:
+    exists: true
+    filetype: file
+    contains:
+    - "Lagoon Drupal 8 configuration file."
+  /usr/bin/govcms-deploy:
+    exists: true
+    mode: "0755"

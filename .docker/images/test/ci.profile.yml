@@ -1,0 +1,17 @@
+title: 'CI Site Audit'
+format:
+  html:
+    template: govcms-page
+policies:
+    'govCMS-D8:GoogleAnalyticsAccount':
+    'govCMS-D8:PageviewsTracker':
+    'govCMS-D8:GoogleAnalyticsCache':
+    'govCMS-D8:DefaultDateTimezone':
+    'govCMS-D8:Services':
+    'govCMS-D8:AccountSecurity':
+    'govCMS-D8:PasswordPolicy':
+    'govCMS-D8:MaliciousWebformUpload':
+    # 'govCMS-D8:SearchDB':
+    'govCMS-D8:Seckit':
+    'govCMS-D8:Shield':
+    'govCMS-D8:RobotsTxt':
