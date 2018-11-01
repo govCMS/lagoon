@@ -1,3 +1,9 @@
-FROM govcms/test
+FROM govcms8lagoon/test
 
-COPY themes/ /app/web/themes/custom
+COPY themes/ /app/web/profiles/contrib/govcms/themes/custom
+
+RUN rm -Rf /app/tests/behat/features/*
+COPY tests/behat/features/ /app/tests/behat/features
+
+RUN rm -Rf /app/tests/phpunit/tests/*
+COPY tests/phpunit/tests/ /app/tests/phpunit/tests

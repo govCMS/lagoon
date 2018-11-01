@@ -1,0 +1,10 @@
+image: integratedexperts/circleci2-builder
+services:
+- docker:dind
+stages:
+- deploy
+deploy:
+  stage: deploy
+  script:
+  - echo "curl -X POST -d projectName=$CI_PROJECT_NAME -d branchName=$CI_COMMIT_REF_NAME http://rest2tasks-lagoon.govcms.amazee.io/deploy"
+  - curl -X POST -d projectName=$CI_PROJECT_NAME -d branchName=$CI_COMMIT_REF_NAME http://rest2tasks-lagoon.govcms.amazee.io/deploy

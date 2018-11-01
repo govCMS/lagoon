@@ -50,6 +50,22 @@ commands:
     usage: Login to a website.
     cmd: docker-compose exec -T test drush uli "$@"
 
+  lint:
+    usage: Lint code
+    cmd: docker-compose exec -T test lint-theme
+
+  test-behat:
+    usage: Run Behat tests.
+    cmd: docker-compose exec -T test behat "$@"
+
+  test-phpunit:
+    usage: Run PHPUnit tests.
+    cmd: docker-compose exec -T test phpunit "$@"
+
   pull:
     usage: Pull latest docker images.
-    cmd: docker image ls --format \"{{.Repository}}:{{.Tag}}\" | grep govcmslagoon/ | grep -v none | xargs -n1 docker pull | cat
+    cmd: docker image ls --format \"{{.Repository}}:{{.Tag}}\" | grep govcms8lagoon/ | grep -v none | xargs -n1 docker pull | cat
+
+  audit-site:
+    usage: Run site audit
+    cmd: docker-compose exec -T test drutiny profile:run ci @self "$@"

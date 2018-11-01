@@ -1,1 +1,16 @@
 docker-compose-yaml: docker-compose.yml
+
+tasks:
+  post-rollout:
+    - run:
+        name: Deploy GovCMS
+        command: govcms-deploy
+        service: cli
+
+environments:
+  master:
+    cronjobs:
+      - name: drush cron
+        schedule: "*/15 * * * *"
+        command: 'drush cron'
+        service: cli

@@ -1,21 +1,24 @@
 version: '2.3'
 
 x-lagoon-project:
-  &lagoon-project govcms-saas
+  &lagoon-project govcms8-saas
 
 x-lagoon-local-dev-url:
-  &lagoon-local-dev-url http://govcms8.docker.amazee.io
+  &lagoon-local-dev-url http://govcms8-saas.docker.amazee.io
 
 x-volumes:
   &default-volumes
     volumes:
-      - ./themes:/app/themes/custom:${VOLUME_FLAGS:-delegated}
+      - ./themes:/app/web/profiles/contrib/govcms/themes/custom:${VOLUME_FLAGS:-delegated}
       - ./files:/app/web/sites/default/files:delegated
+      - ./tests/behat/features:/app/web/tests/behat/features:${VOLUME_FLAGS:-delegated}
+      - ./tests/phpunit/tests:/app/web/tests/phpunit/tests:${VOLUME_FLAGS:-delegated}
+      - ./config:/app/config
 
 x-environment:
   &default-environment
     LAGOON_PROJECT: *lagoon-project
-    LAGOON_ROUTE: &default-url ${LOCALDEV_URL:-http://govcms8.docker.amazee.io}
+    LAGOON_ROUTE: &default-url ${LOCALDEV_URL:-http://govcms8-saas.docker.amazee.io}
 
 services:
 
@@ -27,7 +30,7 @@ services:
     labels:
       lagoon.type: cli-persistent
       lagoon.persistent.name: nginx
-      lagoon.persistent: /app/web/sites/default/files/
+      lagoon.persistent: /app/sites/default/files/
     << : *default-volumes
     environment:
       << : *default-environment
@@ -52,7 +55,7 @@ services:
         CLI_IMAGE: *lagoon-project
     labels:
       lagoon.type: nginx-php-persistent
-      lagoon.persistent: /app/web/sites/default/files/
+      lagoon.persistent: /app/sites/default/files/
     << : *default-volumes
     depends_on:
       - cli
@@ -72,7 +75,7 @@ services:
     labels:
       lagoon.type: nginx-php-persistent
       lagoon.name: nginx
-      lagoon.persistent: /app/web/sites/default/files/
+      lagoon.persistent: /app/sites/default/files/
     << : *default-volumes
     depends_on:
       - cli
@@ -80,23 +83,23 @@ services:
       << : *default-environment
 
   mariadb:
-    image: govcmslagoon/mariadb-drupal
+    image: govcms8lagoon/mariadb-drupal
     labels:
-      lagoon.type: mariadb
+      lagoon.type: mariadb-shared
     ports:
       - "3306" # Find port on host with `docker-compose port mariadb 3306`
     environment:
       << : *default-environment
 
   redis:
-    image: govcmslagoon/redis
+    image: govcms8lagoon/redis
     labels:
       lagoon.type: redis
     environment:
       << : *default-environment
 
   solr:
-    image: govcmslagoon/solr
+    image: govcms8lagoon/solr
     labels:
       lagoon.type: solr
     ports:
