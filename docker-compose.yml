@@ -30,7 +30,7 @@ services:
     labels:
       lagoon.type: cli-persistent
       lagoon.persistent.name: nginx
-      lagoon.persistent: /app/sites/default/files/
+      lagoon.persistent: /app/web/sites/default/files/
     << : *default-volumes
     environment:
       << : *default-environment
@@ -55,7 +55,7 @@ services:
         CLI_IMAGE: *lagoon-project
     labels:
       lagoon.type: nginx-php-persistent
-      lagoon.persistent: /app/sites/default/files/
+      lagoon.persistent: /app/web/sites/default/files/
     << : *default-volumes
     depends_on:
       - cli
@@ -75,7 +75,7 @@ services:
     labels:
       lagoon.type: nginx-php-persistent
       lagoon.name: nginx
-      lagoon.persistent: /app/sites/default/files/
+      lagoon.persistent: /app/web/sites/default/files/
     << : *default-volumes
     depends_on:
       - cli
