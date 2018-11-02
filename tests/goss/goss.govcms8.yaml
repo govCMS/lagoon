@@ -3,13 +3,13 @@ gossfile:
   sanitise.yaml: {}
 
 file:
-  /app/web/sites/all/modules/contrib:
+  /app/web/modules/contrib:
     exists: true
     filetype: directory
-  /app/web/sites/all/modules/contrib/redis:
+  /app/web/modules/contrib/redis:
     exists: true
     filetype: directory
-  /app/web/sites/all/modules/contrib/stage_file_proxy:
+  /app/web/modules/contrib/stage_file_proxy:
     exists: true
     filetype: directory
   /home/.drush:
