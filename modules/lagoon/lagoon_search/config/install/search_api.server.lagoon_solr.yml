@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
-  - search_api_solr
+    - search_api_solr
 id: lagoon_solr
 name: 'Lagoon Solr'
 description: ''
