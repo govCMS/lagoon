@@ -1,2 +1,4 @@
 ---
 file:
+  /app/web/install.php:
+    exists: false
