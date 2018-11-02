@@ -8,5 +8,5 @@ RUN apk add --update clamav clamav-libunrar \
 
 COPY --from=cli /app /app
 
-#RUN /app/sanitize.sh \
-#  && rm -rf /app/sanitize.sh
+RUN /app/sanitize.sh \
+  && rm -rf /app/sanitize.sh

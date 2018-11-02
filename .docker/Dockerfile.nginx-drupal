@@ -11,5 +11,5 @@ RUN fix-permissions /etc/nginx
 
 COPY --from=cli /app /app
 
-#RUN /app/sanitize.sh \
-#  && rm -rf /app/sanitize.sh
+RUN /app/sanitize.sh \
+  && rm -rf /app/sanitize.sh
