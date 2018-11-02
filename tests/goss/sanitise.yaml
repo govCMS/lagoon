@@ -1,4 +1,4 @@
 ---
 file:
-  /app/web/install.php:
+  /app/web/core/install.php:
     exists: false
