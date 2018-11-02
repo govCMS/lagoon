@@ -4,12 +4,12 @@ FROM ${CLI_IMAGE} as cli
 FROM govcms8dev/test
 
 COPY --from=cli /app /app
+COPY .docker/sanitize.sh /app/sanitize.sh
 
 RUN /app/sanitize.sh \
   && rm -rf /app/sanitize.sh
 
-COPY .docker/images/test/ci.profile.yml .docker/images/test/drutiny /app/web/sites/all/drutiny/profiles/ \
-    && .docker/sanitize.sh /app/sanitize.sh
+COPY .docker/images/test/ci.profile.yml .docker/images/test/drutiny /app/web/sites/all/drutiny/profiles/
 
 ENV SITE_AUDIT_VERSION 7.x-3.x
 RUN wget https://github.com/govcms/audit-site/archive/$SITE_AUDIT_VERSION.tar.gz \
