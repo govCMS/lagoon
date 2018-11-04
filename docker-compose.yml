@@ -9,7 +9,7 @@ x-lagoon-local-dev-url:
 x-volumes:
   &default-volumes
     volumes:
-      - ./themes:/app/web/profiles/contrib/govcms/themes/custom:${VOLUME_FLAGS:-delegated}
+      - ./themes:/app/web/themes/custom:${VOLUME_FLAGS:-delegated}
       - ./files:/app/web/sites/default/files:delegated
       - ./tests/behat/features:/app/web/tests/behat/features:${VOLUME_FLAGS:-delegated}
       - ./tests/phpunit/tests:/app/web/tests/phpunit/tests:${VOLUME_FLAGS:-delegated}
