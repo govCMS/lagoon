@@ -1,6 +1,6 @@
-# GovCMS Lagoon project
+# GovCMS8 Lagoon project
 
-[![CircleCI](https://circleci.com/gh/govCMS/govcms8lagoon.svg?style=svg&circle-token=b356e4c11fbbf32973d909ee37e048da981fc663)](https://circleci.com/gh/govCMS/govcms8lagoon)
+[![CircleCI](https://circleci.com/gh/govCMS/govcms8lagoon.svg?style=svg)](https://circleci.com/gh/govCMS/govcms8lagoon)
 
 ## Requirements
 
