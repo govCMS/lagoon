@@ -122,8 +122,8 @@ if (getenv('LAGOON')) {
 
 // Lagoon Solr connection
 if (getenv('LAGOON')) {
-  $config['lagoon_solr_host'] = (getenv('SOLR_HOST') ?: 'solr');
-  $config['lagoon_solr_path'] = '/solr/' . (getenv('SOLR_CORE') ?: 'drupal');
+  $config['search_api.server']['backend_config']['connector_config']['host'] = getenv('SOLR_HOST') ?: 'solr';
+  $config['search_api.server']['backend_config']['connector_config']['path'] = '/solr/' . getenv('SOLR_CORE') ?: 'drupal';
 }
 
 // Lagoon Varnish & reverse proxy settings
