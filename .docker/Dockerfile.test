@@ -1,6 +1,6 @@
 FROM govcms8lagoon/test
 
-COPY themes/ /app/web/profiles/contrib/govcms/themes/custom
+COPY themes/ /app/web/themes/custom
 
 RUN rm -Rf /app/tests/behat/features/*
 COPY tests/behat/features/ /app/tests/behat/features
