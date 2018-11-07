@@ -17,6 +17,7 @@ rm -f $APP_DIR/web/core/UPDATE.txt
 rm -f $APP_DIR/web/web.config
 rm -f $APP_DIR/web/robots.txt
 rm -f $APP_DIR/web/.editorconfig
+rm -rf $APP_DIR/web/core/tests
 
 if [ -f favicon.ico ]; then
   mv $APP_DIR/favicon.ico $APP_DIR/web/core/misc/favicon.ico;

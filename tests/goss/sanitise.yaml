@@ -30,3 +30,5 @@ file:
     exists: false
   /app/web/favicon.ico:
     exists: false
+  /app/web/core/tests:
+    exists: false
