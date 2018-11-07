@@ -4,9 +4,10 @@ FROM ${CLI_IMAGE} as cli
 FROM govcms8dev/test
 
 COPY --from=cli /app /app
+COPY .docker/sanitize.sh /app/sanitize.sh
 
-#RUN /app/sanitize.sh \
-#  && rm -rf /app/sanitize.sh
+RUN /app/sanitize.sh \
+  && rm -rf /app/sanitize.sh
 
 COPY .docker/images/test/ci.profile.yml .docker/images/test/drutiny /app/web/sites/all/drutiny/profiles/
 

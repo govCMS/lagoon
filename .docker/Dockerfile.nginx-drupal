@@ -10,6 +10,7 @@ COPY .docker/images/nginx/no-robots.sh /lagoon/entrypoints/20-no-robots.sh
 RUN fix-permissions /etc/nginx
 
 COPY --from=cli /app /app
+COPY .docker/sanitize.sh /app/sanitize.sh
 
-#RUN /app/sanitize.sh \
-#  && rm -rf /app/sanitize.sh
+RUN /app/sanitize.sh \
+  && rm -rf /app/sanitize.sh

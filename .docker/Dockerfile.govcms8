@@ -4,8 +4,6 @@ COPY .docker/sanitize.sh /app/sanitize.sh
 
 COPY .docker/images/govcms8/scripts /usr/bin/
 
-# @code: Sanitize.sh not required; already sanitized?
-
 RUN apk add python \
     && composer require \
     drupal/fast_404:^1.0 \
@@ -15,8 +13,9 @@ RUN apk add python \
     drupal/clamav:^1.1 \
     && mkdir -p /app/web/sites/default/files/private \
     && fix-permissions /home/.drush \
-    && chmod +x /app/sanitize.sh
-    #&& /app/sanitize.sh
+    && chmod +x /app/sanitize.sh \
+    && /app/sanitize.sh \
+    && rm -f /app/sanitize.sh
 
 COPY modules/ /app/web/sites/all/modules/
 
