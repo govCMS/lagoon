@@ -1,4 +1,32 @@
 ---
 file:
-  /app/web/install.php:
+  /app/web/core/.env.example:
+    exists: false
+  /app/web/core/install.php:
+    exists: false
+  /app/web/core/INSTALL.txt:
+    exists: false
+  /app/web/core/INSTALL.mysql.txt:
+    exists: false
+  /app/web/core/INSTALL.pgsql.txt:
+    exists: false
+  /app/web/core/INSTALL.sqlite.txt:
+    exists: false
+  /app/web/core/CHANGELOG.txt:
+    exists: false
+  /app/web/core/COPYRIGHT.txt:
+    exists: false
+  /app/web/core/LICENSE.txt:
+    exists: false
+  /app/web/core/MAINTAINERS.txt:
+    exists: false
+  /app/web/core/UPDATE.txt:
+    exists: false
+  /app/web/web.config:
+    exists: false
+  /app/web/robots.txt:
+    exists: false
+  /app/web/.editorconfig:
+    exists: false
+  /app/web/favicon.ico:
     exists: false
