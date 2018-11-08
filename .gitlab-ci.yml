@@ -1,1 +1,1 @@
-include: 'https://projects.govcms.gov.au/dof/govcms8-saas-scaffold-ci/raw/master/.gitlab-ci.yml'
+include: 'https://projects.govcms.gov.au/dof/govcms8-saas-scaffold-ci/raw/master/.gitlab-ci-include.yml'
