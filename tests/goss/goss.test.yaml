@@ -3,7 +3,7 @@ gossfile:
   sanitise.yaml: {}
 
 file:
-  /app/web/sites/all/drutiny/profiles/ci.profile.yml:
+  /app/web/sites/all/drutiny/Profiles/sample.profile.yml:
     exists: true
   /app/web/sites/all/drutiny/vendor/bin/drutiny:
     exists: true

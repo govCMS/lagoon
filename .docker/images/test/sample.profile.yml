@@ -1,0 +1,6 @@
+title: 'Drupal 8 Sample Audit - run with docker-compose exec -T test drutiny profile:run sample @self'
+format:
+  html:
+    template: govcms-page
+policies:
+  Test:Pass:
