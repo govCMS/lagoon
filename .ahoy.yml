@@ -66,7 +66,6 @@ commands:
       export $(grep -v '^#' .env.default | xargs)
       . .docker/release.sh
 
-# @todo: Enable when GOVCMS-619 is complete.
-#  audit-site:
-#    usage: Run site audit
-#    cmd: docker-compose exec -T test drutiny profile:run ci @self "$@"
+  audit-site:
+    usage: Run site audit
+    cmd: docker-compose exec -T test drutiny profile:run d8-full @self "$@"
