@@ -61,3 +61,26 @@ This project is designed to provision a Drupal 8 project onto GovCMS SaaS, using
 1. The vanilla GovCMS8 Distribution is available at [Github Source](https://github.com/govcms/govcms8) and as [Public DockerHub images](https://hub.docker.com/r/govcms8)
 2. Those GovCMS8 images are then customised for Lagoon and GovCMS, and are available at [Github Source](https://github.com/govcms/govcms8lagoon) and as [Public DockerHub images](https://hub.docker.com/r/govcms8lagoon)
 3. Those GovCMS8lagoon images are then retrieved in this scaffold repository.
+
+## Configuration management
+
+GovCMS8 has default configuration management built in. It assumes all configuration is tracked (in `config/default`).
+
+1. Export all configuration for a build:
+
+        Mac/Linux:  ahoy cex
+        Windows:    docker-compose exec -T test drush cex sync
+
+2. Import any configuration changes from the codebase:
+
+        Mac/Linux:  ahoy cim
+        Windows:    docker-compose exec -T test drush cim sync
+
+3. Import development environment configuration overrides:
+
+        Mac/Linux:  ahoy cim dev
+        Windows:    docker-compose exec -T test drush cim dev --partial
+
+
+*Note*: Configuration overrides are snippets of configuration that may be imported over the base configuration. These (optional) files should exist in `config/dev`.
+For example a development project may include a file such as `config/dev/shield.settings.yml` which provides Shield authentication configuration that would only apply to a development environment, not production.

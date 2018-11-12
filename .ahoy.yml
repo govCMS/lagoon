@@ -50,6 +50,20 @@ commands:
     usage: Login to a website.
     cmd: docker-compose exec -T test drush uli "$@"
 
+  cex:
+    usage: Export site configuration to default location.
+    cmd: docker-compose exec -T test drush cex sync
+
+  cim:
+    usage: Import site configuration. Will perform partial configuration overrides if a parameter is provided.
+    cmd: |
+      if [ "$#" -eq 0 ]
+        then
+          docker-compose exec -T test drush cim sync
+      else
+          docker-compose exec -T test drush cim "$@" --partial
+      fi
+
   lint:
     usage: Lint code
     cmd: docker-compose exec -T test lint-theme
