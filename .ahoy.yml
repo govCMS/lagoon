@@ -57,6 +57,15 @@ commands:
   cim:
     usage: Import site configuration. Will perform partial configuration overrides if a parameter is provided.
     cmd: |
+      if [ -f ./config/default/system.site.yml ]; then
+        configUuid="$(cat ./config/default/system.site.yml | grep uuid | tail -c +7 | head -c 36)"
+        docker-compose exec -T test drush config-set system.site uuid $configUuid
+      fi
+
+      # No support for config import for entire site install.
+      docker-compose exec -T test drush ev '\Drupal::entityManager()->getStorage("shortcut_set")->load("default")->delete();'
+      docker-compose exec -T test drush pm-uninstall shortcut
+
       if [ "$#" -eq 0 ]
         then
           docker-compose exec -T test drush cim sync

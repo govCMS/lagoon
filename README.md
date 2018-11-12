@@ -66,12 +66,12 @@ This project is designed to provision a Drupal 8 project onto GovCMS SaaS, using
 
 GovCMS8 has default configuration management built in. It assumes all configuration is tracked (in `config/default`).
 
-1. Export all configuration for a build:
+1. Export latest configuration to `config/default`:
 
         Mac/Linux:  ahoy cex
         Windows:    docker-compose exec -T test drush cex sync
 
-2. Import any configuration changes from the codebase:
+2. Import any configuration changes from `config/default`:
 
         Mac/Linux:  ahoy cim
         Windows:    docker-compose exec -T test drush cim sync
