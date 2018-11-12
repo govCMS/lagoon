@@ -1,22 +1,19 @@
-## Configuration management
+## Development overrides.
 
-GovCMS8 has default configuration management built in. It assumes all configuration is tracked (in `config/default`).
+Configuration files placed here are treated as development environment overrides. They will be imported in non-production environments *only*.
 
-1. Export all configuration for a build:
+For example if you place a field named 'shield.settings.yml' in this folder with the following contents:
 
-        Mac/Linux:  ahoy cex
-        Windows:    docker-compose exec -T test drush cex sync
+```
+credential_provider: shield
+credentials:
+  shield:
+    user: example
+    pass: password
+print: Hello!
+allow_cli: true
+_core:
+  default_config_hash: c1dcnGFDXTeMq2-Z8e7H6Qxp6TTJe-ZhSA126E3bQJ4
+```
 
-2. Import any configuration changes from the codebase:
-
-        Mac/Linux:  ahoy cim
-        Windows:    docker-compose exec -T test drush cim sync
-
-3. Import development environment configuration overrides:
-
-        Mac/Linux:  ahoy cim dev
-        Windows:    docker-compose exec -T test drush cim dev --partial
-
-
-*Note*: Configuration overrides are snippets of configuration that may be imported over the base configuration. These (optional) files should exist in `config/dev`.
-For example a development project may include a file such as `config/dev/shield.settings.yml` which provides Shield authentication configuration that would only apply to a development environment, not production.
+The shield configuration will be imported automatically in non-production Lagoon environments, enabling Shield authentication.
