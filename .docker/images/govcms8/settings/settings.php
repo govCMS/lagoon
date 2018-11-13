@@ -227,6 +227,7 @@ if (getenv('LAGOON_ENVIRONMENT_TYPE')) {
 
 // Configuration path settings.
 $config_directories[CONFIG_SYNC_DIRECTORY] = '/app/config/default';
+$config_directories['dev'] = '/app/config/dev';
 
 // Last: this servers specific settings files.
 if (file_exists(__DIR__ . '/settings.local.php')) {
