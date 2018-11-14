@@ -2,7 +2,6 @@
 
 ## Known Issues
 
-* Currently (Nov 2018), all local projects utilise the same LOCALDEV_URL - we are working to fix that.
 * This repository is still a Work-in-Progress, and may be subject to slight alterations
 
 ## Requirements and Preliminary Setup
