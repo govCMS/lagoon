@@ -233,3 +233,17 @@ $config_directories['dev'] = '/app/config/dev';
 if (file_exists(__DIR__ . '/settings.local.php')) {
   include __DIR__ . '/settings.local.php';
 }
+
+// Stage file proxy URL from production URL.
+if (getenv('LAGOON_ENVIRONMENT_TYPE') != 'production') {
+
+  if (getenv('LAGOON_PROJECT')) {
+    $origin = 'https://nginx-' . getenv('LAGOON_PROJECT') . '-master.govcms.amazee.io';
+    $config['stage_file_proxy.settings']['origin'] = $origin;
+  }
+
+  if (getenv('STAGE_FILE_PROXY_URL')) {
+    $config['stage_file_proxy.settings']['origin'] = getenv('STAGE_FILE_PROXY_URL');
+  }
+
+}
