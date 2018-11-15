@@ -9,7 +9,10 @@ COPY .docker/sanitize.sh /app/sanitize.sh
 RUN /app/sanitize.sh \
   && rm -rf /app/sanitize.sh
 
-COPY .docker/images/test/ci.profile.yml .docker/images/test/drutiny /app/web/sites/all/drutiny/profiles/
+COPY .docker/images/test/drutiny /usr/bin/drutiny
+
+# Ensure that drush and drush.launcher both work
+ENV WEBROOT=web
 
 ENV SITE_AUDIT_VERSION 7.x-3.x
 RUN wget https://github.com/govcms/audit-site/archive/$SITE_AUDIT_VERSION.tar.gz \
@@ -18,7 +21,8 @@ RUN wget https://github.com/govcms/audit-site/archive/$SITE_AUDIT_VERSION.tar.gz
     && mkdir -p /app/web/sites/all/drutiny \
     && mv /tmp/audit-site-$SITE_AUDIT_VERSION/* /app/web/sites/all/drutiny \
     && rm -Rf /tmp/audit-site-$SITE_AUDIT_VERSION \
-    && rm -Rf /app/web/sites/all/drutiny/Profiles \
     && php -d memory_limit=-1 /usr/local/bin/composer --working-dir=/app/web/sites/all/drutiny/ install --ignore-platform-reqs \
-    && mv /app/web/sites/all/drutiny/profiles/drutiny /usr/bin/drutiny \
     && chmod +x /usr/bin/drutiny
+
+# Add custom drutiny profiles from test folder for local development
+COPY .docker/images/test/*.yml /app/web/sites/all/drutiny/Profiles
