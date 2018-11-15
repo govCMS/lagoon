@@ -6,16 +6,50 @@
 # Ensure tmp folder always exists.
 mkdir -p /app/web/sites/default/files/private/tmp/
 
-# Run database updates if drupal is installed.
-if drush status --fields=bootstrap | grep -q "Successful"; then
+# Non production environments.
+if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
+    # Import production database on inital deployment.
+    if ! drush status --fields=bootstrap | grep -q "Successful"; then
+
+        # SQL sync only in Lagoon development environments.
+        if [[ ! -z "$LAGOON_ENVIRONMENT_TYPE" && "$LAGOON_ENVIRONMENT_TYPE" != "local" ]]; then
+          drush sql-sync @govcms-prod @self -y
+
+          # Base configuration import with development environment overrides.
+          drush cim -y sync
+          drush cim -y dev --partial
+
+          # Enable stage file proxy post db-import.
+          drush en stage_file_proxy -y
+        fi
+
+    else
+      # Base configuration import with development environment overrides.
+      drush cim -y sync
+      drush cim -y dev --partial
+
+      # Enable stage file proxy.
+      drush en stage_file_proxy -y
+    fi
+
+# Production environments.
+else
+
+  if drush status --fields=bootstrap | grep -q "Successful"; then
     mkdir -p /app/web/sites/default/files/private/backups/ && drush sql-dump --ordered-dump --gzip --result-file=/app/web/sites/default/files/private/backups/pre-deploy-dump.sql
     drush en -y govcms_lagoon && drush pmu -y govcms_lagoon;
+
+    # Configuration import.
     drush cim -y sync
-    if [ ! "${LAGOON_ENVIRONMENT_TYPE}" == "production" ]; then
-      drush cim -y dev --partial
-    fi
-    drush updb -y
-    drush cr
-else
+
+  else
     echo "Drupal not installed."
+  fi
+
+fi
+
+# All valid environments.
+if drush status --fields=bootstrap | grep -q "Successful"; then
+  drush updb -y
+  drush cr
 fi
