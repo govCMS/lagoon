@@ -17,6 +17,7 @@ x-volumes:
 
 x-environment:
   &default-environment
+    LAGOON_ENVIRONMENT_TYPE: ${LAGOON_ENVIRONMENT_TYPE}
     LAGOON_PROJECT: *lagoon-project
     LAGOON_ROUTE: &default-url ${LOCALDEV_URL:-http://govcms8-saas.docker.amazee.io}
 
