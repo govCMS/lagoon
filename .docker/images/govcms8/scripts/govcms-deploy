@@ -6,6 +6,9 @@
 # Ensure tmp folder always exists.
 mkdir -p /app/web/sites/default/files/private/tmp/
 
+# Check for presence of config files.
+config_count=`ls -1 /app/config/default/* 2>/dev/null | wc -l`
+
 # Non production environments.
 if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
     # Import production database on inital deployment.
@@ -16,8 +19,10 @@ if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
           drush sql-sync @govcms-prod @self -y
 
           # Base configuration import with development environment overrides.
-          drush cim -y sync
-          drush cim -y dev --partial
+          if [ "$config_count" -gt 1 ]; then
+            drush cim -y sync
+            drush cim -y dev --partial
+          fi
 
           # Enable stage file proxy post db-import.
           drush en stage_file_proxy -y
@@ -25,8 +30,10 @@ if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
 
     else
       # Base configuration import with development environment overrides.
-      drush cim -y sync
-      drush cim -y dev --partial
+      if [ "$config_count" -gt 1 ]; then
+        drush cim -y sync
+        drush cim -y dev --partial
+      fi
 
       # Enable stage file proxy.
       drush en stage_file_proxy -y
@@ -40,7 +47,9 @@ else
     drush en -y govcms_lagoon && drush pmu -y govcms_lagoon;
 
     # Configuration import.
-    drush cim -y sync
+    if [ "$config_count" -gt 1 ]; then
+      drush cim -y sync
+    fi
 
   else
     echo "Drupal not installed."
