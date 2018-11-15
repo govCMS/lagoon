@@ -233,3 +233,8 @@ $config_directories['dev'] = '/app/config/dev';
 if (file_exists(__DIR__ . '/settings.local.php')) {
   include __DIR__ . '/settings.local.php';
 }
+
+// Stage file proxy URL from production URL.
+if (getenv('STAGE_FILE_PROXY_URL')) {
+  $config['stage_file_proxy.settings']['origin'] = getenv('STAGE_FILE_PROXY_URL');
+}
