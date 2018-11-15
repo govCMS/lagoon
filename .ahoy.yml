@@ -12,7 +12,7 @@ commands:
 
   build:
     usage: Build project.
-    cmd: docker-compose up -d --build "$@"
+    cmd: docker-compose up -d --build "$@"; ahoy govcms-deploy
 
   cli:
     usage: Start a shell inside TEST container.
@@ -21,6 +21,10 @@ commands:
   run:
     usage: Run command inside TEST container.
     cmd: docker-compose exec -T test bash -c "$@"
+
+  govcms-deploy:
+    usage: Runs deployment commands (config import, updb, cr, set up file_stage_proxy)
+    cmd: docker-compose exec -T cli govcms-deploy
 
   drush:
     usage: Run drush commands in TEST container.
@@ -44,7 +48,7 @@ commands:
 
   install:
     usage: Install the profile.
-    cmd: docker-compose exec -T test drush si -y govcms "$@"
+    cmd: docker-compose exec -T test drush si -y govcms "$@"; ahoy govcms-deploy
 
   login:
     usage: Login to a website.
