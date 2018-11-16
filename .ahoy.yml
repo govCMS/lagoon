@@ -9,11 +9,15 @@ commands:
   down:
     usage: Delete project (CAUTION).
     cmd: |
-      ahoy confirm "Running this command will destroy your current site, database and build? Are you sure you didn't mean ahoy stop?" &&
-      # Run this if confirm returns true
-      docker-compose down ||
-      # Run this if confirm returns false
-      echo "OK, probably a wise choice..."
+      if [ "$1" == "y" ]; then
+        docker-compose down
+      else
+        ahoy confirm "Running this command will destroy your current site, database and build? Are you sure you didn't mean ahoy stop?" &&
+        # Run this if confirm returns true
+        docker-compose down ||
+        # Run this if confirm returns false
+        echo "OK, probably a wise choice..."
+      fi
 
   build:
     usage: Build project.
@@ -118,7 +122,7 @@ commands:
   confirm:
     cmd: |
       read -r -p "$@ [y/N] " response
-      if [ $response = y ]
+      if [[ $response = y ]]
       then
         true
       else
