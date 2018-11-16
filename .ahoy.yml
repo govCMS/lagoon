@@ -77,6 +77,19 @@ commands:
           docker-compose exec -T test drush cim "$@" --partial
       fi
 
+  mysql-import:
+    usage: Pipe in a sql file.  `ahoy mysql-import local.sql`
+    cmd: |
+      if [ -e "$@" ] ; then
+        docker-compose exec test bash -c 'drush sql-drop' &&
+        docker-compose exec -T test bash -c 'drush sql-cli' < "$@"
+      else echo "Provided sql file" "$@" "does not exist"
+      fi
+
+  mysql-dump:
+    usage: Dump data out into a file. `ahoy mysql-dump local.sql`
+    cmd: docker-compose exec test bash -c 'drush sql-dump --ordered-dump' > "$@"
+
   lint:
     usage: Lint code
     cmd: docker-compose exec -T test lint-theme
