@@ -7,8 +7,13 @@ commands:
     cmd: docker-compose up -d "$@"
 
   down:
-    usage: Delete project.
-    cmd: docker-compose down
+    usage: Delete project (CAUTION).
+    cmd: |
+      ahoy confirm "Running this command will destroy your current site, database and build? Are you sure you didn't mean ahoy stop?" &&
+      # Run this if confirm returns true
+      docker-compose down ||
+      # Run this if confirm returns false
+      echo "OK, probably a wise choice..."
 
   build:
     usage: Build project.
@@ -96,3 +101,14 @@ commands:
   audit-site:
     usage: Run site audit
     cmd: docker-compose exec -T test drutiny profile:run ci @self "$@"
+
+  confirm:
+    cmd: |
+      read -r -p "$@ [y/N] " response
+      if [ $response = y ]
+      then
+        true
+      else
+        false
+      fi
+    hide: true
