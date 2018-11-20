@@ -25,7 +25,7 @@ commands:
 
   cli:
     usage: Start a shell inside TEST container.
-    cmd: docker-compose exec -T test bash
+    cmd: docker-compose exec test bash
 
   run:
     usage: Run command inside TEST container.
