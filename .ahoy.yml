@@ -4,7 +4,7 @@ ahoyapi: v2
 commands:
   up:
     usage: Build project.
-    cmd: docker-compose up -d "$@"
+    cmd: docker-compose up -d "$@"; ahoy govcms-deploy
 
   down:
     usage: Delete project (CAUTION).
