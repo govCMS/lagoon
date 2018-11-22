@@ -3,6 +3,9 @@
 # GovCMS 8 Drupal deployment script.
 #
 
+# Ensure placeholders are replaced in Drush9 alias file.
+sed -i "s/%%PROJECT_NAME%%/$LAGOON_PROJECT/g" /app/drush/sites/govcms.site.yml
+
 # Ensure tmp folder always exists.
 mkdir -p /app/web/sites/default/files/private/tmp/
 
@@ -16,7 +19,7 @@ if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
 
         # SQL sync only in Lagoon development environments.
         if [[ ! -z "$LAGOON_ENVIRONMENT_TYPE" && "$LAGOON_ENVIRONMENT_TYPE" != "local" ]]; then
-          drush sql-sync @govcms-prod @self -y
+          drush sql-sync @govcms.prod @self -y
 
           # Base configuration import with development environment overrides.
           if [ "$config_count" -gt 1 ]; then
