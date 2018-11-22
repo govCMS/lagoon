@@ -1,0 +1,8 @@
+# File: govcms.site.yml
+prod:
+  root: /app
+  host: ssh.lagoon.svc
+  user: %%PROJECT_NAME%%-master
+  uri: nginx-%%PROJECT_NAME%%-master.govcms.amazee.io
+  ssh:
+    options: -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 2020 -F /dev/null

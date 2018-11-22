@@ -3,6 +3,7 @@ FROM govcms8dev/govcms8
 COPY .docker/sanitize.sh /app/sanitize.sh
 
 COPY .docker/images/govcms8/scripts /usr/bin/
+COPY .docker/images/govcms8/govcms.site.yml /app/drush/sites/
 
 RUN apk add python \
     && composer require \
