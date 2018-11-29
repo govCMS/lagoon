@@ -1,0 +1,14 @@
+### Lagoon Drupal 8 development environment services file.
+#
+# This file should contain service definitions that are included on local development environments.
+#
+parameters:
+  http.response.debug_cacheability_headers: true
+  twig.config:
+    debug: true
+    auto_reload: true
+    cache: false
+
+services:
+  cache.backend.null: # Defines a Cache Backend Factory which is just empty, it is not used by default
+    class: Drupal\Core\Cache\NullBackendFactory
