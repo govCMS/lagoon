@@ -1,5 +1,9 @@
 FROM govcms8dev/govcms8
 
+# Temporary override until lagoon PR is available in upstream image.
+# https://github.com/amazeeio/lagoon/issues/787
+ENV PHP_MAX_INPUT_VARS=2000
+
 COPY .docker/sanitize.sh /app/sanitize.sh
 
 COPY .docker/images/govcms8/scripts /usr/bin/
