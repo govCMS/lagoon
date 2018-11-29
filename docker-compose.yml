@@ -8,6 +8,7 @@ x-volumes:
 x-environment:
   &default-environment
     LAGOON_ROUTE: ${LOCALDEV_URL:-http://govcms8-lagoon.docker.amazee.io}
+    DEV_MODE: ${DEV_MODE:-false}
 
 volumes:
   files: {}

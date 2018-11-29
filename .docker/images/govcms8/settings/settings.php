@@ -246,4 +246,12 @@ if (getenv('LAGOON_ENVIRONMENT_TYPE') != 'production') {
     $config['stage_file_proxy.settings']['origin'] = getenv('STAGE_FILE_PROXY_URL');
   }
 
+  if (getenv('DEV_MODE')) {
+    if (!drupal_installation_attempted()) {
+      if (file_exists(__DIR__ . '/development.settings.php')) {
+        include __DIR__ . '/development.settings.php';
+      }
+    }
+  }
+
 }
