@@ -3,6 +3,10 @@ FROM ${CLI_IMAGE} as cli
 
 FROM govcms8dev/php
 
+# Temporary override until lagoon PR is available in upstream image.
+# https://github.com/amazeeio/lagoon/issues/787
+ENV PHP_MAX_INPUT_VARS=2000
+
 RUN apk add --update clamav clamav-libunrar \
     && freshclam
 
