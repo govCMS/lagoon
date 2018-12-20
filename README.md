@@ -13,7 +13,7 @@
 
 1. Checkout project repo and confirm the path is in Docker's file sharing config (https://docs.docker.com/docker-for-mac/#file-sharing):
 
-        git clone https://projects.govcms.gov.au/dof/agency.git govcms-agency && cd $_
+        git clone https://projects.govcms.gov.au/department/agency.git govcms-agency && cd $_
 
 2. Make sure you don't have anything running on port 80 on the host machine (like a web server):
 
