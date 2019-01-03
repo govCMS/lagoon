@@ -43,6 +43,7 @@ services:
       dockerfile: $PWD/.docker/Dockerfile.nginx-drupal
       args:
         CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
+        X_FRAME_OPTIONS: ${X_FRAME_OPTIONS:-SameOrigin}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/nginx-drupal
     << : *default-volumes
     environment:

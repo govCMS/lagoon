@@ -5,7 +5,7 @@ FROM govcms8dev/nginx-drupal
 
 # nginx config.
 COPY .docker/images/nginx/helpers/ /etc/nginx/helpers/
-COPY .docker/images/nginx/x_frame_options.conf /etc/nginx/conf.d/drupal/location_drupal_append_x_frame_options.conf;
+COPY .docker/images/nginx/x_frame_options.template /etc/nginx/conf.d/drupal/location_drupal_append_x_frame_options.template
 COPY .docker/images/nginx/no-robots.sh /lagoon/entrypoints/20-no-robots.sh
 RUN fix-permissions /etc/nginx
 
@@ -14,3 +14,8 @@ COPY .docker/sanitize.sh /app/sanitize.sh
 
 RUN /app/sanitize.sh \
   && rm -rf /app/sanitize.sh
+
+RUN apk add gettext
+
+ARG X_FRAME_OPTIONS
+RUN envsubst < /etc/nginx/conf.d/drupal/location_drupal_append_x_frame_options.template > /etc/nginx/conf.d/drupal/location_drupal_append_x_frame_options.conf
