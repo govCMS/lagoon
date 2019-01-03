@@ -43,12 +43,12 @@ services:
       dockerfile: $PWD/.docker/Dockerfile.nginx-drupal
       args:
         CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
-        X_FRAME_OPTIONS: ${X_FRAME_OPTIONS:-SameOrigin}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/nginx-drupal
     << : *default-volumes
     environment:
       << : *default-environment
       LAGOON_LOCALDEV_URL: ${LOCALDEV_URL_NGINX:-http://govcms8-lagoon-nginx.docker.amazee.io}
+      X_FRAME_OPTIONS: ${X_FRAME_OPTIONS:-SameOrigin}
     networks:
       - amazeeio-network
       - default
