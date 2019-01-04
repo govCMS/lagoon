@@ -142,7 +142,7 @@ if (getenv('LAGOON')) {
 }
 
 // Redis configuration.
-if (getenv('LAGOON') && (file_exists($app_root . '/modules/contrib/redis') || file_exists($app_root . 'modules/redis')) && extension_loaded('redis')){
+if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
   $settings['redis.connection']['interface'] = 'PhpRedis';
   $settings['redis.connection']['host'] = getenv('REDIS_HOST') ?: 'redis';
   $settings['redis.connection']['port'] = 6379;
