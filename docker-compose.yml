@@ -48,6 +48,7 @@ services:
     environment:
       << : *default-environment
       LAGOON_LOCALDEV_URL: ${LOCALDEV_URL_NGINX:-http://govcms8-lagoon-nginx.docker.amazee.io}
+      X_FRAME_OPTIONS: ${X_FRAME_OPTIONS:-SameOrigin}
     networks:
       - amazeeio-network
       - default
