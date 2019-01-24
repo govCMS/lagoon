@@ -86,6 +86,8 @@ services:
     build:
       context: .
       dockerfile: $PWD/.docker/Dockerfile.solr
+      args:
+        CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/solr
     ports:
       - "8983" # Find port on host with `docker-compose port solr 8983`
