@@ -1,0 +1,16 @@
+---
+file:
+  /opt/solr/server/solr/mycores/drupal/conf:
+    exists: true
+    filetype: directory
+  /opt/solr/server/solr/mycores/drupal/conf/schema.xml:
+    exists: true
+    filetype: file
+    contains:
+    - "drupal-6.4-solr-6.x"
+  /opt/solr/server/solr/mycores/drupal/conf/solrconfig.xml:
+    exists: true
+    filetype: file
+    contains:
+    - "<dataDir>/var/solr/${solr.core.name}</dataDir>"
+    - "<lockType>${solr.lock.type:none}</lockType>"
