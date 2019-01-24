@@ -1,4 +1,4 @@
-FROM govcms8dev/govcms8
+FROM govcms8dev/govcms8:1.0.0-beta1
 
 # Temporary override until lagoon PR is available in upstream image.
 # https://github.com/amazeeio/lagoon/issues/787
