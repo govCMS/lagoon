@@ -1,7 +1,7 @@
 ARG CLI_IMAGE
 FROM ${CLI_IMAGE} as cli
 
-FROM govcms8dev/nginx-drupal
+FROM govcms8dev/nginx-drupal:1.0.0-beta1
 
 # nginx config.
 COPY .docker/images/nginx/helpers/ /etc/nginx/helpers/
@@ -14,4 +14,3 @@ COPY .docker/sanitize.sh /app/sanitize.sh
 
 RUN /app/sanitize.sh \
   && rm -rf /app/sanitize.sh
-
