@@ -12,6 +12,9 @@ mkdir -p /app/web/sites/default/files/private/tmp/
 # Check for presence of config files.
 config_count=`ls -1 /app/config/default/* 2>/dev/null | wc -l`
 
+# Clear cache before configuration import
+drush cr
+
 # Non production environments.
 if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
     # Import production database on inital deployment.
