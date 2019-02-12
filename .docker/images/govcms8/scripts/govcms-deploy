@@ -12,8 +12,11 @@ mkdir -p /app/web/sites/default/files/private/tmp/
 # Check for presence of config files.
 config_count=`ls -1 /app/config/default/* 2>/dev/null | wc -l`
 
-# Clear cache before configuration import
-drush cr
+# All valid environments.
+if drush status --fields=bootstrap | grep -q "Successful"; then
+  drush updb -y
+  drush cr
+fi
 
 # Non production environments.
 if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
@@ -61,10 +64,4 @@ else
     echo "Drupal not installed."
   fi
 
-fi
-
-# All valid environments.
-if drush status --fields=bootstrap | grep -q "Successful"; then
-  drush updb -y
-  drush cr
 fi
