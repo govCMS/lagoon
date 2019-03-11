@@ -201,7 +201,7 @@ if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
 if (getenv('LAGOON')) {
   $settings['file_public_path'] = 'sites/default/files';
   $settings['file_private_path'] = 'sites/default/files/private';
-  $settings['file_temporary_path'] = 'sites/default/files/private/tmp';
+  $config['system.file']['path']['temporary'] = 'sites/default/files/private/tmp';
 }
 
 // ClamAV settings.
