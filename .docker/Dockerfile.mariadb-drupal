@@ -1,1 +1,1 @@
-FROM govcms8dev/mariadb-drupal:1.0-beta3
+FROM govcms8dev/mariadb-drupal:1.0.0-beta3
