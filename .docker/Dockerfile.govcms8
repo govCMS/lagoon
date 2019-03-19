@@ -23,6 +23,12 @@ RUN apk add python \
     && /app/sanitize.sh \
     && rm -f /app/sanitize.sh
 
+RUN cd /app/web/modules/contrib/google_analytics/ \
+    && wget https://www.drupal.org/files/issues/2018-06-18/patch_google_analytics.patch \
+    && patch --verbose -i patch_google_analytics.patch \
+    && rm patch_google_analytics.patch \
+    && cd /app
+
 COPY modules/ /app/web/sites/all/modules/
 
 COPY .docker/images/govcms8/settings/ /app/web/sites/default/
