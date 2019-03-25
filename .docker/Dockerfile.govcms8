@@ -16,6 +16,8 @@ RUN apk add python \
     drupal/redis:^1.0 \
     drupal/stage_file_proxy:^1.0 \
     drupal/clamav:^1.1 \
+    drupal/coi:^1.0 \
+    drupal/config_override_core_fields:^1.0 \
     && mkdir -p /app/web/sites/default/files/private \
     && fix-permissions /home/.drush \
     && fix-permissions /app/drush/sites \
