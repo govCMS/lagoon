@@ -30,7 +30,14 @@
         "govcms/govcms": "*",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
-        "webflo/drupal-core-strict": "8.6.12"
+        "webflo/drupal-core-strict": "8.6.12",
+        "drupal/fast_404":"1.0.0-alpha4",
+        "drupal/lagoon_logs":"1.x-dev",
+        "drupal/stage_file_proxy":"1.0.0-alpha3",
+        "drupal/clamav":"1.1.0",
+        "drupal/coi": "1.0.0",
+        "drupal/config_override_core_fields": "^1.0",
+        "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "conflict": {
         "drupal/drupal": "*"

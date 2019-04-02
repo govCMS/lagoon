@@ -4,10 +4,7 @@ FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal${LAGOON_IMAGE_VERSION_PHP} as 
 
 ARG GOVCMS_PROJECT_VERSION
 
-RUN rm -rf /app \
-    && mkdir /app
-
-COPY composer-lagoon.json /app/composer.json
+COPY composer.json /app/composer.json
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
 RUN composer install -d /app
@@ -18,14 +15,6 @@ COPY .docker/images/govcms8/scripts /usr/bin/
 COPY .docker/images/govcms8/govcms.site.yml /app/drush/sites/
 
 RUN apk add python \
-    && composer require \
-    drupal/fast_404:^1.0 \
-    drupal/lagoon_logs:1.x-dev \
-    drupal/redis:^1.0 \
-    drupal/stage_file_proxy:^1.0 \
-    drupal/clamav:^1.1 \
-    drupal/coi:^1.0 \
-    drupal/config_override_core_fields:^1.0 \
     && mkdir -p /app/web/sites/default/files/private \
     && fix-permissions /home/.drush \
     && fix-permissions /app/drush/sites \
