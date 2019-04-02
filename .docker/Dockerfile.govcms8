@@ -1,8 +1,17 @@
-FROM govcms8dev/govcms8:1.0.0-beta3
+ARG LAGOON_IMAGE_VERSION_PHP
+ARG PHP_IMAGE_VERSION
+#FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal${LAGOON_IMAGE_VERSION_PHP} as builder
+FROM amazeeio/php:7.1-cli-drupal-v0.22.1 as builder
 
-# Temporary override until lagoon PR is available in upstream image.
-# https://github.com/amazeeio/lagoon/issues/787
-ENV PHP_MAX_INPUT_VARS=2000
+ARG GOVCMS_PROJECT_VERSION
+
+RUN rm -rf /app \
+    && mkdir /app
+
+COPY composer-lagoon.json /app/composer.json
+COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
+
+RUN composer install -d /app
 
 COPY .docker/sanitize.sh /app/sanitize.sh
 
