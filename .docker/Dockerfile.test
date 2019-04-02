@@ -1,28 +1,37 @@
 ARG CLI_IMAGE
+ARG LAGOON_IMAGE_VERSION_PHP
+ARG PHP_IMAGE_VERSION
 FROM ${CLI_IMAGE} as cli
 
-FROM govcms8dev/test:1.0.0-beta3
+FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal${LAGOON_IMAGE_VERSION_PHP}
 
 COPY --from=cli /app /app
-COPY .docker/sanitize.sh /app/sanitize.sh
+COPY .docker/scripts/phpunit /app/web/profiles/contrib/govcms/.docker/phpunit
+COPY .docker/scripts/lint-govcms /app/web/profiles/contrib/govcms/.docker/scripts/lint-govcms
 
-RUN /app/sanitize.sh \
-  && rm -rf /app/sanitize.sh
+RUN cp -r /app/web/profiles/contrib/govcms/tests /app/ \
+    && echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/memory.ini \
+    && composer install -d /app/tests -n --ansi --prefer-dist --no-suggest \
+    && rm -rf /usr/local/etc/php/conf.d/memory.ini \
+    && mv /app/web/profiles/contrib/govcms/.docker/scripts/lint-govcms /usr/bin/lint-govcms \
+    && chmod +x /usr/bin/lint-govcms \
+    && mv /app/web/profiles/contrib/govcms/.docker/scripts/lint-theme /usr/bin/lint-theme \
+    && chmod +x /usr/bin/lint-theme \
+    && mv /app/web/profiles/contrib/govcms/.docker/scripts/behat /usr/bin/behat \
+    && chmod +x /usr/bin/behat \
+    && mv /app/web/profiles/contrib/govcms/.docker/phpunit /usr/bin/phpunit \
+    && chmod +x /usr/bin/phpunit
 
 COPY .docker/images/test/drutiny /usr/bin/drutiny
 
+ARG SITE_AUDIT_VERSION
+RUN git clone --single-branch --branch=$SITE_AUDIT_VERSION https://github.com/govcms/audit-site.git /app/sites/all/drutiny \
+    && php -d memory_limit=-1 /usr/local/bin/composer --working-dir=/app/sites/all/drutiny/ install --ignore-platform-reqs \
+    && rm -Rf /app/sites/all/drutiny/.git \
+    && chmod +x /usr/bin/drutiny
+
 # Ensure that drush and drush.launcher both work
 ENV WEBROOT=web
-
-ENV SITE_AUDIT_VERSION 7.x-3.x
-RUN wget https://github.com/govcms/audit-site/archive/$SITE_AUDIT_VERSION.tar.gz \
-    && tar -C /tmp -xzvf $SITE_AUDIT_VERSION.tar.gz \
-    && rm $SITE_AUDIT_VERSION.tar.gz \
-    && mkdir -p /app/web/sites/all/drutiny \
-    && mv /tmp/audit-site-$SITE_AUDIT_VERSION/* /app/web/sites/all/drutiny \
-    && rm -Rf /tmp/audit-site-$SITE_AUDIT_VERSION \
-    && php -d memory_limit=-1 /usr/local/bin/composer --working-dir=/app/web/sites/all/drutiny/ install --ignore-platform-reqs \
-    && chmod +x /usr/bin/drutiny
 
 # Add custom drutiny profiles from test folder for local development
 COPY .docker/images/test/*.yml /app/web/sites/all/drutiny/Profiles
