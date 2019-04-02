@@ -15,3 +15,6 @@ COPY .docker/sanitize.sh /app/sanitize.sh
 
 RUN /app/sanitize.sh \
   && rm -rf /app/sanitize.sh
+
+# Define where the Drupal Root is located
+ENV WEBROOT=web
