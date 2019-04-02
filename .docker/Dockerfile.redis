@@ -1,1 +1,2 @@
-FROM amazeeio/redis
+ARG LAGOON_IMAGE_VERSION
+FROM amazeeio/redis:${LAGOON_IMAGE_VERSION}
