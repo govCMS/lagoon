@@ -30,9 +30,9 @@ RUN cp -r /app/web/profiles/contrib/govcms/tests /app/ \
 COPY .docker/images/test/drutiny /usr/bin/drutiny
 
 ARG SITE_AUDIT_VERSION
-RUN git clone --single-branch --branch=$SITE_AUDIT_VERSION https://github.com/govcms/audit-site.git /app/sites/all/drutiny \
-    && php -d memory_limit=-1 /usr/local/bin/composer --working-dir=/app/sites/all/drutiny/ install --ignore-platform-reqs \
-    && rm -Rf /app/sites/all/drutiny/.git \
+RUN git clone --single-branch --branch=$SITE_AUDIT_VERSION https://github.com/govcms/audit-site.git /app/web/sites/all/drutiny \
+    && php -d memory_limit=-1 /usr/local/bin/composer --working-dir=/app/web/sites/all/drutiny/ install --ignore-platform-reqs \
+    && rm -Rf /app/web/sites/all/drutiny/.git \
     && chmod +x /usr/bin/drutiny
 
 # Ensure that drush and drush.launcher both work
