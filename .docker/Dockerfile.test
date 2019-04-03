@@ -5,6 +5,11 @@ FROM ${CLI_IMAGE} as cli
 
 FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal${LAGOON_IMAGE_VERSION_PHP}
 
+ENV DOCKERIZE_VERSION v0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
 COPY --from=cli /app /app
 COPY .docker/scripts/phpunit /app/web/profiles/contrib/govcms/.docker/phpunit
 COPY .docker/scripts/lint-govcms /app/web/profiles/contrib/govcms/.docker/scripts/lint-govcms
