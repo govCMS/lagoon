@@ -13,11 +13,8 @@
             "url": "https://asset-packagist.org"
         },
         {
-            "type": "path",
-            "url": "/src",
-            "options": {
-                "symlink": false
-            }
+            "type": "vcs",
+            "url": "git@github.com:govcms/govcms8.git"
         }
     ],
     "require": {
@@ -25,12 +22,12 @@
         "cweagans/composer-patches": "^1.6.5",
         "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/console": "^1.0.2",
-        "drupal/core": "8.6.12",
+        "drupal/core": "8.6.x-dev",
         "drush/drush": "^9.0.0",
-        "govcms/govcms": "*",
+        "govcms/govcms": "1.x",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
-        "webflo/drupal-core-strict": "8.6.12",
+        "webflo/drupal-core-strict": "8.6.x-dev",
         "drupal/fast_404":"1.0.0-alpha4",
         "drupal/lagoon_logs":"1.x-dev",
         "drupal/stage_file_proxy":"1.0.0-alpha3",
@@ -41,6 +38,9 @@
     },
     "conflict": {
         "drupal/drupal": "*"
+    },
+    "provide": {
+        "drupal/core": "*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -71,6 +71,7 @@
             "drupal/core": "-p2"
         },
         "enable-patching": true,
+        "patches": {},
         "installer-types": ["bower-asset", "npm-asset"],
         "installer-paths": {
             "web/core": [

@@ -20,6 +20,8 @@ services:
       context: .
       dockerfile: $PWD/.docker/Dockerfile.govcms8
       args:
+        GOVCMS_PROJECT_VERSION: ${GOVCMS_PROJECT_VERSION:-1.x}
+        DRUPAL_CORE_VERSION: ${DRUPAL_CORE_VERSION:-8.6.x-dev}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION_PHP}
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.1}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
