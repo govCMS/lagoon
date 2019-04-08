@@ -30,6 +30,7 @@
         "webflo/drupal-core-strict": "8.6.x-dev",
         "drupal/fast_404":"1.0.0-alpha4",
         "drupal/lagoon_logs":"1.x-dev",
+        "drupal/redis":"1.1.0",
         "drupal/stage_file_proxy":"1.0.0-alpha3",
         "drupal/clamav":"1.1.0",
         "drupal/coi": "1.0.0",
