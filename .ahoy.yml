@@ -69,3 +69,20 @@ commands:
   audit-site:
     usage: Run site audit
     cmd: docker-compose exec -T test drutiny profile:run d8-full @self "$@"
+
+  lint:
+    usage: Lint code
+    cmd: docker-compose exec test lint-govcms
+
+  test:
+    usage: Run all tests.
+    cmd: |
+      ahoy test-phpunit
+      ahoy test-behat
+  test-behat:
+    usage: Run Behat tests.
+    cmd: docker-compose exec test behat "$@"
+
+  test-phpunit:
+    usage: Run PHPUnit tests.
+    cmd: docker-compose exec test phpunit "$@"

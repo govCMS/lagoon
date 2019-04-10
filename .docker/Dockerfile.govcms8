@@ -1,8 +1,19 @@
-FROM govcms8dev/govcms8:1.0.0-beta3
+ARG LAGOON_IMAGE_VERSION_PHP
+ARG PHP_IMAGE_VERSION
+FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal${LAGOON_IMAGE_VERSION_PHP} as builder
 
-# Temporary override until lagoon PR is available in upstream image.
-# https://github.com/amazeeio/lagoon/issues/787
-ENV PHP_MAX_INPUT_VARS=2000
+ARG GOVCMS_PROJECT_VERSION
+ARG DRUPAL_CORE_VERSION
+
+COPY composer.json /app/composer.json
+
+RUN sed -i -e "/govcms\/govcms/ s#1.x#${GOVCMS_PROJECT_VERSION}#" /app/composer.json \
+    && sed -i -e "/drupal\/core/ s#8.6.x-dev#${DRUPAL_CORE_VERSION}#" /app/composer.json \
+    && sed -i -e "/webflo\/drupal-core-strict/ s#8.6.x-dev#${DRUPAL_CORE_VERSION}#" /app/composer.json
+
+COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
+
+RUN composer install -d /app
 
 COPY .docker/sanitize.sh /app/sanitize.sh
 
@@ -10,24 +21,12 @@ COPY .docker/images/govcms8/scripts /usr/bin/
 COPY .docker/images/govcms8/govcms.site.yml /app/drush/sites/
 
 RUN apk add python \
-    && composer require \
-    drupal/fast_404:^1.0 \
-    drupal/lagoon_logs:1.x-dev \
-    drupal/redis:^1.0 \
-    drupal/stage_file_proxy:^1.0 \
-    drupal/clamav:^1.1 \
     && mkdir -p /app/web/sites/default/files/private \
     && fix-permissions /home/.drush \
     && fix-permissions /app/drush/sites \
     && chmod +x /app/sanitize.sh \
     && /app/sanitize.sh \
     && rm -f /app/sanitize.sh
-
-RUN cd /app/web/modules/contrib/google_analytics/ \
-    && wget https://www.drupal.org/files/issues/2018-06-18/patch_google_analytics.patch \
-    && patch --verbose -i patch_google_analytics.patch \
-    && rm patch_google_analytics.patch \
-    && cd /app
 
 COPY modules/ /app/web/sites/all/modules/
 

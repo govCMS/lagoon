@@ -1,7 +1,8 @@
 ARG CLI_IMAGE
+ARG LAGOON_IMAGE_VERSION
 FROM ${CLI_IMAGE} as cli
 
-FROM govcms8dev/nginx-drupal:1.0.0-beta3
+FROM amazeeio/nginx-drupal:${LAGOON_IMAGE_VERSION}
 
 # nginx config.
 COPY .docker/images/nginx/helpers/ /etc/nginx/helpers/
@@ -14,3 +15,6 @@ COPY .docker/sanitize.sh /app/sanitize.sh
 
 RUN /app/sanitize.sh \
   && rm -rf /app/sanitize.sh
+
+# Define where the Drupal Root is located
+ENV WEBROOT=web
