@@ -6,6 +6,9 @@
  * This file will only be included on production environments.
  */
 
+// Ensure config is set to a read-only state.
+$settings['config_readonly'] = TRUE;
+
 // Inject Google Analytics snippet on all production sites.
 $config['google_analytics.settings']['codesnippet']['after'] = "gtag('config', 'UA-54970022-1', {'name': 'govcms'}); gtag('govcms.send', 'pageview', {'anonymizeIp': true})";
 
