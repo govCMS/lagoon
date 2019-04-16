@@ -35,7 +35,7 @@
         "drupal/clamav":"1.1.0",
         "drupal/coi": "1.0.0",
         "drupal/config_override_core_fields": "^1.0",
-        "drupal/config_readonly":"^1.0",
+        "drupal/config_readonly":"^1.0-beta3",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "conflict": {
