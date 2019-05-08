@@ -24,8 +24,6 @@ file:
     exists: false
   /app/web/web.config:
     exists: false
-  /app/web/robots.txt:
-    exists: false
   /app/web/.editorconfig:
     exists: false
   /app/web/favicon.ico:
