@@ -7,9 +7,9 @@ ARG DRUPAL_CORE_VERSION
 
 COPY composer.json /app/composer.json
 
-RUN sed -i -e "/govcms\/govcms/ s#1.x#${GOVCMS_PROJECT_VERSION}#" /app/composer.json \
-    && sed -i -e "/drupal\/core/ s#8.6.x-dev#${DRUPAL_CORE_VERSION}#" /app/composer.json \
-    && sed -i -e "/webflo\/drupal-core-strict/ s#8.6.x-dev#${DRUPAL_CORE_VERSION}#" /app/composer.json
+RUN sed -i -e "/govcms\/govcms/ s!1.x!${GOVCMS_PROJECT_VERSION}!" /app/composer.json \
+    && sed -i -e "/drupal\/core/ s!8.6.x-dev!${DRUPAL_CORE_VERSION}!" /app/composer.json \
+    && sed -i -e "/webflo\/drupal-core-strict/ s!8.6.x-dev!${DRUPAL_CORE_VERSION}!" /app/composer.json
 
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
