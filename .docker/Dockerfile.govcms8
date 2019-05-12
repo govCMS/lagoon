@@ -20,7 +20,8 @@ COPY .docker/sanitize.sh /app/sanitize.sh
 COPY .docker/images/govcms8/scripts /usr/bin/
 COPY .docker/images/govcms8/govcms.site.yml /app/drush/sites/
 
-RUN apk add python \
+# findutils can be removed after amazeeio/lagoon PR1077
+RUN apk --no-cache add python findutils \
     && mkdir -p /app/web/sites/default/files/private \
     && fix-permissions /home/.drush \
     && fix-permissions /app/drush/sites \

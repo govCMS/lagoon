@@ -33,7 +33,9 @@ ARG SITE_AUDIT_VERSION
 RUN git clone --single-branch --branch=$SITE_AUDIT_VERSION https://github.com/govcms/audit-site.git /app/web/sites/all/drutiny \
     && php -d memory_limit=-1 /usr/local/bin/composer --working-dir=/app/web/sites/all/drutiny/ install --ignore-platform-reqs \
     && rm -Rf /app/web/sites/all/drutiny/.git \
-    && chmod +x /usr/bin/drutiny
+    && chmod +x /usr/bin/drutiny \
+    && apk --no-cache add findutils
+# findutils can be removed after amazeeio/lagoon PR1077
 
 # Ensure that drush and drush.launcher both work
 ENV WEBROOT=web
