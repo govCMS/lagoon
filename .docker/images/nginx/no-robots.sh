@@ -4,5 +4,5 @@
 #
 
 if [ ! "${LAGOON_ENVIRONMENT_TYPE}" == "production" ]; then
-    printf "User-agent: *\nDisallow: /\n" > /app/robots.txt
+    printf "User-agent: *\nDisallow: /\n" > /app/web/robots.txt
 fi

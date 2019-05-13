@@ -1,3 +1,7 @@
 ---
 gossfile:
   sanitise.yaml: {}
+
+file:
+  /app/web/robots.txt:
+    exists: true
