@@ -204,10 +204,12 @@ if (getenv('LAGOON')) {
   $settings['file_temporary_path'] = 'sites/default/files/private/tmp';
 }
 
-// ClamAV settings.
-$config['clamav.settings']['scan_mode'] = 0;
-$config['clamav.settings']['mode_daemon_tcpip']['hostname'] = getenv('CLAMAV_HOST') ?: 'localhost';
-$config['clamav.settings']['mode_daemon_tcpip']['port'] = getenv('CLAMAV_PORT') ?: 3310;
+if (getenv('LAGOON')) {
+  // ClamAV settings.
+  $config['clamav.settings']['scan_mode'] = 0;
+  $config['clamav.settings']['mode_daemon_tcpip']['hostname'] = getenv('CLAMAV_HOST') ?: 'localhost';
+  $config['clamav.settings']['mode_daemon_tcpip']['port'] = getenv('CLAMAV_PORT') ?: 3310;
+}
 
 // Hash Salt
 if (getenv('LAGOON')) {
