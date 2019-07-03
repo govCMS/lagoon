@@ -216,6 +216,11 @@ if (getenv('LAGOON')) {
     $config['clamav.settings']['scan_mode'] = 1;
     $config['clamav.settings']['mode_executable']['executable_path'] = '/usr/bin/clamscan';
   }
+
+  $env = getenv('LAGOON_ENVIRONMENT_TYPE') ?: 'local';
+  if ($env == 'local') {
+    $config['clamav.settings']['enabled'] = FALSE;
+  }
 }
 
 // Hash Salt
