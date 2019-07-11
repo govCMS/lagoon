@@ -13,9 +13,8 @@ mkdir -p /app/web/sites/default/files/private/tmp/
 config_count=`ls -1 /app/config/default/*.yml 2>/dev/null | wc -l`
 dev_config_count=`ls -1 /app/config/dev/*.yml 2>/dev/null | wc -l`
 
-# Configuration import function.
-common_setup () {
-  # Ensure updates run prior to configuration import.
+# Database updates, cache rebuild, optional config imports.
+common_deploy () {
   drush updb -y
   drush cr
 
@@ -39,18 +38,18 @@ if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
         # Import prod db in Lagoon development environments.
         if [[ ! -z "$LAGOON_ENVIRONMENT_TYPE" && "$LAGOON_ENVIRONMENT_TYPE" != "local" ]]; then
           drush sql-sync @govcms-prod @self -y
-          common_setup
+          common_deploy
         else
           echo "Drupal not installed."
         fi
     else
-      common_setup
+      common_deploy
     fi
 # Production environments.
 else
   if drush status --fields=bootstrap | grep -q "Successful"; then
     mkdir -p /app/web/sites/default/files/private/backups/ && drush sql-dump --ordered-dump --gzip --result-file=/app/web/sites/default/files/private/backups/pre-deploy-dump.sql
-    common_setup
+    common_deploy
     drush en -y govcms_lagoon && drush pmu -y govcms_lagoon;
   else
     echo "Drupal not installed."
