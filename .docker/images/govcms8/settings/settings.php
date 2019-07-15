@@ -155,7 +155,7 @@ if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
     $response = $redis->ping();
 
     if (strpos($response, 'PONG') === FALSE) {
-      throw new \Exception('Redis could be reached by is unavailable.');
+      throw new \Exception('Redis could be reached but is not responding correctly.');
     }
 
     $settings['redis.connection']['interface'] = 'PhpRedis';
