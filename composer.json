@@ -3,37 +3,16 @@
     "description": "Project template for GovCMS Drupal 8 projects with composer",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "repositories": [
-        {
+    "repositories": {
+        "govcms": {
             "type": "composer",
-            "url": "https://packages.drupal.org/8"
+            "url": "https://satis.govcms.gov.au"
         },
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:govcms/govcms8.git"
-        }
-    ],
+        "packagist.org": false
+    },
     "require": {
-        "composer/installers": "^1.2",
-        "cweagans/composer-patches": "^1.6.5",
-        "drupal-composer/drupal-scaffold": "^2.5",
-        "drupal/console": "^1.0.2",
-        "drupal/core": "8.6.x-dev",
-        "drush/drush": "^9.0.0",
-        "govcms/govcms": "1.x",
-        "webflo/drupal-finder": "^1.0.0",
-        "webmozart/path-util": "^2.3",
-        "webflo/drupal-core-strict": "8.6.x-dev",
-        "drupal/fast_404":"1.0.0-alpha4",
-        "drupal/lagoon_logs":"1.x-dev",
-        "drupal/redis":"1.1.0",
-        "drupal/stage_file_proxy":"1.0.0-alpha3",
-        "drupal/clamav":"1.1.0",
-        "zaporylie/composer-drupal-optimizations": "^1.0"
+        "govcms/govcms": "*",
+        "simesy/scaffold-tooling": "*"
     },
     "conflict": {
         "drupal/drupal": "*"
