@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Code linting for GovCMS project.
 
-APP_DIR=${APP_DIR:-/app/web}
-PROFILE_DIR=${PROFILE_DIR:-${APP_DIR}/profiles/govcms}
+APP_DIR=${APP_DIR:-/app}
+PROFILE_DIR=${PROFILE_DIR:-${APP_DIR}/web/profiles/govcms}
 
 # Lint code.
 ${APP_DIR}/tests/vendor/bin/parallel-lint --exclude ${APP_DIR}/tests/vendor -e php,inc,module,theme,install,profile,test \
