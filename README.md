@@ -10,11 +10,18 @@
 
 ## Purpose
 
-This project is used to create the images required by Lagoon, using the GovCMS8 distribution - it is only intended to be used by distribution/platform maintainers.
+This project is used to create the images required by Lagoon, using the GovCMS8 distribution - it is only intended to be
+used by distribution/platform maintainers.
 
-## Commands
+## Instructions
 
-Additional commands are listed in `.ahoy.yml`.
+You start by cloning this respository locally and then copy `.env.default` to `.env`. Note that .env.default is updated
+for each release so you should update your .env file as required.
+
+Then you can `ahoy build` and it will build the container. There are no mounts to the host here, but if you ssh into
+one of the containers (eg `ahoy cli`) you will see the familiar /app/web, etc.
+
+Additional commands are listed in `.ahoy.yml` which are similar to useing the PaaS scaffold.
 
 ## Releasing a govcms8lagoon release to dockerhub
 
