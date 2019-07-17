@@ -1,27 +1,29 @@
-# GovCMS8 Lagoon project
+# GovCMS8 Lagoon project - Drupal 8
 
 [![CircleCI](https://circleci.com/gh/govCMS/govcms8lagoon.svg?style=svg)](https://circleci.com/gh/govCMS/govcms8lagoon)
 
-## Requirements
+## Purpose
+
+This project is used to create the images required by Lagoon, using the GovCMS distribution - it is only intended to
+be used by distribution/platform maintainers.
+
+Images are published to the [govcms8lagoon](https://hub.docker.com/u/govcms8lagoon) namespace on Docker Hub.
+
+There is also the equivalent project for [GovCMS Drupal 7 images](https://github.com/govcms/govcmslagoon)
+
+## Instructions
+
+_Requirements_
 
 * [Docker](https://docs.docker.com/install/)
 * [pygmy](https://docs.amazee.io/local_docker_development/pygmy.html#installation) (you might need sudo for this depending on your ruby configuration)
 * [Ahoy](http://ahoy-cli.readthedocs.io/en/latest/#installation)
 
-## Purpose
+Clone this respository locally and then copy `.env.default` to `.env`. Note that .env.default may be updated for each
+release so you should update your .env file as required.
 
-This project is used to create the images required by Lagoon, using the GovCMS8 distribution - it is only intended to be
-used by distribution/platform maintainers.
-
-## Instructions
-
-You start by cloning this respository locally and then copy `.env.default` to `.env`. Note that .env.default is updated
-for each release so you should update your .env file as required.
-
-Then you can `ahoy build` and it will build the container. There are no mounts to the host here, but if you ssh into
+Running `ahoy build` will build the containers. There are no file mounts from the host, but if you ssh into
 one of the containers (eg `ahoy cli`) you will see the familiar /app/web, etc.
-
-Additional commands are listed in `.ahoy.yml` which are similar to useing the PaaS scaffold.
 
 ## Releasing a govcms8lagoon release to dockerhub
 
