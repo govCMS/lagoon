@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="bootstrap.inc" colors="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true">
+  <testsuites>
+    <testsuite name="">
+      <directory>/app/tests/phpunit/tests</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
