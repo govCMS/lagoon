@@ -5,13 +5,13 @@ FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal${LAGOON_IMAGE_VERSION_PHP} as 
 ARG GOVCMS_PROJECT_VERSION
 ARG DRUPAL_CORE_VERSION
 
-COPY composer.json /app/composer.json
+COPY .docker/images/govcms8/composer/composer.json /app/composer.json
 
 RUN sed -i -e "/govcms\/govcms/ s!1.x!${GOVCMS_PROJECT_VERSION}!" /app/composer.json \
     && sed -i -e "/drupal\/core/ s!8.6.x-dev!${DRUPAL_CORE_VERSION}!" /app/composer.json \
     && sed -i -e "/webflo\/drupal-core-strict/ s!8.6.x-dev!${DRUPAL_CORE_VERSION}!" /app/composer.json
 
-COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
+COPY .docker/images/govcms8/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
 ENV COMPOSER_MEMORY_LIMIT=-1
 RUN composer install -d /app
