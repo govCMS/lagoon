@@ -19,7 +19,8 @@ use PHPUnit\Runner\Version;
  *   An associative array of extension directories found within the scanned
  *   directory, keyed by extension name.
  */
-function drupal_phpunit_find_extension_directories($scan_directory) {
+function drupal_phpunit_find_extension_directories($scan_directory)
+{
   $extensions = [];
   $dirs = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($scan_directory, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS));
   foreach ($dirs as $dir) {
@@ -43,7 +44,8 @@ function drupal_phpunit_find_extension_directories($scan_directory) {
  * @return array
  *   An array of directories under which contributed extensions may exist.
  */
-function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
+function drupal_phpunit_contrib_extension_directory_roots($root = NULL)
+{
   if ($root === NULL) {
     $root = '/app/web';
   }
@@ -78,7 +80,8 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
  * @return array
  *   An associative array of extension directories, keyed by their namespace.
  */
-function drupal_phpunit_get_extension_namespaces($dirs) {
+function drupal_phpunit_get_extension_namespaces($dirs)
+{
   $suite_names = ['Unit', 'Kernel', 'Functional', 'FunctionalJavascript'];
   $namespaces = [];
   foreach ($dirs as $extension => $dir) {
@@ -111,7 +114,7 @@ function drupal_phpunit_get_extension_namespaces($dirs) {
 // phpunit.xml.dist is located in a non-default directory relative to the
 // PHPUnit executable.
 if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
-  define('PHPUNIT_COMPOSER_INSTALL', '/app/vendor/autoload.php');
+  define('PHPUNIT_COMPOSER_INSTALL', '/app/web/autoload.php');
 }
 
 /**
@@ -122,17 +125,18 @@ if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
  * phpunit's global state change watcher. The class loader can be retrieved from
  * composer at any time by requiring autoload.php.
  */
-function drupal_phpunit_populate_class_loader() {
+function drupal_phpunit_populate_class_loader()
+{
 
   /** @var \Composer\Autoload\ClassLoader $loader */
   $loader = require '/app/web/autoload.php';
 
   // Start with classes in known locations.
-  $loader->add('Drupal\\Tests', __DIR__);
-  $loader->add('Drupal\\TestSite', __DIR__);
-  $loader->add('Drupal\\KernelTests', __DIR__);
-  $loader->add('Drupal\\FunctionalTests', __DIR__);
-  $loader->add('Drupal\\FunctionalJavascriptTests', __DIR__);
+  $loader->add('Drupal\\Tests', '/app/web/core/tests');
+  $loader->add('Drupal\\TestSite', '/app/web/core/tests');
+  $loader->add('Drupal\\KernelTests', '/app/web/core/tests');
+  $loader->add('Drupal\\FunctionalTests', '/app/web/core/tests');
+  $loader->add('Drupal\\FunctionalJavascriptTests', '/app/web/core/tests');
 
   if (!isset($GLOBALS['namespaces'])) {
     // Scan for arbitrary extension namespaces from core and contrib.
@@ -155,8 +159,7 @@ drupal_phpunit_populate_class_loader();
 // Ensure we have the correct PHPUnit version for the version of PHP.
 if (class_exists('\PHPUnit_Runner_Version')) {
   $phpunit_version = \PHPUnit_Runner_Version::id();
-}
-else {
+} else {
   $phpunit_version = Version::id();
 }
 
