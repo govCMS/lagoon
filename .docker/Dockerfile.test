@@ -30,7 +30,7 @@ RUN cp -r /app/web/profiles/contrib/govcms/tests /app/ \
 COPY .docker/images/test/drutiny /usr/bin/drutiny
 
 COPY .docker/images/test/phpunit.xml /app/tests/phpunit
-COPY .docker/images/test/bootstrap.inc /app/tests/phpunit
+COPY .docker/images/test/bootstrap.php /app/tests/phpunit
 
 ARG SITE_AUDIT_VERSION
 RUN git clone --single-branch --branch=$SITE_AUDIT_VERSION https://github.com/govcms/audit-site.git /app/web/sites/all/drutiny \
