@@ -86,4 +86,4 @@ commands:
 
   test-phpunit:
     usage: Run PHPUnit tests.
-    cmd: docker-compose exec test phpunit "$@"
+    cmd: docker-compose exec test phpunit --testsuite govcms
