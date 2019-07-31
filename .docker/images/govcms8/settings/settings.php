@@ -208,6 +208,13 @@ if (getenv('LAGOON')) {
 $config['clamav.settings']['scan_mode'] = 1;
 $config['clamav.settings']['mode_executable']['executable_path'] = '/usr/bin/clamscan';
 
+// Enable shield.
+if (getenv('LAGOON') && (getenv('DRUPAL_SHIELD_USER') && getenv('DRUPAL_SHIELD_PASS'))) {
+  $config['shield.settings']['credential_provider'] = 'shield';
+  $config['shield.settings']['credentials']['shield']['user'] = getenv('DRUPAL_SHIELD_USER');
+  $config['shield.settings']['credentials']['shield']['pass'] = getenv('DRUPAL_SHIELD_PASS');
+}
+
 // Hash Salt
 if (getenv('LAGOON')) {
   $settings['hash_salt'] = hash('sha256', getenv('LAGOON_PROJECT'));
