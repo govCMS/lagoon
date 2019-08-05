@@ -14,7 +14,7 @@ RUN sed -i -e "/govcms\/govcms/ s!1.x!${GOVCMS_PROJECT_VERSION}!" /app/composer.
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
 ENV COMPOSER_MEMORY_LIMIT=-1
-RUN composer install -d /app && compose clearcache
+RUN composer install -d /app && composer clearcache
 
 COPY .docker/sanitize.sh /app/sanitize.sh
 
