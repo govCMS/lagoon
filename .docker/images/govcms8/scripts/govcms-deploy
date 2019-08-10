@@ -3,6 +3,13 @@
 # GovCMS 8 Drupal deployment script.
 #
 
+# Having this set to TRUE, which can be done as a runtime variable against a
+# project environment, implies that we use this environment to test a site against
+# changes like future versions of govcms images. In this scenario the database
+# will be synced from PROD, ignoring any local database state.
+# @todo this variable will get a new name, since it is part of a bigger piece of work around types of environments.
+GOVCMS_TEST_CANARY=${GOVCMS_TEST_CANARY:-FALSE}
+
 # Ensure placeholders are replaced in Drush9 alias file.
 sed -i "s/%%PROJECT_NAME%%/$LAGOON_PROJECT/g" /app/drush/sites/govcms.site.yml
 
@@ -32,6 +39,12 @@ if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
         fi
 
     else
+      # @see comments for GOVCMS_TEST_CANARY above.
+      if [[ "$GOVCMS_TEST_CANARY" = TRUE ]]; then
+        echo "GOVCMS_TEST_CANARY is set, syncing the database."
+        drush sql-sync @govcms.prod @self -y
+      fi
+
       # Base configuration import with development environment overrides.
       if [ "$config_count" -gt 1 ]; then
         drush cim -y sync
