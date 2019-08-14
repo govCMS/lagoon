@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Drutiny wrapper.
 
-APP_DIR=${APP_DIR:-/app/web}
-DRUTINY_DIR=${DRUTINY_DIR:-$APP_DIR/sites/all/drutiny}
+APP_DIR=${APP_DIR:-/app}
+DRUTINY_DIR=${DRUTINY_DIR:-$APP_DIR/web/sites/all/drutiny}
 
 CUR_DIR=$(pwd)
 
