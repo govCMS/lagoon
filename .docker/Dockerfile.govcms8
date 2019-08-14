@@ -14,16 +14,14 @@ RUN sed -i -e "/govcms\/govcms/ s!^1.0!${GOVCMS_PROJECT_VERSION}!" /app/composer
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
 ENV COMPOSER_MEMORY_LIMIT=-1
-RUN composer install -d /app
+RUN composer install -d /app && composer clearcache
 
 COPY .docker/sanitize.sh /app/sanitize.sh
 
 COPY .docker/images/govcms8/scripts /usr/bin/
 COPY .docker/images/govcms8/govcms.site.yml /app/drush/sites/
 
-# findutils can be removed after amazeeio/lagoon PR1077
-RUN apk --no-cache add python findutils \
-    && mkdir -p /app/web/sites/default/files/private \
+RUN mkdir -p /app/web/sites/default/files/private \
     && fix-permissions /home/.drush \
     && fix-permissions /app/drush/sites \
     && chmod +x /app/sanitize.sh \
