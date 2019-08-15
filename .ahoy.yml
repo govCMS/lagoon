@@ -79,10 +79,11 @@ commands:
     cmd: |
       ahoy test-phpunit
       ahoy test-behat
+
   test-behat:
     usage: Run Behat tests.
     cmd: docker-compose exec test behat "$@"
 
   test-phpunit:
     usage: Run PHPUnit tests.
-    cmd: docker-compose exec test phpunit "$@"
+    cmd: docker-compose exec test phpunit --testsuite govcms

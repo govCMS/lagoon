@@ -22,18 +22,21 @@
         "cweagans/composer-patches": "^1.6.5",
         "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/console": "^1.0.2",
-        "drupal/core": "8.6.x-dev",
+        "drupal/core": "^8.7",
         "drush/drush": "^9.0.0",
-        "govcms/govcms": "1.x",
+        "govcms/govcms": "^1.0",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
-        "webflo/drupal-core-strict": "8.6.x-dev",
+        "webflo/drupal-core-strict": "^8.7",
         "drupal/fast_404":"1.0.0-alpha4",
         "drupal/lagoon_logs":"1.x-dev",
         "drupal/redis":"1.1.0",
         "drupal/stage_file_proxy":"1.0.0-alpha3",
         "drupal/clamav":"1.1.0",
         "zaporylie/composer-drupal-optimizations": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
     },
     "conflict": {
         "drupal/drupal": "*"
