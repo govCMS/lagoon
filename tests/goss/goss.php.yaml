@@ -10,7 +10,7 @@ command:
     stderr: []
     timeout: 20000
   # Test that viruses can be discovered.
-  curl http://www.eicar.org/download/eicar.com.txt | clamscan -:
+  curl https://raw.githubusercontent.com/danielmiessler/SecLists/master/Payloads/Anti-Virus/eicar-com.txt | clamscan -:
     exit-status: 1
     stdout:
     - "Eicar-Test-Signature FOUND"
