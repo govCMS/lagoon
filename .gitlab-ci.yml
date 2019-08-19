@@ -1,0 +1,63 @@
+---
+
+image: govcmsdev/gitlab-ci
+
+services:
+  - "docker:dind"
+
+stages:
+  - build
+
+build:
+
+  stage: build
+
+  script:
+
+    # Export dynamic variables
+    - export DOCKERHUB_NAMESPACE="${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}"
+    - export IMAGE_VERSION_TAG_PREFIX="";
+
+    # Handle master branch for IMAGE_VERSION_TAG gracefully.
+    - if [[ "${CI_COMMIT_REF_NAME}" == "master" ]]; then
+        export IMAGE_VERSION_TAG="latest";
+      else
+        export IMAGE_VERSION_TAG="${CI_COMMIT_REF_NAME//\//-}";
+      fi
+
+    # Add Edge tag for when tagging is used:
+    - IMAGE_TAG_EDGE=${CI_COMMIT_TAG:-}
+
+    # Docker-Compose file linting (check for syntax errors)
+    - docker-compose config -q
+    # Add Environment variables stored in code.
+    - cp .env.default .env
+    # Ensure docker network amazeeio-network is present.
+    - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
+    # Build the project
+    - docker-compose build
+    # Start the project
+    - docker-compose up -d
+    - docker image ls
+
+    # Log in to the private registry.
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+
+    # Push the images to the registry.
+    - .docker/push.sh
+
+    # Run container-diff checks
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/govcms8:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/govcms8:${IMAGE_VERSION_TAG}
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/mariadb-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/mariadb-drupal:${IMAGE_VERSION_TAG}
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/nginx-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/nginx-drupal:${IMAGE_VERSION_TAG}
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/php:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/php:${IMAGE_VERSION_TAG}
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/redis:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/redis:${IMAGE_VERSION_TAG}
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/solr:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/solr:${IMAGE_VERSION_TAG}
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/test:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/test:${IMAGE_VERSION_TAG}
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/varnish-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/varnish-drupal:${IMAGE_VERSION_TAG}
+
+    # Clean-up.
+    - docker-compose down
+
+before_script:
+  - curl -LO https://storage.googleapis.com/container-diff/latest/container-diff-linux-amd64 && chmod +x container-diff-linux-amd64 && mkdir -p $HOME/bin && export PATH=$PATH:$HOME/bin && mv container-diff-linux-amd64 $HOME/bin/container-diff
