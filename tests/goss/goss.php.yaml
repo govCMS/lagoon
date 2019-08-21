@@ -17,4 +17,4 @@ command:
     - "Scanned files: 1"
     - "Infected files: 1"
     stderr: []
-    timeout: 60000
+    timeout: 120000
