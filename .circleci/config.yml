@@ -42,7 +42,7 @@ jobs:
           command: |
             # Set ENABLE_REDIS env var and warm cache with a bootstrap
             docker-compose exec -T --env ENABLE_REDIS=true cli drush status
-            redisKeys = $(docker-compose exec -T redis redis-cli KEYS '*' | wc -l)
+            redisKeys=$(docker-compose exec -T redis redis-cli KEYS '*' | wc -l)
             if [[ $redisKeys -le 1 ]]; then
               echo 'Redis fail: No valid cache keys.'
               exit 1

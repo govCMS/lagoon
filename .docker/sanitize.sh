@@ -43,3 +43,8 @@ find $APP_DIR -type f -iname 'README.txt' -exec rm -f {} +
 find $APP_DIR/web/libraries/ -type d -name test -exec rm -rf {} +
 find $APP_DIR/web/libraries/ -type d -name tests -exec rm -rf {} +
 find $APP_DIR/web/libraries/ -type d -name samples -exec rm -rf {} +
+
+# Ensure directory permissions are correct.
+find $APP_DIR/web/sites -type d -exec chmod 755 {} +
+find $APP_DIR/web/sites -type f -exec chmod 644 {} +
+chmod 755 $APP_DIR/web/sites
