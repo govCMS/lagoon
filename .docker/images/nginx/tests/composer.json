@@ -8,9 +8,8 @@
             "email": "sj.worley88@gmail.com"
         }
     ],
-    "require": {},
-    "require-dev": {
-        "phpunit/phpunit": "^8.2"
+    "require": {
+        "phpunit/phpunit": "^7.5"
     },
     "autoload": {
       "psr-4": {
