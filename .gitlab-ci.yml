@@ -12,6 +12,10 @@ build:
 
   stage: build
 
+  artifacts:
+    paths:
+      - /var/log/container-diff/
+
   script:
 
     # Export dynamic variables
