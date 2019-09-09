@@ -52,6 +52,7 @@ build:
 
     # Run container-diff checks
     - mkdir logs
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/chrome:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/chrome:${IMAGE_VERSION_TAG} --output logs/chrome.txt || true
     - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/govcms8:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/govcms8:${IMAGE_VERSION_TAG} --output logs/govcms8.txt
     - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/mariadb-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/mariadb-drupal:${IMAGE_VERSION_TAG} --output logs/mariadb-drupal.txt
     - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/nginx-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/nginx-drupal:${IMAGE_VERSION_TAG} --output logs/nginx-drupal.txt
