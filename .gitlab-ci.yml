@@ -14,7 +14,7 @@ build:
 
   artifacts:
     paths:
-      - /var/log/container-diff/
+      - $CI_PROJECT_DIR/logs
 
   script:
 
@@ -51,15 +51,15 @@ build:
     - .docker/push.sh
 
     # Run container-diff checks
-    - mkdir /var/log/container-diff/
-    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/govcms8:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/govcms8:${IMAGE_VERSION_TAG} --output /var/log/container-diff/govcms8.txt
-    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/mariadb-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/mariadb-drupal:${IMAGE_VERSION_TAG} --output /var/log/container-diff/mariadb-drupal.txt
-    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/nginx-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/nginx-drupal:${IMAGE_VERSION_TAG} --output /var/log/container-diff/nginx-drupal.txt
-    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/php:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/php:${IMAGE_VERSION_TAG} --output /var/log/container-diff/php.txt
-    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/redis:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/redis:${IMAGE_VERSION_TAG} --output /var/log/container-diff/redis.txt
-    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/solr:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/solr:${IMAGE_VERSION_TAG} --output /var/log/container-diff/solr.txt
-    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/test:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/test:${IMAGE_VERSION_TAG} --output /var/log/container-diff/test.txt
-    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/varnish-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/varnish-drupal:${IMAGE_VERSION_TAG} --output /var/log/container-diff/varnish-drupal.txt
+    - mkdir logs
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/govcms8:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/govcms8:${IMAGE_VERSION_TAG} --output logs/govcms8.txt
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/mariadb-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/mariadb-drupal:${IMAGE_VERSION_TAG} --output logs/mariadb-drupal.txt
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/nginx-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/nginx-drupal:${IMAGE_VERSION_TAG} --output logs/nginx-drupal.txt
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/php:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/php:${IMAGE_VERSION_TAG} --output logs/php.txt
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/redis:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/redis:${IMAGE_VERSION_TAG} --output logs/redis.txt
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/solr:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/solr:${IMAGE_VERSION_TAG} --output logs/solr.txt
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/test:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/test:${IMAGE_VERSION_TAG} --output logs/test.txt
+    - $HOME/bin/container-diff diff --type=file registry.hub.docker.com/${CI_PROJECT_NAME}/varnish-drupal:latest ${CI_REGISTRY}/${DOCKERHUB_NAMESPACE}/varnish-drupal:${IMAGE_VERSION_TAG} --output logs/varnish-drupal.txt
 
     # Clean-up.
     - docker-compose down
