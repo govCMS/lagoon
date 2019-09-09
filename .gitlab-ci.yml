@@ -1,6 +1,6 @@
 ---
 
-image: govcmsdev/gitlab-ci
+image: quay.io/govcms/govcms-ci
 
 services:
   - "docker:dind"
