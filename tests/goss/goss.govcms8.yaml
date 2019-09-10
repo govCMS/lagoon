@@ -29,7 +29,11 @@ file:
   /usr/bin/govcms-deploy:
     exists: true
     mode: "0755"
-    
+  /app/web/sites:
+    exists: true
+    filetype: directory
+    mode: "0755"
+
 command:
   find /app/ -type f -size +1M -printf '%k\t%p\n':
     exit-status: 0
