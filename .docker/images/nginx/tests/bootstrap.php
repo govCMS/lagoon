@@ -14,7 +14,7 @@ function get_curl_headers($path = "/", $opts = NULL)
 
   $path = '/' . ltrim($path, '/');
 
-  exec("docker-compose exec -T --env LAGOON_IMAGE_VERSION_PHP=7.1 test curl {$uri}{$path} -I {$opts} 2>/dev/null", $response);
+  exec("docker-compose exec -T test curl {$uri}{$path} -I {$opts} 2>/dev/null", $response);
 
   if (empty($response)) {
     return [];
@@ -44,7 +44,7 @@ function curl_get_content($path = "/", $opts = NULL)
   $response = null;
   $path = '/' . ltrim($path, '/');
 
-  exec("docker-compose exec -T --env LAGOON_IMAGE_VERSION_PHP=7.1 test curl {$uri}{$path} {$opts} 2>/dev/null", $response);
+  exec("docker-compose exec -T test curl {$uri}{$path} {$opts} 2>/dev/null", $response);
 
   if (empty($response)) {
     return FALSE;
