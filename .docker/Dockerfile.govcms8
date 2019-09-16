@@ -15,7 +15,10 @@ RUN sed -i -e "/govcms\/govcms/ s!\^1.0!${GOVCMS_PROJECT_VERSION}!" /app/compose
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
 ENV COMPOSER_MEMORY_LIMIT=-1
-RUN composer install -d /app && composer clearcache
+RUN composer install -d /app \
+# Force drupal-scaffold to run to ensure that the needed files are always created, even if a composer.lock is provided
+    && composer drupal-scaffold \
+    && composer clearcache
 
 COPY .docker/sanitize.sh /app/sanitize.sh
 
