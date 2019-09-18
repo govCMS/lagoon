@@ -20,7 +20,7 @@ RUN rm -rf /app/* \
     && wget -O /usr/local/bin/jq "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64" \
     && chmod +x /usr/local/bin/jq \
     && cat composer.json | jq .repositories='{"govcms":{"type":"composer","url":"https://satis.govcms.gov.au"},"packagist.org":false}' | tee composer.json \
-    && composer -n update \
+    && composer -n update --no-dev \
     && composer clearcache \
     && rm -Rf /app/.git
 
