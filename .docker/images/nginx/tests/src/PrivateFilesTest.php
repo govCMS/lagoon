@@ -32,7 +32,7 @@ class PrivateFilesTest extends TestCase
   public function setUp(): void
   {
     // Make sure private files directory exists in the nginx container.
-    `docker-compose exec --env LAGOON_IMAGE_VERSION_PHP=7.1 nginx mkdir -p /app/web/sites/default/files/private`;
+    `docker-compose exec nginx mkdir -p /app/web/sites/default/files/private`;
     foreach ($this->filesProvider() as $parts) {
       list($file, $path) = $parts;
       // Move out test files.
