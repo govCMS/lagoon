@@ -22,7 +22,7 @@ services:
       args:
         GOVCMS_PROJECT_VERSION: ${GOVCMS_PROJECT_VERSION:-^1.0}
         DRUPAL_CORE_VERSION: ${DRUPAL_CORE_VERSION:-^8.7}
-        LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION_PHP}
+        LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION_PHP:-}
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.2}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
     << : *default-volumes
@@ -35,7 +35,7 @@ services:
       dockerfile: $PWD/.docker/Dockerfile.test
       args:
         CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
-        LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION_PHP}
+        LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION_PHP:-}
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.2}
         SITE_AUDIT_VERSION: ${SITE_AUDIT_VERSION:-7.x-3.x}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/test
@@ -68,7 +68,7 @@ services:
       dockerfile: $PWD/.docker/Dockerfile.php
       args:
         CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
-        LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION_PHP}
+        LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION_PHP:-}
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.2}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/php
     << : *default-volumes
