@@ -66,6 +66,9 @@
         ],
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+        ],
+        "drupal-scaffold": [
+            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
         ]
     },
     "extra": {

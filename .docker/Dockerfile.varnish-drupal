@@ -1,2 +1,4 @@
-FROM amazeeio/varnish-drupal
+ARG LAGOON_IMAGE_VERSION
+
+FROM amazeeio/varnish-drupal:${LAGOON_IMAGE_VERSION}
 ENV LAGOON_PROJECT=govcms8lagoon
