@@ -35,7 +35,20 @@ jobs:
           name: Get site and module version status
           command: |
             ahoy drush st
-            ahoy drush pml          
+            ahoy drush pml
+      -
+        run:
+          name: Test redis is functional
+          command: |
+            # Set ENABLE_REDIS env var and warm cache with a bootstrap
+            docker-compose exec -T --env ENABLE_REDIS=true cli drush status
+            redisKeys=$(docker-compose exec -T redis redis-cli KEYS '*' | wc -l)
+            if [[ $redisKeys -le 1 ]]; then
+              echo 'Redis fail: No valid cache keys.'
+              exit 1
+            else
+              echo "Redis success: Redis contains $redisKeys keys."
+            fi
       - run:
           name: Push Docker images to Dockerhub
           command: |
