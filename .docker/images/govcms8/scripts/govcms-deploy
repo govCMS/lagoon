@@ -28,7 +28,6 @@ common_deploy () {
   # Base configuration import with development environment overrides.
   if [ "$config_count" -gt 0 ]; then
     drush cim -y sync
-
     if [[ ! -z "$LAGOON_ENVIRONMENT_TYPE" && "$LAGOON_ENVIRONMENT_TYPE" != "production" && "$dev_config_count" -gt 0 ]]; then
       drush cim -y dev --partial
     fi
