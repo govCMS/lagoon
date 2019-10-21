@@ -145,13 +145,14 @@ if (getenv('LAGOON')) {
 if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
   $redis = new \Redis();
   $redis_host = getenv('REDIS_HOST') ?: 'redis';
+  $redis_port = getenv('REDIS_SERVICE_PORT') ?: 6379;
   try {
     if (drupal_installation_attempted()) {
       # Do not set the cache during installations of Drupal
       throw new \Exception('Drupal installation underway.');;
     }
 
-    $redis->connect($redis_host, 6379);
+    $redis->connect($redis_host, $redis_port);
     $response = $redis->ping();
 
     if (strpos($response, 'PONG') === FALSE) {
@@ -160,8 +161,8 @@ if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
 
     $settings['redis.connection']['interface'] = 'PhpRedis';
     $settings['redis.connection']['host'] = $redis_host;
-    $settings['redis.connection']['port'] = 6379;
-    $settings['cache_prefix']['default'] = getenv('LAGOON_PROJECT') . '_' . getenv('LAGOON_GIT_SAFE_BRANCH');
+    $settings['redis.connection']['port'] = $redis_port;
+    $settings['cache_prefix']['default'] = getenv('REDIS_CACHE_PREFIX') ?: getenv('LAGOON_PROJECT') . '_' . getenv('LAGOON_GIT_SAFE_BRANCH');
 
     $settings['cache']['default'] = 'cache.backend.redis';
 
@@ -223,8 +224,8 @@ if (getenv('LAGOON')) {
 
 // ClamAV settings.
 if (getenv('LAGOON')) {
-  $clam_mode = getenv('CLAMAV_MODE') ?: 1;
-  if ($clam_mode == 0) {
+  $clam_mode = getenv('CLAMAV_MODE') !== false ? getenv('CLAMAV_MODE') : 1;
+  if ($clam_mode == 0 || strtolower($clam_mode) == 'daemon') {
     $config['clamav.settings']['scan_mode'] = 0;
     $config['clamav.settings']['mode_daemon_tcpip']['hostname'] = getenv('CLAMAV_HOST') ?: 'localhost';
     $config['clamav.settings']['mode_daemon_tcpip']['port'] = getenv('CLAMAV_PORT') ?: 3310;
