@@ -1,0 +1,5 @@
+lagoon_extras.overview:
+  title: Lagoon Platform Extras
+  description: 'Additional options to help manage the platform.'
+  route_name: lagoon_extras.settings
+  parent: system.admin_config_system

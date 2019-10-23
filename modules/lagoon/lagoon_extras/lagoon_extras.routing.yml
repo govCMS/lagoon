@@ -1,0 +1,7 @@
+lagoon_extras.settings:
+  path: '/admin/config/system/platform'
+  defaults:
+    _form: '\Drupal\lagoon_extras\Form\SettingsForm'
+    _title: 'Lagoon Extras Configuration'
+  requirements:
+    _permission: 'administer site configuration'

@@ -1,0 +1,10 @@
+services:
+  # Standard file system class with additional logging.
+  lagoon_file_system:
+    class: Drupal\lagoon_extras\File\FileSystem
+    arguments:
+      - '@stream_wrapper_manager'
+      - '@settings'
+      - '@logger.channel.file'
+    decorates: file_system
+    decoration_priority: 1

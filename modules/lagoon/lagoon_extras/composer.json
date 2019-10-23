@@ -1,0 +1,5 @@
+{
+  "name": "drupal/lagoon_extras",
+  "description": "Tools to assist with application management and monitoring.",
+  "type": "drupal-module"
+}

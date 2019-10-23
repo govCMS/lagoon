@@ -1,0 +1,2 @@
+# Define default settings for the platform module.
+verbose_logging: false
