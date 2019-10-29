@@ -3,6 +3,8 @@
 # Build and push images to Dockerhub.
 #
 
+# Docker registry host - when set should contain /.
+DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-}
 # Namespace for the image.
 DOCKERHUB_NAMESPACE=${DOCKERHUB_NAMESPACE:-govcms8}
 # Docker image version tag.
@@ -33,13 +35,13 @@ for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
 
     # Tag images with 'edge' tag and push.
     echo "==> Tagged and pushed \"$service\" image to $DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE"
-    docker tag $DOCKERHUB_NAMESPACE/$service $DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
-    docker push $DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
+    docker tag $DOCKERHUB_NAMESPACE/$service $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
+    docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
 
     # Tag images with version tag, if provided, and push.
     if [ "$version_tag" != "" ]; then
       echo "==> Tagging and pushing \"$service\" image to $DOCKERHUB_NAMESPACE/$service:$version_tag"
-      docker tag $DOCKERHUB_NAMESPACE/$service $DOCKERHUB_NAMESPACE/$service:$version_tag
-      docker push $DOCKERHUB_NAMESPACE/$service:$version_tag
+      docker tag $DOCKERHUB_NAMESPACE/$service $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
+      docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
     fi
 done
