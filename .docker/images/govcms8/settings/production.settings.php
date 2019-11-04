@@ -32,7 +32,7 @@ $config['environment_indicator.indicator']['name'] = 'Public Domain';
 if (!empty($_SERVER['HTTP_HOST'])) {
   $http_host = $_SERVER['HTTP_HOST'];
   if (preg_match('/(?<!www)\.govcms\.gov\.au/i', $http_host)) {
-    $config['environment_indicator.indicator']['bg_color'] = 'green';
+    $config['environment_indicator.indicator']['bg_color'] = 'orange';
     $config['environment_indicator.indicator']['name'] = 'Edit Domain';
   }
 }
