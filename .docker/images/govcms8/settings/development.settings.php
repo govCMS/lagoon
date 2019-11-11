@@ -42,3 +42,13 @@ $settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.null';
  * Include development services yml.
  */
 $settings['container_yamls'][] = DRUPAL_ROOT . '/sites/default/development.services.yml';
+
+/**
+ * Configure Environment indicator.
+ */
+$config['environment_indicator.indicator']['bg_color'] = 'green';
+$config['environment_indicator.indicator']['name'] = 'Branch Development';
+
+if (getenv('LOCALDEV_URL') !== FALSE) {
+  $config['environment_indicator.indicator']['name'] = 'Local Development';
+}

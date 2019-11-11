@@ -1,20 +1,35 @@
-# GovCMS8 Lagoon project
+# GovCMS8 Lagoon project - Drupal 8
 
 [![CircleCI](https://circleci.com/gh/govCMS/govcms8lagoon.svg?style=svg)](https://circleci.com/gh/govCMS/govcms8lagoon)
 
-## Requirements
-
-* [Docker](https://docs.docker.com/install/)
-* [pygmy](https://docs.amazee.io/local_docker_development/pygmy.html#installation) (you might need sudo for this depending on your ruby configuration)
-* [Ahoy](http://ahoy-cli.readthedocs.io/en/latest/#installation)
-
 ## Purpose
 
-This project is used to create the images required by Lagoon, using the GovCMS8 distribution - it is only intended to be used by distribution/platform maintainers.
+This project is used to create the images required by Lagoon, using the GovCMS distribution - it is only intended to
+be used by distribution/platform maintainers.
 
-## Commands
+Images are published to the [govcms8lagoon](https://hub.docker.com/u/govcms8lagoon) namespace on Docker Hub.
 
-Additional commands are listed in `.ahoy.yml`.
+There is also the equivalent project for [GovCMS Drupal 7 images](https://github.com/govcms/govcmslagoon). Please
+be mindful that there is some duplication across the two projects, so consider whether pull requests for changes
+should be accompanied by PRs on the other repository.
+
+## Instructions
+
+_Expected tools_
+
+* [Docker](https://docs.docker.com/install/)
+* [pygmy](https://docs.amazee.io/local_docker_development/pygmy.html#installation)
+* [Ahoy](http://ahoy-cli.readthedocs.io/en/latest/#installation)
+* [Circle CI](https://circleci.com/docs/2.0/local-cli)
+
+Clone this respository locally. You might copy `.env.default` to `.env` and modify, but running the CircleCI build will
+overwrite it if you do (probably not ideal).
+
+Running `ahoy build` will build the containers. There are no file mounts from the host, but if you ssh into
+one of the containers (eg `ahoy cli`) you will see the familiar /app/web, etc.
+
+Running `circleci build` will execute the build steps defined in `.circleci/config.yml` it will try to deploy to
+Docker Hub - it's the final step so failure is an option if you are just testing the build.
 
 ## Releasing a govcms8lagoon release to dockerhub
 

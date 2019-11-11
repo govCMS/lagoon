@@ -12,3 +12,4 @@ dependencies:
   - robotstxt:robotstxt
   - lagoon_logs:lagoon_logs
   - lagoon_extras:lagoon_extras
+  - environment_indicator:environment_indicator
