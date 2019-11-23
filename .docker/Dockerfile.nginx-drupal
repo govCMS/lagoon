@@ -6,8 +6,7 @@ FROM amazeeio/nginx-drupal:${LAGOON_IMAGE_VERSION}
 
 # nginx config.
 COPY .docker/images/nginx/helpers/ /etc/nginx/helpers/
-COPY .docker/images/nginx/x_frame_options.conf /etc/nginx/conf.d/drupal/location_drupal_append_x_frame_options.conf
-COPY .docker/images/nginx/no_robots_govcms_host.conf /etc/nginx/conf.d/drupal/location_drupal_prepend_no_robots_govcms_host.conf
+
 COPY .docker/images/nginx/no-robots.sh /lagoon/entrypoints/20-no-robots.sh
 RUN fix-permissions /etc/nginx
 
