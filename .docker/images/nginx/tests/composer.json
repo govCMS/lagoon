@@ -1,0 +1,19 @@
+{
+    "name": "govcmstests/nginx",
+    "description": "Testing framework for the nginx image.",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Steve Worley",
+            "email": "sj.worley88@gmail.com"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "^7.5"
+    },
+    "autoload": {
+      "psr-4": {
+        "GovCMSTests\\": "src/"
+      }
+    }
+}
