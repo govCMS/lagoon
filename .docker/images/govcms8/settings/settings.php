@@ -287,3 +287,6 @@ if (getenv('LAGOON_ENVIRONMENT_TYPE') != 'production') {
   }
 
 }
+
+// Include lagoon verbose logging controllable via an env var.
+$config['lagoon_extras.settings']['verbose_logging'] = getenv('GOVCMS_VERBOSE_LOGGING') ?: FALSE;
