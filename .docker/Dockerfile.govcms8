@@ -25,6 +25,9 @@ COPY .docker/sanitize.sh /app/sanitize.sh
 COPY .docker/images/govcms8/scripts /usr/bin/
 COPY .docker/images/govcms8/govcms.site.yml /app/drush/sites/
 
+# Ensure MySQL client can accept server max_allowed_packet
+COPY .docker/images/govcms8/mariadb-client.cnf /etc/my.cnf.d
+
 RUN mkdir -p /app/web/sites/default/files/private \
     && fix-permissions /home/.drush \
     && fix-permissions /app/drush/sites \
