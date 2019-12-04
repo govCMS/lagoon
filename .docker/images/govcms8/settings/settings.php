@@ -149,7 +149,7 @@ if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
   try {
     if (drupal_installation_attempted()) {
       # Do not set the cache during installations of Drupal
-      throw new \Exception('Drupal installation underway.');;
+      throw new \Exception('Drupal installation underway.');
     }
 
     $redis->connect($redis_host, $redis_port);
