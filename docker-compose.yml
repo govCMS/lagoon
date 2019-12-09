@@ -9,6 +9,7 @@ x-environment:
   &default-environment
     LAGOON_ROUTE: ${LOCALDEV_URL:-http://govcms8lagoon.docker.amazee.io}
     DEV_MODE: ${DEV_MODE:-false}
+    CACHE_MAX_AGE: ${CACHE_MAX_AGE:-3600}
 
 volumes:
   files: {}
