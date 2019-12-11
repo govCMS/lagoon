@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+IFS=$'\n\t'
+set -euo pipefail
+
+LAGOON_ENVIRONMENT_TYPE=${LAGOON_ENVIRONMENT_TYPE:-production}
+
+DUMP_NAME="pre-deploy-dump.sql"  # Do not change, used .lagoon.yml
+BACKUP_DIR="/app/web/sites/default/files/private/backups"
+mkdir -p "$BACKUP_DIR"
+
+# Database
+if [[ "$LAGOON_ENVIRONMENT_TYPE" = "production" ]]; then
+    drush sql:dump --gzip --result-file="$BACKUP_DIR"/"$DUMP_NAME".sql
+fi
+
+# Config
+drush config:export sync -y --destination "$BACKUP_DIR"/config
+tar -czf "$BACKUP_DIR"/config.tar.gz -C "$BACKUP_DIR"/config
+rm -rf "$BACKUP_DIR"/config
