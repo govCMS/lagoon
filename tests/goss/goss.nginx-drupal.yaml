@@ -6,7 +6,7 @@ command:
   nginx -T | grep client_max_body_size | tail -1:
     exit-status: 0
     stdout:
-      - "client_max_body_size 256M;"
+      - "client_max_body_size  256M;"
 
 file:
   /app/web/robots.txt:
