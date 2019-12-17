@@ -3,5 +3,10 @@ gossfile:
   sanitise.yaml: {}
 
 file:
+  nginx -T | grep client_max_body_size | tail -1:
+    exit-status: 0
+    stdout:
+      - "client_max_body_size 256M;"
+
   /app/web/robots.txt:
     exists: true
