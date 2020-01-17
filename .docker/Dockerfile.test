@@ -1,9 +1,9 @@
 ARG CLI_IMAGE
-ARG LAGOON_IMAGE_VERSION_PHP
+ARG LAGOON_IMAGE_VERSION
 ARG PHP_IMAGE_VERSION
 FROM ${CLI_IMAGE} as cli
 
-FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal${LAGOON_IMAGE_VERSION_PHP}
+FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal-${LAGOON_IMAGE_VERSION}
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
@@ -29,8 +29,11 @@ RUN cp -r /app/web/profiles/contrib/govcms/tests /app/ \
 
 COPY .docker/images/test/drutiny /usr/bin/drutiny
 
-COPY .docker/images/test/phpunit/phpunit.xml /app/tests/phpunit
-COPY .docker/images/test/phpunit/bootstrap.php /app/tests/phpunit
+COPY .docker/images/test/phpunit/phpunit.xml /app/tests/phpunit/
+COPY .docker/images/test/phpunit/bootstrap.php /app/tests/phpunit/
+
+# Ensure MySQL client can accept server max_allowed_packet
+COPY .docker/images/govcms8/mariadb-client.cnf /etc/my.cnf.d
 
 ARG SITE_AUDIT_VERSION
 RUN git clone --single-branch --branch=$SITE_AUDIT_VERSION https://github.com/govcms/audit-site.git /app/web/sites/all/drutiny \

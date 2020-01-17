@@ -10,12 +10,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Docker-compose validate
+          name: Validate docker-compose configuration
           command: docker-compose config -q
       - run:
           name: Update codebase to follow CI configuration
-          command: |
-            cp .env.default .env
+          command: cp .env.default .env
       - setup_remote_docker
       - run:
           name: Start amazeeio-network
@@ -35,7 +34,19 @@ jobs:
           name: Get site and module version status
           command: |
             ahoy drush st
-            ahoy drush pml          
+            ahoy drush pml
+      - run:
+          name: Test that Redis is functional
+          command: |
+            # Set ENABLE_REDIS env var and warm cache with a bootstrap
+            docker-compose exec -T --env ENABLE_REDIS=true cli drush status
+            redisKeys=$(docker-compose exec -T redis redis-cli KEYS '*' | wc -l)
+            if [[ $redisKeys -le 1 ]]; then
+              echo 'Redis fail: No valid cache keys.'
+              exit 1
+            else
+              echo "Redis success: Redis contains $redisKeys keys."
+            fi
       - run:
           name: Push Docker images to Dockerhub
           command: |
@@ -47,6 +58,13 @@ jobs:
             else
               echo "Skipping deployment"
             fi
+      - run:
+          name: Test Nginx configuration
+          command: |
+            docker-compose exec nginx nginx -t
+            composer install -d .docker/images/nginx/tests
+            .docker/images/nginx/tests/vendor/bin/phpunit -c .docker/images/nginx/tests/phpunit.xml
+
 workflows:
   version: 2
   main:
