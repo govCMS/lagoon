@@ -10,12 +10,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Docker-compose validate
+          name: Validate docker-compose configuration
           command: docker-compose config -q
       - run:
           name: Update codebase to follow CI configuration
-          command: |
-            cp .env.default .env
+          command: cp .env.default .env
       - setup_remote_docker
       - run:
           name: Start amazeeio-network
