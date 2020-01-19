@@ -13,7 +13,7 @@ $config['google_analytics.settings']['codesnippet']['after'] = "gtag('config', '
 $config['system.logging']['error_level'] = 'hide';
 
 // Set max cache lifetime to 1h by default.
-$config['system.performance']['cache']['page']['max_age'] = 3600;
+$config['system.performance']['cache']['page']['max_age'] = 900;
 if (is_numeric($max_age=GETENV('CACHE_MAX_AGE'))) {
   $config['system.performance']['cache']['page']['max_age'] = $max_age;
 }
