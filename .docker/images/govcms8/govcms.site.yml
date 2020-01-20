@@ -1,8 +1,14 @@
-# File: govcms.site.yml
+##
+# File /app/drush/sites/govcms.site.yml
+#
+# This is used in integration and workflow processes in Openshift and GitLab.
+# It is not intended to be used by clients outside Lagoon and may change.
+#
+
 prod:
   root: /app
   host: ssh.lagoon.svc
-  user: %%PROJECT_NAME%%-master
-  uri: nginx-%%PROJECT_NAME%%-master.govcms.amazee.io
+  user: ${env.LAGOON_PROJECT}-master
+  uri: nginx-${env.LAGOON_PROJECT}-master.govcms.amazee.io
   ssh:
     options: -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 2020 -F /dev/null

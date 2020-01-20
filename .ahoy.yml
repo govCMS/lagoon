@@ -16,15 +16,15 @@ commands:
 
   cli:
     usage: Start a shell inside TEST container.
-    cmd: docker-compose exec test bash
+    cmd: docker-compose exec cli bash
 
   run:
     usage: Run command inside TEST container.
-    cmd: docker-compose exec -T test bash -c "$@"
+    cmd: docker-compose exec -T cli bash -c "$@"
 
   drush:
     usage: Run drush commands in TEST container.
-    cmd: docker-compose exec -T test drush "$@"
+    cmd: docker-compose exec -T cli drush "$@"
 
   logs:
     usage: Show Docker logs.
@@ -44,11 +44,11 @@ commands:
 
   install:
     usage: Install the profile.
-    cmd: docker-compose exec -T test drush si -y govcms "$@"
+    cmd: docker-compose exec -T cli drush si -y govcms "$@"
 
   login:
     usage: Login to a website.
-    cmd: docker-compose exec -T test drush uli "$@"
+    cmd: docker-compose exec -T cli drush uli "$@"
 
   pull:
     usage: Pull latest docker images.
@@ -68,11 +68,11 @@ commands:
 
   audit-site:
     usage: Run site audit
-    cmd: docker-compose exec -T test drutiny profile:run d8-full @self "$@"
+    cmd: docker-compose exec -T cli drutiny profile:run d8-full @self "$@"
 
   lint:
     usage: Lint code
-    cmd: docker-compose exec test lint-govcms
+    cmd: docker-compose exec cli lint-govcms
 
   test:
     usage: Run all tests.
@@ -82,8 +82,8 @@ commands:
 
   test-behat:
     usage: Run Behat tests.
-    cmd: docker-compose exec test behat "$@"
+    cmd: docker-compose exec cli behat "$@"
 
   test-phpunit:
     usage: Run PHPUnit tests.
-    cmd: docker-compose exec test phpunit --testsuite govcms
+    cmd: docker-compose exec cli phpunit --testsuite govcms

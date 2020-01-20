@@ -8,7 +8,7 @@ command:
     stdout:
     - /usr/bin/clamscan
     stderr: []
-    timeout: 10000
+    timeout: 20000
   # Test that viruses can be discovered.
   curl http://www.eicar.org/download/eicar.com.txt | clamscan -:
     exit-status: 1

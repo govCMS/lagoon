@@ -32,6 +32,9 @@ COPY .docker/images/test/drutiny /usr/bin/drutiny
 COPY .docker/images/test/phpunit/phpunit.xml /app/tests/phpunit/
 COPY .docker/images/test/phpunit/bootstrap.php /app/tests/phpunit/
 
+# Ensure MySQL client can accept server max_allowed_packet
+COPY .docker/images/govcms8/mariadb-client.cnf /etc/my.cnf.d
+
 ARG SITE_AUDIT_VERSION
 RUN git clone --single-branch --branch=$SITE_AUDIT_VERSION https://github.com/govcms/audit-site.git /app/web/sites/all/drutiny \
     && php -d memory_limit=-1 /usr/local/bin/composer --working-dir=/app/web/sites/all/drutiny/ install --ignore-platform-reqs \

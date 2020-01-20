@@ -11,3 +11,4 @@ dependencies:
   - clamav:clamav
   - robotstxt:robotstxt
   - lagoon_logs:lagoon_logs
+  - environment_indicator:environment_indicator
