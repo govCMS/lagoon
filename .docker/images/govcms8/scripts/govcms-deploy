@@ -24,7 +24,12 @@ dev_config_count=`ls -1 /app/config/dev/*.yml 2>/dev/null | wc -l`
 # performing read operations.
 sync_opts=""
 read_replica_enabled () {
-  if tables=$(drush @govcms-prod sqlq 'show tables; --database=read') && [ -n "$tables" ]; then
+  if [[ -z "$MARIADB_READREPLICA_HOSTS" ]]; then
+    return
+  fi
+
+  if tables=$(drush @govcms.prod sqlq 'show tables;' --database=read 2> /dev/null) && [ -n "$tables" ]; then
+    echo "Replica is available, using for database operations."
     sync_opts="--source-database=read"
   fi
 }
@@ -57,7 +62,7 @@ if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
         # Import prod db in Lagoon development environments.
         if [[ ! -z "$LAGOON_ENVIRONMENT_TYPE" && "$LAGOON_ENVIRONMENT_TYPE" != "local" ]]; then
           drush sql-drop -y
-          drush sql-sync @govcms-prod @self $sync_opts -y
+          drush sql-sync @govcms.prod @self $sync_opts -y
           common_deploy
         else
           echo "Drupal not installed."
@@ -67,7 +72,7 @@ if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
       if [[ "$GOVCMS_TEST_CANARY" = TRUE ]]; then
         echo "GOVCMS_TEST_CANARY is set, syncing the database."
         drush sql-drop -y
-        drush sql-sync @govcms-prod @self $sync_opts -y
+        drush sql-sync @govcms.prod @self $sync_opts -y
       fi
       common_deploy
     fi
