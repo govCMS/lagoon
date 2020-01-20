@@ -124,7 +124,7 @@ if (getenv('LAGOON')) {
   ]);
 
   if (getenv('MARIADB_READREPLICA_HOSTS')) {
-    $replica_hosts = explode(',', getenv('MARIADB_READREPLICA_HOSTS'));
+    $replica_hosts = explode(' ', getenv('MARIADB_READREPLICA_HOSTS'));
     $replica_hosts = array_map('trim', $replica_hosts);
 
     if (!empty($replica_hosts)) {
