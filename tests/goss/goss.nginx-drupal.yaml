@@ -5,3 +5,5 @@ gossfile:
 file:
   /app/web/robots.txt:
     exists: true
+  /etc/nginx/conf.d/drupal/favicon.ico:
+    exists: true
