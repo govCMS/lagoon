@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.solr_search
+  module:
+    - views
+  theme:
+    - govcms8_uikit_starter
+id: exposedformsolr_searchpage_1
+theme: govcms8_uikit_starter
+region: search
+weight: 0
+provider: null
+plugin: 'views_exposed_filter_block:solr_search-page_1'
+settings:
+  id: 'views_exposed_filter_block:solr_search-page_1'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+visibility: {  }
