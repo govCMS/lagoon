@@ -7,7 +7,7 @@ dependencies:
     - search_api_solr
 id: lagoon_solr
 name: 'Lagoon Solr'
-description: ''
+description: 'Default solr search server'
 backend: search_api_solr
 backend_config:
   connector: standard
