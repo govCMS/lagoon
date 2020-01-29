@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies:
   module:
-    - search_api_solr
     - node
     - search_api
+    - search_api_solr
   config:
     - field.storage.node.body
     - search_api.server.lagoon_solr
@@ -14,8 +14,8 @@ third_party_settings:
     commit_before_finalize: false
     commit_after_finalize: false
 id: solr_index
-name: 'solr index'
-description: ''
+name: 'Solr Index'
+description: 'Default search index using the solr search server'
 read_only: false
 field_settings:
   title:

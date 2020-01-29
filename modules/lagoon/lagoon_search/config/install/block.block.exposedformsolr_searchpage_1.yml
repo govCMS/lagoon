@@ -4,6 +4,7 @@ dependencies:
   config:
     - views.view.solr_search
   module:
+    - system
     - views
   theme:
     - govcms8_uikit_starter
@@ -17,6 +18,11 @@ settings:
   id: 'views_exposed_filter_block:solr_search-page_1'
   label: ''
   provider: views
-  label_display: visible
+  label_display: '0'
   views_label: ''
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: '/search/*'
+    negate: true
+    context_mapping: {  }
