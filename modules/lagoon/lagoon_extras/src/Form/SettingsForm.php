@@ -5,6 +5,9 @@ namespace Drupal\lagoon_extras\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Configuration form for the module.
+ */
 class SettingsForm extends ConfigFormBase {
 
   /**
@@ -57,7 +60,6 @@ class SettingsForm extends ConfigFormBase {
     return $form;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -68,8 +70,5 @@ class SettingsForm extends ConfigFormBase {
 
     parent::submitForm($form, $form_state);
   }
-
-
-
 
 }

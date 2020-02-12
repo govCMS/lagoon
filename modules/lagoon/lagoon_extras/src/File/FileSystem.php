@@ -17,9 +17,9 @@ class FileSystem extends BaseFileSystem {
     $status = parent::unlink($uri, $context);
 
     if ($status) {
-      $this->logger->info("The file %uri was successfully unlinked", ['%uri' => $uri]);
+      $this->logger->info('The file %uri was successfully unlinked', ['%uri' => $uri]);
       if (\Drupal::config(Form::SETTINGS)->get('verbose_logging')) {
-        $this->logger->info('%backtrace', ['%backtrace' => json_encode(debug_backtrace())]);
+        $this->logger->info('%backtrace', ['%backtrace' => json_encode(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS))]);
       }
     }
 
@@ -35,7 +35,7 @@ class FileSystem extends BaseFileSystem {
     if ($status) {
       $this->logger->info('The directory %uri was successfully removed.', ['%uri' => $uri]);
       if (\Drupal::config(SettingsForm::SETTINGS)->get('verbose_logging')) {
-        $this->logger->info('%backtrace', ['%backtrace' => json_encode(debug_backtrace())]);
+        $this->logger->info('%backtrace', ['%backtrace' => json_encode(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS))]);
       }
     }
 
