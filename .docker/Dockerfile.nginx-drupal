@@ -5,9 +5,11 @@ FROM ${CLI_IMAGE} as cli
 FROM amazeeio/nginx-drupal:${LAGOON_IMAGE_VERSION}
 
 # nginx config.
-COPY .docker/images/nginx/helpers/ /etc/nginx/helpers/
-
 COPY .docker/images/nginx/no-robots.sh /lagoon/entrypoints/20-no-robots.sh
+
+COPY .docker/images/nginx/helpers/ /etc/nginx/helpers/
+COPY .docker/images/nginx/drupal /etc/nginx/conf.d/drupal
+
 RUN fix-permissions /etc/nginx
 
 COPY --from=cli /app /app
