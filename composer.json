@@ -15,6 +15,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:govcms/govcms8.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:govCMS/scaffold-tooling.git"
         }
     ],
     "require": {
@@ -32,7 +36,8 @@
         "drupal/redis":"1.1.0",
         "drupal/stage_file_proxy":"1.0.0-alpha3",
         "drupal/clamav":"1.1.0",
-        "zaporylie/composer-drupal-optimizations": "^1.0"
+        "zaporylie/composer-drupal-optimizations": "^1.0",
+        "govcms/scaffold-tooling": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5"
