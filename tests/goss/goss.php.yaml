@@ -13,7 +13,7 @@ command:
   curl http://www.eicar.org/download/eicar.com.txt | clamscan -:
     exit-status: 1
     stdout:
-    - "Clamav.Test.File-7 FOUND"
+    - "FOUND"
     - "Scanned files: 1"
     - "Infected files: 1"
     stderr: []
