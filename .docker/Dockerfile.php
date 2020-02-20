@@ -5,7 +5,7 @@ FROM ${CLI_IMAGE} as cli
 
 FROM amazeeio/php:${PHP_IMAGE_VERSION}-fpm-${LAGOON_IMAGE_VERSION}
 
-RUN apk add --no-cache --update clamav clamav-libunrar \
+RUN apk add --no-cache --update clamav clamav-libunrar --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ \
     && freshclam
 
 COPY .docker/images/php/00-govcms.ini /usr/local/etc/php/conf.d/
