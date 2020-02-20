@@ -44,6 +44,7 @@ if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
     if ! drush status --fields=bootstrap | grep -q "Successful"; then
         # Import prod db in Lagoon development environments.
         if [[ ! -z "$LAGOON_ENVIRONMENT_TYPE" && "$LAGOON_ENVIRONMENT_TYPE" != "local" ]]; then
+          drush sql-drop -y
           drush sql-sync @govcms.prod @self -y
           common_deploy
         else
@@ -53,6 +54,7 @@ if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
       # @see comments for GOVCMS_TEST_CANARY above.
       if [[ "$GOVCMS_TEST_CANARY" = TRUE ]]; then
         echo "GOVCMS_TEST_CANARY is set, syncing the database."
+        drush sql-drop -y
         drush sql-sync @govcms.prod @self -y
       fi
       common_deploy
