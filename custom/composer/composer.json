@@ -1,0 +1,5 @@
+{
+    "name": "govcms/custom",
+    "description": "Additional packages from https://satis.govcms.gov.au or where composer.json is locked.",
+    "require": {}
+}
