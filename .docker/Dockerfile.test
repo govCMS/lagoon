@@ -11,7 +11,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 COPY --from=cli /app /app
-RUN composer require -d /app govcms/require-dev:~1
+RUN composer install -d /app --no-interaction --no-suggest
 
 COPY .docker/scripts/phpunit /app/web/profiles/contrib/govcms/.docker/phpunit
 COPY .docker/scripts/lint-govcms /app/web/profiles/contrib/govcms/.docker/scripts/lint-govcms

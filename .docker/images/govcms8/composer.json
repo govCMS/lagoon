@@ -15,6 +15,7 @@
         "govcms/custom": "*"
     },
     "require-dev": {
+        "govcms/require-dev": "~1"
     },
     "conflict": {
         "drupal/drupal": "*"
