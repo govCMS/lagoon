@@ -1,6 +1,6 @@
 ---
 
-image: quay.io/govcms/govcms-ci
+image: quay.io/govcms/govcms-ci:feature_updates
 
 services:
   - "docker:dind"
