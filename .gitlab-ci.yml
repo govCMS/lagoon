@@ -164,8 +164,15 @@ test:nginx:
   <<: *test
   stage: test
   script:
+    # Wait for nginx container.
+    - docker-compose exec -T test dockerize -wait tcp://nginx:8080 -timeout 1m
+    # Validate nginx configuration.
     - docker-compose exec -T nginx nginx -t
+    # Validate composer.json and composer.lock configuration for tests.
+    - composer validate --strict -d .docker/images/nginx/tests
+    # Install dependencies for tests.
     - composer install -d .docker/images/nginx/tests
+    # Run tests and store logs in artifacts directory.
     - .docker/images/nginx/tests/vendor/bin/phpunit -c .docker/images/nginx/tests/phpunit.xml
   needs:
     - build:containers

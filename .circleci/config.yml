@@ -38,7 +38,7 @@ jobs:
       - run:
           name: Test that Redis is functional
           command: |
-            # Set ENABLE_REDIS env var and warm cache with a bootstrap
+            # Set ENABLE_REDIS env var and warm cache with a bootstrap.
             docker-compose exec -T --env ENABLE_REDIS=true cli drush status
             redisKeys=$(docker-compose exec -T redis redis-cli KEYS '*' | wc -l)
             if [[ $redisKeys -le 1 ]]; then
@@ -48,30 +48,20 @@ jobs:
               echo "Redis success: Redis contains $redisKeys keys."
             fi
       - run:
-          name: Push Docker images to Dockerhub
-          command: |
-            if [ "${DEPLOY_ANY_BRANCH}" != "" ] || [ "${CIRCLE_BRANCH}" == "master" ] || [ ! -z ${CIRCLE_TAG} ]; then
-              echo "IMAGE_VERSION_TAG=$CIRCLE_TAG">>.env
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              export $(grep -v '^#' .env | xargs)
-              ahoy push
-            else
-              echo "Skipping deployment"
-            fi
-      - run:
           name: Test Nginx configuration
           command: |
-            docker-compose exec nginx nginx -t
+            # Wait for nginx container.
+            docker-compose exec -T test dockerize -wait tcp://nginx:8080 -timeout 1m
+            # Validate nginx configuration.
+            docker-compose exec -T nginx nginx -t
+            # Validate composer.json and composer.lock configuration for tests.
+            composer validate --strict -d .docker/images/nginx/tests
+            # Install dependencies for tests.
             composer install -d .docker/images/nginx/tests
-            .docker/images/nginx/tests/vendor/bin/phpunit -c .docker/images/nginx/tests/phpunit.xml
-
-workflows:
-  version: 2
-  main:
-    jobs:
-      - build:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only: /.*/
+            # Create artifact directory.
+            mkdir -p /tmp/artifacts/phpunit
+            # Run tests and store logs in artifacts directory.
+            .docker/images/nginx/tests/vendor/bin/phpunit -c .docker/images/nginx/tests/phpunit.xml --log-junit /tmp/artifacts/phpunit/nginx.xml
+      - store_test_results:
+          path: /tmp/artifacts/phpunit
+          when: always
