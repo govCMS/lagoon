@@ -23,14 +23,13 @@ class RobotsTxtTest extends TestCase
 
   /**
    * Disallow in govcms.
-   *
    * @dataProvider provideHosts
    */
   public function testDisallowString($host)
   {
-    $robots_txt = \curl_get_content("/robots.txt", "-H 'Host: $host'");
-    $this->assertEquals($robots_txt[0], "User-agent: *");
-    $this->assertEquals($robots_txt[1], 'Disallow: /');
+    $robots_txt = \curl_get_content('/robots.txt', "-H 'Host: $host'");
+    $this->assertEquals('User-agent: *', $robots_txt[0]);
+    $this->assertEquals('Disallow: /', $robots_txt[1]);
   }
 
   /**
@@ -40,7 +39,7 @@ class RobotsTxtTest extends TestCase
   {
     // Drupal is configured to respond to robots.txt as well as we're adding X-Robots-Tag to all Drupal requests.
     // We ensure that X-Robots-Tag is added to the response as this means Drupal is serving the request.
-    $robots_headers = get_curl_headers("/robots.txt", "-H 'Host: www.govcms.gov.au'");
+    $robots_headers = \get_curl_headers('/robots.txt', "-H 'Host: www.govcms.gov.au'");
     $this->assertArrayHasKey('X-Robots-Tag', $robots_headers);
   }
 }
