@@ -51,9 +51,9 @@ jobs:
           name: Test Nginx configuration
           command: |
             # Wait for nginx container.
-            docker-compose exec test dockerize -wait tcp://nginx:8080 -timeout 1m
+            docker-compose exec -T test dockerize -wait tcp://nginx:8080 -timeout 1m
             # Validate nginx configuration.
-            docker-compose exec nginx nginx -t
+            docker-compose exec -T nginx nginx -t
             # Validate composer.json and composer.lock configuration for tests.
             composer validate --strict -d .docker/images/nginx/tests
             # Install dependencies for tests.
