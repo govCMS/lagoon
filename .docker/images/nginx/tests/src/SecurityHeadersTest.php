@@ -12,7 +12,7 @@ class SecurityHeadersTest extends TestCase {
   /**
    * Ensure that the X-XSS-Protection header is present.
    */
-  public function testXssProtectioin() {
+  public function testXssProtection() {
     $headers = \get_curl_headers("/");
     $this->assertEquals('1; mode=block', $headers['X-XSS-Protection']);
   }
