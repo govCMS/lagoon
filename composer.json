@@ -32,6 +32,7 @@
         "drupal/redis":"1.1.0",
         "drupal/stage_file_proxy":"1.0.0-alpha3",
         "drupal/clamav":"1.1.0",
+        "symfony/event-dispatcher": "4.3.11 as 3.4.35",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
