@@ -40,7 +40,7 @@ function lagoon_search_update_8101() {
   }
 
   if ($new_config['connector_config']['core'] != 'drupal') {
-    throw new \Exception('Backend core ocnfiguration was not updated.');
+    throw new \Exception('Backend core configuration was not updated.');
   }
 
   \Drupal::logger('lagoon_search')->notice('Successfully updated configuration.');
