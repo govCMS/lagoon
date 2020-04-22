@@ -21,7 +21,7 @@ function lagoon_search_update_8101() {
   if (!$backend_config = $config->get('backend_config')) {
     // This means that the Lagoon Solr configuration was not found so
     // we have nothing to update.
-    \Drupal::logger('lagoon_search')->error('Skipping lagoon_search_update_8101, nothing to update');
+    \Drupal::logger('lagoon_search')->notice('Skipping lagoon_search_update_8101, nothing to update');
     return;
   }
 
