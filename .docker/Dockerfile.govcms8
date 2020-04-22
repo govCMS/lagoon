@@ -32,6 +32,7 @@ COPY .docker/images/govcms8/mariadb-client.cnf /etc/my.cnf.d
 RUN mkdir -p /app/web/sites/default/files/private \
     && fix-permissions /home/.drush \
     && fix-permissions /app/drush/sites \
+    && fix-permissions /etc/my.cnf.d \
     && chmod +x /app/sanitize.sh \
     && /app/sanitize.sh \
     && rm -f /app/sanitize.sh
