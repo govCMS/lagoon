@@ -1,7 +1,7 @@
 name: Lagoon search
 description: Provides integration between your Drupal site and Lagoon solr.
 package: Lagoon
-version: 8.x-1.01
+version: 8.x-1.1
 
 type: module
 core: 8.x
