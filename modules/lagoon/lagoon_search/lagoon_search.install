@@ -35,11 +35,13 @@ function lagoon_search_update_8101() {
   $new_config = $config_factory->getEditable('search_api.server.lagoon_solr')->get('backend_config');
 
   if ($new_config['connector_config']['path'] != '/') {
-    throw new \Exception('Backend path configuration was not updated.');
+    \Drupal::logger('lagoon_search')->notice('Backend path configuration was not updated.');
+    return;
   }
 
   if ($new_config['connector_config']['core'] != 'drupal') {
-    throw new \Exception('Backend core configuration was not updated.');
+    \Drupal::logger('lagoon_search')->notice('Backend core configuration was not updated.');
+    return;
   }
 
   \Drupal::logger('lagoon_search')->notice('Successfully updated configuration.');
