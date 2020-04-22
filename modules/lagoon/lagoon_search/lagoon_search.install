@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Update hooks for lagoon search.
+ */
+
+/**
+ * Ensures that the solr configuration is up-to-date.
+ *
+ * The latest version of solr changes the path and core, we need to ensure that
+ * all sites that are using Lagoon Search will have this updated. The install
+ * configuration reflects the correct configuration.
+ *
+ * @see https://github.com/govCMS/govcms8lagoon/pull/143
+ */
+function lagoon_search_update_8101() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('search_api.server.lagoon_solr');
+
+  if (!$backend_config = $config->get('backend_config')) {
+    // This means that the Lagoon Solr configuration was not found so
+    // we have nothing to update.
+    \Drupal::logger('lagoon_search')->notice('Skipping lagoon_search_update_8101, nothing to update');
+    return;
+  }
+
+  // Update the configuration to be compatible with the new Solr version.
+  $backend_config['connector_config']['path'] = '/';
+  $backend_config['connector_config']['core'] = 'drupal';
+
+  $config->set('backend_config', $backend_config);
+  $config->save(TRUE);
+
+  $new_config = $config_factory->getEditable('search_api.server.lagoon_solr')->get('backend_config');
+
+  if ($new_config['connector_config']['path'] != '/') {
+    \Drupal::logger('lagoon_search')->notice('Backend path configuration was not updated.');
+    return;
+  }
+
+  if ($new_config['connector_config']['core'] != 'drupal') {
+    \Drupal::logger('lagoon_search')->notice('Backend core configuration was not updated.');
+    return;
+  }
+
+  \Drupal::logger('lagoon_search')->notice('Successfully updated configuration.');
+}
