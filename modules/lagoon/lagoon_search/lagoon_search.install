@@ -12,7 +12,6 @@
  * all sites that are using Lagoon Search will have this updated. The install
  * configuration reflects the correct configuration.
  *
- * @see https://jira.gold.gov.au/jira/browse/GOVCMS-4634
  * @see https://github.com/govCMS/govcms8lagoon/pull/143
  */
 function lagoon_search_update_8101() {
