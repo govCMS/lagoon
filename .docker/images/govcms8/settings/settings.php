@@ -34,9 +34,9 @@ $contrib_path = 'modules/contrib';
 if (file_exists($contrib_path . '/fast404/fast404.inc')) {
   include_once $contrib_path . 'fast404/fast404.inc';
 }
-$settings['fast404_exts'] = '/^(?!robots)^(?!sites\/default\/files\/private).*\.(?:png|gif|jpe?g|svg|tiff|bmp|raw|webp|docx?|xlsx?|pptx?|swf|flv|cgi|dll|exe|nsf|cfm|ttf|bat|pl|asp|ics|rtf)$/i';
+$settings['fast404_exts'] = getenv('GOVCMS_FAST404_EXTS') ?: '/^(?!robots)^(?!\/system\/files).*\.(?:png|gif|jpe?g|svg|tiff|bmp|raw|webp|pdf?|docx?|xlsx?|pptx?|swf|flv|cgi|dll|exe|nsf|cfm|ttf|bat|pl|asp|ics|rtf)$/i';
 $settings['fast404_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>';
-$settings['fast404_whitelist'] = array('robots.txt', 'system/files');
+$settings['fast404_string_whitelisting'] = array('robots.txt', 'system/files');
 
 // Allow custom themes to provide custom 404 pages.
 // By placing a file called 404.html in the root of their theme repository.
@@ -267,6 +267,11 @@ if (getenv('LAGOON')) {
   }
 }
 
+// Enforce correct solr server configuration (GOVCMS-4634)
+// Fix for 8.5.0 and the solr upgrade.
+$config['search_api.server.lagoon_solr']['backend_config']['connector_config']['path'] = '/';
+$config['search_api.server.lagoon_solr']['backend_config']['connector_config']['core'] = 'drupal';
+
 // Hash Salt
 if (getenv('LAGOON')) {
   $settings['hash_salt'] = hash('sha256', getenv('LAGOON_PROJECT'));
@@ -305,7 +310,7 @@ if (getenv('LAGOON_ENVIRONMENT_TYPE') != 'production') {
     $config['stage_file_proxy.settings']['origin'] = getenv('STAGE_FILE_PROXY_URL');
   }
 
-  if (getenv('DEV_MODE')) {
+  if (getenv('DEV_MODE') && getenv('DEV_MODE') == 'true') {
     if (!drupal_installation_attempted()) {
       if (file_exists(__DIR__ . '/development.settings.php')) {
         include __DIR__ . '/development.settings.php';

@@ -5,7 +5,18 @@
 # It is not intended to be used by clients outside Lagoon and may change.
 #
 
+# Scaffold tooling moves the scripts to use the `ci.prod` alias. This is marked
+# as deprecated and will be removed in an upcomming release.
+# @deprecrated 8.2
 prod:
+  root: /app
+  host: ssh.lagoon.svc
+  user: ${env.LAGOON_PROJECT}-master
+  uri: nginx-${env.LAGOON_PROJECT}-master.govcms.amazee.io
+  ssh:
+    options: -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 2020 -F /dev/null
+
+ci.prod:
   root: /app
   host: ssh.lagoon.svc
   user: ${env.LAGOON_PROJECT}-master

@@ -39,3 +39,6 @@ if (!empty($_SERVER['HTTP_HOST'])) {
     $config['environment_indicator.indicator']['name'] = 'Edit Domain';
   }
 }
+
+// Disable temporary file deletion (GOVCMSD8-576).
+$config['system.file']['temporary_maximum_age'] = 0;

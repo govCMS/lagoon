@@ -3,6 +3,11 @@ gossfile:
   sanitise.yaml: {}
 
 command:
+  php -r "echo ini_get('upload_max_filesize');":
+    exit-status: 0
+    stdout:
+      - "256M"
+
   which clamscan:
     exit-status: 0
     stdout:
@@ -10,10 +15,10 @@ command:
     stderr: []
     timeout: 20000
   # Test that viruses can be discovered.
-  curl http://www.eicar.org/download/eicar.com.txt | clamscan -:
+  echo -e "X5O!P%@AP[4\PZX54(P^)7CC)7}\$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!\$H+H*" > /tmp/virus && clamscan /tmp/virus:
     exit-status: 1
     stdout:
-    - "Eicar-Test-Signature FOUND"
+    - "FOUND"
     - "Scanned files: 1"
     - "Infected files: 1"
     stderr: []
