@@ -2,6 +2,7 @@
     "name": "govcmstests/nginx",
     "description": "Testing framework for the nginx image.",
     "type": "project",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Steve Worley",
