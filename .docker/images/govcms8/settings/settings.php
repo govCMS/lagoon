@@ -139,7 +139,7 @@ if (getenv('LAGOON')) {
         // to use the database.replica service for particular operations.
         // @TODO: Lagoon should expose MARAIDB replica hosts as an array so we can
         // scale the replicas horizontally.
-        $database['default']['replica'][] = array_merge($db_conf, [
+        $databases['default']['replica'][] = array_merge($db_conf, [
           'host' => $replica_host,
         ]);
       }
