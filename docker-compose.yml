@@ -25,6 +25,7 @@ services:
         DRUPAL_CORE_VERSION: ${DRUPAL_CORE_VERSION:-^8.8}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.2}
+        COMPOSER_AUTH: ${COMPOSER_AUTH:-}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
     << : *default-volumes
     environment:
@@ -39,6 +40,7 @@ services:
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.2}
         SITE_AUDIT_VERSION: ${SITE_AUDIT_VERSION:-7.x-3.x}
+        COMPOSER_AUTH: ${COMPOSER_AUTH:-}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/test
     << : *default-volumes
     depends_on:

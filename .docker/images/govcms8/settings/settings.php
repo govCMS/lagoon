@@ -240,6 +240,11 @@ if (getenv('LAGOON')) {
   }
 }
 
+// Enforce correct solr server configuration (GOVCMS-4634)
+// Fix for 8.5.0 and the solr upgrade.
+$config['search_api.server.lagoon_solr']['backend_config']['connector_config']['path'] = '/';
+$config['search_api.server.lagoon_solr']['backend_config']['connector_config']['core'] = 'drupal';
+
 // Hash Salt
 if (getenv('LAGOON')) {
   $settings['hash_salt'] = hash('sha256', getenv('LAGOON_PROJECT'));
@@ -278,7 +283,7 @@ if (getenv('LAGOON_ENVIRONMENT_TYPE') != 'production') {
     $config['stage_file_proxy.settings']['origin'] = getenv('STAGE_FILE_PROXY_URL');
   }
 
-  if (getenv('DEV_MODE')) {
+  if (getenv('DEV_MODE') && getenv('DEV_MODE') == 'true') {
     if (!drupal_installation_attempted()) {
       if (file_exists(__DIR__ . '/development.settings.php')) {
         include __DIR__ . '/development.settings.php';
