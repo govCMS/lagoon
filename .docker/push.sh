@@ -13,11 +13,13 @@ IMAGE_VERSION_TAG=${IMAGE_VERSION_TAG:-}
 # prevent stripping of the version.
 IMAGE_VERSION_TAG_PREFIX=${IMAGE_VERSION_TAG_PREFIX:-8.x-}
 # Docker image edge tag.
-IMAGE_TAG_EDGE=${IMAGE_TAG_EDGE:-beta}
+IMAGE_TAG_EDGE=${IMAGE_TAG_EDGE:-}
 # Flag to force image build.
 FORCE_IMAGE_BUILD=${FORCE_IMAGE_BUILD:-}
 # Path prefix to Dockerfiles extension that is used as a name of the service.
 FILE_EXTENSION_PREFIX=${FILE_EXTENSION_PREFIX:-.docker/Dockerfile.}
+# CLI Image name
+CLI_IMAGE=${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
 
 for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
     service=${file/$FILE_EXTENSION_PREFIX/}
@@ -30,7 +32,7 @@ for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
     # Only rebuild images if they do not exist or rebuild is forced.
     if [ "$existing_image" == "" ] || [ "$FORCE_IMAGE_BUILD" != "" ]; then
       echo "==> Building \"$service\" image from file $file for service \"$DOCKERHUB_NAMESPACE/$service\""
-      docker build -f $file -t $DOCKERHUB_NAMESPACE/$service .
+      docker build -f $file -t $DOCKERHUB_NAMESPACE/$service --build-arg CLI_IMAGE=${CLI_IMAGE} .
     fi
 
     # Tag images with 'edge' tag and push.
