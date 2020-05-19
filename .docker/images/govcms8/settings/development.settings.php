@@ -46,9 +46,6 @@ $settings['container_yamls'][] = DRUPAL_ROOT . '/sites/default/development.servi
 /**
  * Configure Environment indicator.
  */
-$config['environment_indicator.indicator']['bg_color'] = 'green';
-$config['environment_indicator.indicator']['name'] = 'Branch Development';
-
-if (getenv('LOCALDEV_URL') !== FALSE) {
-  $config['environment_indicator.indicator']['name'] = 'Local Development';
-}
+$config['environment_indicator.indicator']['bg_color'] = '#006600';
+$config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+$config['environment_indicator.indicator']['name'] = 'Non-production';
