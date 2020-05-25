@@ -28,7 +28,7 @@ read_replica_enabled () {
     return
   fi
 
-  if tables=$(drush @govcms.prod sqlq 'show tables;' --database=read 2> /dev/null) && [ -n "$tables" ]; then
+  if tables=$(drush sqlq 'show tables;' --database=read 2> /dev/null) && [ -n "$tables" ]; then
     echo "Replica is available, using for database operations."
     dump_opts="--database=read"
   fi
