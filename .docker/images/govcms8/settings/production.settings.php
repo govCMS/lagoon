@@ -29,16 +29,9 @@ $config['system.performance']['js']['preprocess'] = 1;
 $config['stage_file_proxy.settings']['origin'] = false;
 
 // Configure Environment indicator.
-$config['environment_indicator.indicator']['bg_color'] = 'red';
-$config['environment_indicator.indicator']['name'] = 'Public Domain';
-
-if (!empty($_SERVER['HTTP_HOST'])) {
-  $http_host = $_SERVER['HTTP_HOST'];
-  if (preg_match('/(?<!www)\.govcms\.gov\.au/i', $http_host)) {
-    $config['environment_indicator.indicator']['bg_color'] = 'orange';
-    $config['environment_indicator.indicator']['name'] = 'Edit Domain';
-  }
-}
+$config['environment_indicator.indicator']['bg_color'] = '#AF110E';
+$config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+$config['environment_indicator.indicator']['name'] = 'Production';
 
 // Disable temporary file deletion (GOVCMSD8-576).
 $config['system.file']['temporary_maximum_age'] = 0;

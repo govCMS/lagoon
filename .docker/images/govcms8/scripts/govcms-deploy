@@ -20,6 +20,20 @@ mkdir -p /app/web/sites/default/files/private/tmp/
 config_count=`ls -1 /app/config/default/*.yml 2>/dev/null | wc -l`
 dev_config_count=`ls -1 /app/config/dev/*.yml 2>/dev/null | wc -l`
 
+# Database options to configure the remote to use the read replica when
+# performing read operations.
+dump_opts=""
+read_replica_enabled () {
+  if [[ -z "$MARIADB_READREPLICA_HOSTS" ]]; then
+    return
+  fi
+
+  if tables=$(drush sqlq 'show tables;' --database=read 2> /dev/null) && [ -n "$tables" ]; then
+    echo "Replica is available, using for database operations."
+    dump_opts="--database=read"
+  fi
+}
+
 # Database updates, cache rebuild, optional config imports.
 common_deploy () {
   drush updb -y
@@ -62,7 +76,9 @@ if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
 # Production environments.
 else
   if drush status --fields=bootstrap | grep -q "Successful"; then
-    mkdir -p /app/web/sites/default/files/private/backups/ && drush sql-dump --gzip --result-file=/app/web/sites/default/files/private/backups/pre-deploy-dump.sql
+    read_replica_enabled $dump_opts
+
+    mkdir -p /app/web/sites/default/files/private/backups/ && drush sql-dump --gzip --result-file=/app/web/sites/default/files/private/backups/pre-deploy-dump.sql $dump_opts
     drush config-export sync -y --destination /app/web/sites/default/files/private/backups/config && tar -czf /app/web/sites/default/files/private/backups/config.tar.gz -C /app/web/sites/default/files/private/backups/config . && rm -rf /app/web/sites/default/files/private/backups/config
     common_deploy
     drush en -y govcms_lagoon && drush pmu -y govcms_lagoon;

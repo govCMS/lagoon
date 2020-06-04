@@ -108,16 +108,43 @@ else {
 
 // Lagoon Database connection
 if (getenv('LAGOON')) {
-  $databases['default']['default'] = [
+  $db_conf = [
     'driver' => 'mysql',
     'database' => getenv('MARIADB_DATABASE') ?: 'drupal',
     'username' => getenv('MARIADB_USERNAME') ?: 'drupal',
     'password' => getenv('MARIADB_PASSWORD') ?: 'drupal',
-    'host' => getenv('MARIADB_HOST') ?: 'mariadb',
     'port' => 3306,
     'charset' => 'utf8mb4',
     'collation' => 'utf8mb4_general_ci',
   ];
+
+
+  $databases['default']['default'] = array_merge($db_conf, [
+    'host' => getenv('MARIADB_HOST') ?: 'mariadb'
+  ]);
+
+  if (getenv('MARIADB_READREPLICA_HOSTS')) {
+    $replica_hosts = explode(' ', getenv('MARIADB_READREPLICA_HOSTS'));
+    $replica_hosts = array_map('trim', $replica_hosts);
+
+    if (!empty($replica_hosts)) {
+      // Add a standalone connection to the read replica. This allows Drush to target
+      // the readers directly with --database=read.
+      $databases['read']['default'] = array_merge($db_conf, [
+        'host' => $replica_hosts[0],
+      ]);
+
+      foreach ($replica_hosts as $replica_host) {
+        // Add replica support to the default database connection. This allows services
+        // to use the database.replica service for particular operations.
+        // @TODO: Lagoon should expose MARAIDB replica hosts as an array so we can
+        // scale the replicas horizontally.
+        $databases['default']['replica'][] = array_merge($db_conf, [
+          'host' => $replica_host,
+        ]);
+      }
+    }
+  }
 }
 
 // Lagoon Solr connection
@@ -152,9 +179,13 @@ if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
       throw new \Exception('Drupal installation underway.');
     }
 
-    $redis->connect($redis_host, $redis_port);
+    # Use a timeout to ensure that if Redis is down, that Drupal will
+    # continue to function.
+    if ($redis->connect($redis_host, $redis_port, 1) === FALSE) {
+      throw new \Exception('Redis server unreachable.');
+    }
+    
     $response = $redis->ping();
-
     if (strpos($response, 'PONG') === FALSE) {
       throw new \Exception('Redis could be reached but is not responding correctly.');
     }
