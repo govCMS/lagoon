@@ -15,10 +15,6 @@
         {
             "type": "vcs",
             "url": "git@github.com:govcms/govcms8.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:govCMS/scaffold-tooling.git"
         }
     ],
     "require": {
