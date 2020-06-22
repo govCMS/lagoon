@@ -26,6 +26,7 @@ services:
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.3}
         COMPOSER_AUTH: ${COMPOSER_AUTH:-}
+        GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
     << : *default-volumes
     environment:
