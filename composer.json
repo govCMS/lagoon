@@ -29,7 +29,7 @@
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
         "drupal/core-recommended": "^8.8",
-        "symfony/event-dispatcher": "4.3.11 as 3.4.35",
+        "symfony/event-dispatcher": "4.3.11 as 3.4.41",
         "zaporylie/composer-drupal-optimizations": "^1.0",
         "govcms/scaffold-tooling": "^2.0"
     },
