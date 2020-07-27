@@ -294,8 +294,11 @@ if (getenv('LAGOON_ENVIRONMENT_TYPE')) {
 }
 
 // Configuration path settings.
-$config_directories[CONFIG_SYNC_DIRECTORY] = '/app/config/default';
+// Drupal 8: Support for multiple configuration locations.
+$config_directories['config_sync_directory'] = '/app/config/default';
 $config_directories['dev'] = '/app/config/dev';
+// Drupal 9: Single configuration bucket.
+$settings['config_sync_directory'] = '/app/config/default';
 
 // Last: this servers specific settings files.
 if (file_exists(__DIR__ . '/settings.local.php')) {
