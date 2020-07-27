@@ -22,6 +22,10 @@ jobs:
       - run:
           name: Build project
           command: |
+            if [ ! -z ${GITHUB_TOKEN} ]; then
+              echo "GITHUB_TOKEN=$GITHUB_TOKEN">>.env
+              export $(grep -v '^#' .env | xargs)
+            fi
             ahoy -v build
             docker-compose exec test dockerize -wait tcp://mariadb:3306 -timeout 1m
       - run:
