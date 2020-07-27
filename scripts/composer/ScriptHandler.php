@@ -41,7 +41,7 @@ class ScriptHandler {
       require_once $drupalRoot . '/core/includes/bootstrap.inc';
       require_once $drupalRoot . '/core/includes/install.inc';
       $settings['config_directories'] = [
-        CONFIG_SYNC_DIRECTORY => (object) [
+        'config_sync_directory' => (object) [
           'value' => Path::makeRelative($drupalFinder->getComposerRoot() . '/config/sync', $drupalRoot),
           'required' => TRUE,
         ],
