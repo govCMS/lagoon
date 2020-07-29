@@ -19,7 +19,7 @@ services:
   cli:
     build:
       context: .
-      dockerfile: $PWD/.docker/Dockerfile.govcms8
+      dockerfile: $PWD/.docker/Dockerfile.govcms
       args:
         GOVCMS_PROJECT_VERSION: ${GOVCMS_PROJECT_VERSION:-^1.0}
         DRUPAL_CORE_VERSION: ${DRUPAL_CORE_VERSION:-^8.8}

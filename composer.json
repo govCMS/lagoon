@@ -1,6 +1,6 @@
 {
-    "name": "govcms/govcms-project",
-    "description": "Project template for GovCMS Drupal 8 projects with composer",
+    "name": "govcms/lagoon",
+    "description": "Tooling to run GovCMS on Lagoon",
     "type": "project",
     "license": "GPL-2.0-or-later",
     "repositories": [
@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "cweagans/composer-patches": "^1.6.5",
+        "cweagans/composer-patches": "dev-master",
         "govcms-poc/govcms": "2.x-dev",
         "govcms/scaffold-tooling": "9.x-dev",
         "webflo/drupal-finder": "^1.2",
@@ -91,10 +91,6 @@
         "drupal-scaffold": {
             "locations": {
               "web-root": "./web"
-            },
-            "initial": {
-                ".editorconfig": "../.editorconfig",
-                ".gitattributes": "../.gitattributes"
             }
         }
     }
