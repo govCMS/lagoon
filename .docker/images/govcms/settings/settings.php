@@ -25,6 +25,8 @@
  *
  */
 
+use \Drupal\Core\Installer\InstallerKernel;
+
 // Contrib path.
 $contrib_path = 'modules/contrib';
 
@@ -174,7 +176,7 @@ if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
   $redis_host = getenv('REDIS_HOST') ?: 'redis';
   $redis_port = getenv('REDIS_SERVICE_PORT') ?: 6379;
   try {
-    if (drupal_installation_attempted()) {
+    if (InstallerKernel::installationAttempted()) {
       # Do not set the cache during installations of Drupal
       throw new \Exception('Drupal installation underway.');
     }
@@ -184,7 +186,7 @@ if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
     if ($redis->connect($redis_host, $redis_port, 1) === FALSE) {
       throw new \Exception('Redis server unreachable.');
     }
-    
+
     $response = $redis->ping();
     if (strpos($response, 'PONG') === FALSE) {
       throw new \Exception('Redis could be reached but is not responding correctly.');
@@ -318,7 +320,7 @@ if (getenv('LAGOON_ENVIRONMENT_TYPE') != 'production') {
   }
 
   if (getenv('DEV_MODE') && getenv('DEV_MODE') == 'true') {
-    if (!drupal_installation_attempted()) {
+    if (!InstallerKernel::installationAttempted()) {
       if (file_exists(__DIR__ . '/development.settings.php')) {
         include __DIR__ . '/development.settings.php';
       }
