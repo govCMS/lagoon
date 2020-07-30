@@ -25,7 +25,7 @@
  *
  */
 
-use \Drupal\Core\Installer\InstallerKernel;
+use Drupal\Core\Installer\InstallerKernel;
 
 // Contrib path.
 $contrib_path = 'modules/contrib';
