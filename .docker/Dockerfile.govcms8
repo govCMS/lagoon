@@ -4,11 +4,13 @@ ARG PHP_IMAGE_VERSION
 FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal-${LAGOON_IMAGE_VERSION} as builder
 
 ARG COMPOSER_AUTH
+ARG GITHUB_TOKEN
 
 COPY composer.* /app/
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
 ENV COMPOSER_MEMORY_LIMIT=-1
+RUN composer config -g github-oauth.github.com ${GITHUB_TOKEN}
 RUN composer install -d /app \
 # Force drupal-scaffold to run to ensure that the needed files are always created, even if a composer.lock is provided
     && composer drupal-scaffold \
