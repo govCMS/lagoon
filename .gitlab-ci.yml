@@ -197,6 +197,16 @@ deploy:beta:
   only:
     - master
 
+deploy:edge9:
+  <<: *deploy
+  variables:
+    <<: *vars
+    IMAGE_TAG_EDGE: edge-9.x
+    DOCKERHUB_NAMESPACE: "govcms8lagoon"
+    COMPOSE_PROJECT_NAME: "govcms8lagoon"
+  only:
+    - 9.x
+
 # @TODO: Allow automatic deploys of latest and tags after
 # the process has been validated.
 # deploy:latest:
