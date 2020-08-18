@@ -16,9 +16,10 @@ RUN sed -i -e "/govcms\/govcms/ s!\^1.0!${GOVCMS_PROJECT_VERSION}!" /app/compose
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
 ENV COMPOSER_MEMORY_LIMIT=-1
-RUN composer config -g github-oauth.github.com ${GITHUB_TOKEN}
+# Set the Github OAuth token only when the variable is set.
+RUN [[ ! -z "${GITHUB_TOKEN}" ]]  && composer config -g github-oauth.github.com ${GITHUB_TOKEN} || echo "Personal Github OAuth token is not set."
 RUN composer install -d /app \
-# Force drupal-scaffold to run to ensure that the needed files are always created, even if a composer.lock is provided
+    # Force drupal-scaffold to run to ensure that the needed files are always created, even if a composer.lock is provided
     && composer drupal-scaffold \
     && composer clearcache
 
