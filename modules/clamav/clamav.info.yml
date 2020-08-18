@@ -1,0 +1,12 @@
+name: ClamAV Anti-Virus
+type: module
+description: 'Integration with the ClamAV anti-virus scanner.'
+package: Anti-virus
+core_version_requirement: ^8 || ^9
+configure: clamav.admin_display
+
+# Information added by Drupal.org packaging script on 2018-09-20
+version: '8.x-1.1'
+core: '8.x'
+project: 'clamav'
+datestamp: 1537453089
