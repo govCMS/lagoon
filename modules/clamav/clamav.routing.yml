@@ -1,0 +1,8 @@
+clamav.admin_display:
+  path: '/admin/config/media/clamav'
+  defaults:
+    _form: Drupal\clamav\Form\ClamAVConfigForm
+    # _controller: '\Drupal\clamav\Controller\ClamAVController::admin'
+    _title: 'ClamAV configuration'
+  requirements:
+    _permission: 'administer clamav'

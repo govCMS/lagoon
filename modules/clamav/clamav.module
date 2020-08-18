@@ -1,0 +1,67 @@
+<?php
+/**
+ * @file
+ * Controls behaviour of anti-virus integration with ClamAV.
+ */
+
+use Drupal\clamav\Scanner;
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+
+/**
+ * Implements hook_entity_create().
+ *
+ * Attach a scanner to all entities that implement Drupal\file\FileInterface.
+ */
+function clamav_entity_create($entity) {
+  if (is_a($entity, 'Drupal\file\FileInterface')) {
+    $entity->clamav_attemptScan = TRUE;
+  }
+}
+
+/**
+ * Implements hook_file_validate().
+ */
+function clamav_file_validate(Drupal\file\FileInterface $file) {
+  $errors = array();
+
+  // This hook can be called on actions that do not justify anti-virus scanning
+  // (such as removing an existing file).
+  // The entity-action attaches a property "clamav_attemptScan" for actions
+  // where the file should be scanned.
+  if (empty($file->clamav_attemptScan)) {
+    return $errors;
+  }
+
+  $scanner = \Drupal::service('clamav');
+  if ($scanner->isEnabled() && $scanner->isScannable($file)) {
+    if ($scanner->isVerboseModeEnabled()) {
+      \Drupal::logger('Clam AV')->debug('File %filename is scannable.', array('%filename' => $file->getFilename()));
+    }
+
+    $result = $scanner->scan($file);
+    switch ($result) {
+      // File is infected.
+      case Scanner::FILE_IS_INFECTED:
+        $errors[] = t('A virus has been detected in the file. The file will be deleted.');
+        break;
+
+      // File couldn't be scanned (perhaps the ClamAV service is unavailable).
+      case Scanner::FILE_IS_UNCHECKED:
+        // Check whether unscanned files are permitted
+        if (!$scanner->allowUncheckedFiles()) {
+          $errors[] = t('The anti-virus scanner could not check the file, so the file cannot be uploaded. Contact the site administrator if this problem persists.');
+        }
+        break;
+    }
+  }
+  // In verbose mode, log files that were not checked.
+  elseif ($scanner->isVerboseModeEnabled()) {
+    $message  = 'Uploaded file %filename was not checked, and was uploaded without checking.';
+    $replacements = array(
+      '%filename' => $file->getFilename(),
+    );
+    \Drupal::logger('Clam AV')->info($message, $replacements);
+  }
+
+  return $errors;
+}

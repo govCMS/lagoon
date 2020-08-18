@@ -1,0 +1,5 @@
+clamav.admin_display:
+  title: 'ClamAV'
+  parent: system.admin_config_media
+  description: 'Configure ClamAV anti-virus integration.'
+  route_name: clamav.admin_display
