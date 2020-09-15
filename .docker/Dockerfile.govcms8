@@ -44,6 +44,7 @@ RUN mkdir -p /app/web/sites/default/files/private \
 COPY modules/ /app/web/sites/all/modules/
 
 COPY .docker/images/govcms8/settings/ /app/web/sites/default/
+RUN /usr/bin/govcms-setting new-site-salt
 RUN chmod 444 /app/web/sites/default/settings.php
 
 # Define where the Drupal Root is located
