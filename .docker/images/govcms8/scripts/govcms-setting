@@ -6,7 +6,7 @@
 # Set a new randome hash salt
 if [ "$1" = "new-site-salt" ]; then
 	: ${SITE_HASH_SALT:=$(drush php-eval -q 'echo \Drupal\Component\Utility\Crypt::randomBytesBase64(55) . "\n";')}
-	sed -ri -e "s@^\\\$settings\['hash_salt'\] = .+;@\\\$settings\['hash_salt'\] = '$SITE_HASH_SALT';@g" /app/web/sites/default/settings.php
+	sed -ri -e "s@^\s*\\\$settings\['hash_salt'\] = .+;@  \\\$settings\['hash_salt'\] = '$SITE_HASH_SALT';@g" /app/web/sites/default/settings.php
 fi
 
 
