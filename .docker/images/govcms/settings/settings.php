@@ -278,9 +278,9 @@ if (getenv('LAGOON')) {
 $config['search_api.server.lagoon_solr']['backend_config']['connector_config']['path'] = '/';
 $config['search_api.server.lagoon_solr']['backend_config']['connector_config']['core'] = 'drupal';
 
-// Hash Salt
+// Non-deterministic hash salt.
 if (getenv('LAGOON')) {
-  $settings['hash_salt'] = hash('sha256', getenv('LAGOON_PROJECT'));
+  $settings['hash_salt'] = hash('sha256', getenv('MARIADB_HOST'));
 }
 
 // Loading settings for all environment types.
