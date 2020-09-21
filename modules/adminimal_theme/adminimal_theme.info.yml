@@ -1,0 +1,5 @@
+name: Adminimal
+type: theme
+description: 'Drupal administration theme with modern minimalist design.'
+core_version_requirement: ^8.8 || ^9
+base theme: seven
