@@ -1,6 +1,6 @@
 ---
 
-image: quay.io/govcms/govcms-ci
+image: govcms/govcms-ci:latest
 
 services:
   - "docker:dind"
@@ -177,6 +177,21 @@ test:nginx:
   needs:
     - build:containers
 
+test:drupal_versions:
+  <<: *test
+  stage: test
+  variables:
+    << : *vars
+  script:
+    - ahoy -v install -- install_configure_form.update_status_module='array(FALSE,FALSE)'
+    - docker-compose exec -T cli drush status
+    - /govcms/vendor/bin/govcms-module_verify
+  only:
+    - schedules
+  artifacts:
+    paths:
+      - modules.csv
+
 deploy:edge:
   <<: *deploy
   variables:
@@ -186,6 +201,8 @@ deploy:edge:
     COMPOSE_PROJECT_NAME: "govcms8lagoon"
   only:
     - develop
+  except:
+    - schedules
 
 deploy:beta:
   <<: *deploy
@@ -196,6 +213,8 @@ deploy:beta:
     COMPOSE_PROJECT_NAME: "govcms8lagoon"
   only:
     - master
+  except:
+    - schedules
 
 # @TODO: Allow automatic deploys of latest and tags after
 # the process has been validated.
