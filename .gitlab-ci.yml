@@ -1,6 +1,6 @@
 ---
 
-image: govcms/govcms-ci:edge2
+image: govcms/govcms-ci:latest
 
 services:
   - "docker:dind"
