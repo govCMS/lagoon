@@ -10,6 +10,9 @@ ARG GITHUB_TOKEN
 
 COPY composer.* /app/
 
+# Copy base file for extensible saas.
+COPY custom /app/custom
+
 # Install yq for YAML parsing.
 RUN wget -O /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64" \
   && chmod +x /usr/local/bin/yq

@@ -25,13 +25,14 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6.5",
         "drupal-composer/drupal-scaffold": "^2.5",
+        "drupal/core-recommended": "^8.8",
         "govcms/govcms": "^1.0",
+        "govcms/scaffold-tooling": "^2.0",
+        "symfony/event-dispatcher": "4.3.11 as 3.4.41",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
-        "drupal/core-recommended": "^8.8",
-        "symfony/event-dispatcher": "4.3.11 as 3.4.41",
-        "zaporylie/composer-drupal-optimizations": "^1.0",
-        "govcms/scaffold-tooling": "^2.0"
+        "wikimedia/composer-merge-plugin": "^1.4",
+        "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5"
@@ -101,6 +102,18 @@
                 ".editorconfig": "../.editorconfig",
                 ".gitattributes": "../.gitattributes"
             }
+        },
+        "merge-plugin": {
+            "include": [
+                "custom/composer/composer.json"
+            ],
+            "recurse": true,
+            "replace": true,
+            "ignore-duplicates": false,
+            "merge-dev": true,
+            "merge-extra": true,
+            "merge-extra-deep": false,
+            "merge-scripts": false
         }
     }
 }
