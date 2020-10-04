@@ -75,7 +75,7 @@
             "drupal/core": "-p2"
         },
         "enable-patching": true,
-        "patches": {},
+        "patches-file": "custom/composer/patches.json",
         "installer-types": ["bower-asset", "npm-asset"],
         "installer-paths": {
             "web/core": [
@@ -111,7 +111,7 @@
             "replace": true,
             "ignore-duplicates": false,
             "merge-dev": true,
-            "merge-extra": true,
+            "merge-extra": false,
             "merge-extra-deep": false,
             "merge-scripts": false
         }
