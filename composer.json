@@ -74,7 +74,7 @@
             "drupal/core": "-p2"
         },
         "enable-patching": true,
-        "patches": {},
+        "patches-file": "custom/composer/patches.json",
         "installer-types": ["bower-asset", "npm-asset"],
         "installer-paths": {
             "web/core": [
