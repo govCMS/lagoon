@@ -19,20 +19,22 @@
         {
             "type": "vcs",
             "url": "git@github.com:govCMS/scaffold-tooling.git"
+        },
+        {
+            "type": "path",
+            "url": "custom/composer"
         }
     ],
     "require": {
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6.5",
-        "drupal-composer/drupal-scaffold": "^2.5",
-        "drupal/core-recommended": "^8.8",
         "govcms/govcms": "^1.0",
         "govcms/scaffold-tooling": "^2.0",
-        "symfony/event-dispatcher": "4.3.11 as 3.4.41",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
-        "wikimedia/composer-merge-plugin": "^1.4",
-        "zaporylie/composer-drupal-optimizations": "^1.0"
+        "zaporylie/composer-drupal-optimizations": "^1.0",
+        "symfony/event-dispatcher": "4.3.11 as 3.4.41",
+        "govcms/govcms-custom": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5"
@@ -65,9 +67,6 @@
         ],
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
-        ],
-        "drupal-scaffold": [
-            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
         ]
     },
     "extra": {
@@ -96,24 +95,6 @@
             "drush/Commands/{$name}": [
                 "type:drupal-drush"
             ]
-        },
-        "drupal-scaffold": {
-            "initial": {
-                ".editorconfig": "../.editorconfig",
-                ".gitattributes": "../.gitattributes"
-            }
-        },
-        "merge-plugin": {
-            "include": [
-                "custom/composer/composer.json"
-            ],
-            "recurse": true,
-            "replace": true,
-            "ignore-duplicates": false,
-            "merge-dev": true,
-            "merge-extra": true,
-            "merge-extra-deep": false,
-            "merge-scripts": false
         }
     }
 }

@@ -1,3 +1,6 @@
 {
-    "require": {}
+    "name": "govcms/govcms-custom",
+    "description": "Provides additional packages over the GovCMS base distribution.",
+    "require": {
+    }
 }
