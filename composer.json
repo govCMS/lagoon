@@ -19,6 +19,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:govCMS/scaffold-tooling.git"
+        },
+        {
+            "type": "path",
+            "url": "custom/composer"
         }
     ],
     "require": {
@@ -27,7 +31,8 @@
         "drupal/core-recommended": "^8.8",
         "symfony/event-dispatcher": "4.3.11 as 3.4.41",
         "govcms/govcms": "dev-migrate_scaffold",
-        "govcms/scaffold-tooling": "dev-feature/drupal-scaffold"
+        "govcms/scaffold-tooling": "dev-feature/drupal-scaffold",
+        "govcms/govcms-custom": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5"
@@ -48,7 +53,7 @@
             "drupal/core": "-p2"
         },
         "enable-patching": true,
-        "patches": {},
+        "patches-file": "custom/composer/patches.json",
         "installer-types": ["bower-asset", "npm-asset"],
         "installer-paths": {
             "web/core": ["type:drupal-core"],
