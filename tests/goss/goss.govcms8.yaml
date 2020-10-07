@@ -25,10 +25,25 @@ file:
     exists: true
     filetype: file
     contains:
-    - "Lagoon Drupal 8 configuration file."
-  /usr/bin/govcms-deploy:
+    - "Drupal 8 all environment configuration file."
+  /app/web/sites/default/lagoon.settings.php:
     exists: true
-    mode: "0755"
+    filetype: file
+  /app/web/sites/default/production.settings.php:
+    exists: true
+    filetype: file
+  /app/web/sites/default/development.settings.php:
+    exists: true
+    filetype: file
+  /app/web/sites/default/lagoon.services.yml:
+    exists: true
+    filetype: file
+  /app/web/sites/default/production.services.yml:
+    exists: true
+    filetype: file
+  /app/web/sites/default/development.services.yml:
+    exists: true
+    filetype: file
   /app/web/sites:
     exists: true
     filetype: directory
