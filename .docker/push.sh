@@ -19,7 +19,7 @@ FORCE_IMAGE_BUILD=${FORCE_IMAGE_BUILD:-}
 # Path prefix to Dockerfiles extension that is used as a name of the service.
 FILE_EXTENSION_PREFIX=${FILE_EXTENSION_PREFIX:-.docker/Dockerfile.}
 # CLI Image name
-CLI_IMAGE=${DOCKERHUB_NAMESPACE:-govcms}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
+CLI_IMAGE=${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
 
 for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
     service=${file/$FILE_EXTENSION_PREFIX/}
