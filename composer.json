@@ -14,7 +14,7 @@
         },
         {
             "type": "vcs",
-            "url": "git@github.com:govcms/govcms8.git"
+            "url": "git@github.com:tobybellwood/govCMS8.git"
         },
         {
             "type": "vcs",
@@ -24,14 +24,13 @@
     "require": {
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6.5",
-        "drupal-composer/drupal-scaffold": "^2.5",
-        "govcms/govcms": "^1.0",
+        "govcms/govcms": "dev-migrate_scaffold",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3",
         "drupal/core-recommended": "^8.8",
         "symfony/event-dispatcher": "4.3.11 as 3.4.41",
         "zaporylie/composer-drupal-optimizations": "^1.0",
-        "govcms/scaffold-tooling": "^2.0"
+        "govcms/scaffold-tooling": "dev-feature/drupal-scaffold"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5"
@@ -52,23 +51,6 @@
             "scripts/composer/ScriptHandler.php"
         ]
     },
-    "scripts": {
-        "pre-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "pre-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
-        ],
-        "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
-        ],
-        "drupal-scaffold": [
-            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
-        ]
-    },
     "extra": {
         "patchLevel": {
             "drupal/core": "-p2"
@@ -77,29 +59,21 @@
         "patches": {},
         "installer-types": ["bower-asset", "npm-asset"],
         "installer-paths": {
-            "web/core": [
-                "type:drupal-core"
-            ],
-            "web/libraries/{$name}": [
-                "type:drupal-library", "type:bower-asset", "type:npm-asset"
-            ],
-            "web/modules/contrib/{$name}": [
-                "type:drupal-module"
-            ],
-            "web/profiles/contrib/{$name}": [
-                "type:drupal-profile"
-            ],
-            "web/themes/contrib/{$name}": [
-                "type:drupal-theme"
-            ],
-            "drush/Commands/{$name}": [
-                "type:drupal-drush"
-            ]
+            "web/core": ["type:drupal-core"],
+            "web/libraries/{$name}": ["type:drupal-library"],
+            "web/modules/contrib/{$name}": ["type:drupal-module"],
+            "web/profiles/contrib/{$name}": ["type:drupal-profile"],
+            "web/themes/contrib/{$name}": ["type:drupal-theme"],
+            "drush/Commands/contrib/{$name}": ["type:drupal-drush"],
+            "web/modules/custom/{$name}": ["type:drupal-custom-module"],
+            "web/themes/custom/{$name}": ["type:drupal-custom-theme"]
         },
         "drupal-scaffold": {
-            "initial": {
-                ".editorconfig": "../.editorconfig",
-                ".gitattributes": "../.gitattributes"
+            "allowed-packages": [
+                "govcms/scaffold-tooling"
+            ],
+            "locations": {
+                "web-root": "web/"
             }
         }
     }
