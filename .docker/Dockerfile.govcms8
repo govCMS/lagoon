@@ -21,8 +21,6 @@ RUN wget -O /usr/local/bin/jq "https://github.com/stedolan/jq/releases/download/
 RUN sed -i -e "/govcms\/govcms/ s!\^1.0!${GOVCMS_PROJECT_VERSION}!" /app/composer.json \
     && sed -i -e "/drupal\/core-recommended/ s!\^8.8!${DRUPAL_CORE_VERSION}!" /app/composer.json
 
-COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
-
 ENV COMPOSER_MEMORY_LIMIT=-1
 # Set the Github OAuth token only when the variable is set.
 RUN [[ ! -z "${GITHUB_TOKEN}" ]]  && composer config -g github-oauth.github.com ${GITHUB_TOKEN} || echo "Personal Github OAuth token is not set."
