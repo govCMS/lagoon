@@ -6,7 +6,7 @@
 # Docker registry host - when set should contain /.
 DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-}
 # Namespace for the image.
-DOCKERHUB_NAMESPACE=${DOCKERHUB_NAMESPACE:-govcms}
+DOCKERHUB_NAMESPACE=${DOCKERHUB_NAMESPACE:-govcms8lagoon}
 # Docker image version tag.
 IMAGE_VERSION_TAG=${IMAGE_VERSION_TAG:-}
 # Docker image tag prefix to be stripped from tag. Use " " (space) value to
