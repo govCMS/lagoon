@@ -8,6 +8,9 @@ ARG GITHUB_TOKEN
 
 COPY composer.* /app/
 
+# Copy base file for extensible saas.
+COPY custom /app/custom
+
 # Install yq for YAML parsing.
 RUN wget -O /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64" \
   && chmod +x /usr/local/bin/yq
@@ -25,8 +28,6 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 # Set the Github OAuth token only when the variable is set.
 RUN [[ ! -z "${GITHUB_TOKEN}" ]]  && composer config -g github-oauth.github.com ${GITHUB_TOKEN} || echo "Personal Github OAuth token is not set."
 RUN composer install -d /app \
-    # Force drupal-scaffold to run to ensure that the needed files are always created, even if a composer.lock is provided
-    && composer drupal-scaffold \
     && composer clearcache
 
 COPY .docker/sanitize.sh /app/sanitize.sh
