@@ -7,7 +7,7 @@ x-volumes:
 
 x-environment:
   &default-environment
-    LAGOON_ROUTE: ${LOCALDEV_URL:-http://govcms8lagoon.docker.amazee.io}
+    LAGOON_ROUTE: ${LOCALDEV_URL:-http://govcmslagoon.docker.amazee.io}
     DEV_MODE: ${DEV_MODE:-false}
     CACHE_MAX_AGE: ${CACHE_MAX_AGE:-3600}
 
@@ -19,7 +19,7 @@ services:
   cli:
     build:
       context: .
-      dockerfile: $PWD/.docker/Dockerfile.govcms8
+      dockerfile: $PWD/.docker/Dockerfile.govcms
       args:
         GOVCMS_PROJECT_VERSION: ${GOVCMS_PROJECT_VERSION:-^1.0}
         DRUPAL_CORE_VERSION: ${DRUPAL_CORE_VERSION:-^8.8}
@@ -27,7 +27,7 @@ services:
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.4}
         COMPOSER_AUTH: ${COMPOSER_AUTH:-}
         GITHUB_TOKEN: ${GITHUB_TOKEN:-}
-    image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
+    image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
     << : *default-volumes
     environment:
       << : *default-environment
@@ -37,7 +37,7 @@ services:
       context: .
       dockerfile: $PWD/.docker/Dockerfile.test
       args:
-        CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
+        CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.4}
         SITE_AUDIT_VERSION: ${SITE_AUDIT_VERSION:-7.x-3.x}
@@ -54,13 +54,13 @@ services:
       context: .
       dockerfile: $PWD/.docker/Dockerfile.nginx-drupal
       args:
-        CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
+        CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/nginx-drupal
     << : *default-volumes
     environment:
       << : *default-environment
-      LAGOON_LOCALDEV_URL: ${LOCALDEV_URL_NGINX:-http://govcms8-lagoon-nginx.docker.amazee.io}
+      LAGOON_LOCALDEV_URL: ${LOCALDEV_URL_NGINX:-http://govcms-lagoon-nginx.docker.amazee.io}
       X_FRAME_OPTIONS: ${X_FRAME_OPTIONS:-SameOrigin}
     networks:
       - amazeeio-network
@@ -71,7 +71,7 @@ services:
       context: .
       dockerfile: $PWD/.docker/Dockerfile.php
       args:
-        CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
+        CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.4}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/php
@@ -106,7 +106,7 @@ services:
       context: .
       dockerfile: $PWD/.docker/Dockerfile.solr
       args:
-        CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
+        CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/solr
     ports:
       - "8983" # Find port on host with `docker-compose port solr 8983`
