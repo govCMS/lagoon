@@ -22,13 +22,14 @@
         }
     ],
     "require": {
+        "composer/installers": "^1.2",
         "cweagans/composer-patches": "dev-master",
         "govcms-poc/govcms": "2.x-dev",
+        "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "9.x-dev",
         "webflo/drupal-finder": "^1.2",
         "webmozart/path-util": "^2.3",
-        "zaporylie/composer-drupal-optimizations": "^1.0",
-        "govcms/govcms-custom": "*"
+        "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5"
@@ -70,6 +71,11 @@
         "enable-patching": true,
         "patches-file": "custom/composer/patches.json",
         "installer-types": ["bower-asset", "npm-asset"],
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "web/"
+            }
+        },
         "installer-paths": {
             "web/core": [
                 "type:drupal-core"
