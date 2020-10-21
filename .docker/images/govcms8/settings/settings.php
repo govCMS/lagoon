@@ -271,6 +271,11 @@ if (getenv('LAGOON')) {
   }
 }
 
+// Allow setting a higher timeout value for HTTP Client requests (default: 30 seconds).
+if (is_numeric($http_client_timeout = getenv('GOVCMS_HTTP_CLIENT_TIMEOUT'))) {
+  $settings['http_client_config']['timeout'] = $http_client_timeout;
+}
+
 // Enforce correct solr server configuration (GOVCMS-4634)
 // Fix for 8.5.0 and the solr upgrade.
 $config['search_api.server.lagoon_solr']['backend_config']['connector_config']['path'] = '/';
