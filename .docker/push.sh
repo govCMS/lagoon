@@ -6,23 +6,28 @@
 # Docker registry host - when set should contain /.
 DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-}
 # Namespace for the image.
-DOCKERHUB_NAMESPACE=${DOCKERHUB_NAMESPACE:-govcms8}
+DOCKERHUB_NAMESPACE=${DOCKERHUB_NAMESPACE:-govcms8lagoon}
 # Docker image version tag.
 IMAGE_VERSION_TAG=${IMAGE_VERSION_TAG:-}
 # Docker image tag prefix to be stripped from tag. Use " " (space) value to
 # prevent stripping of the version.
 IMAGE_VERSION_TAG_PREFIX=${IMAGE_VERSION_TAG_PREFIX:-8.x-}
 # Docker image edge tag.
-IMAGE_TAG_EDGE=${IMAGE_TAG_EDGE:-}
+IMAGE_TAG_EDGE=${IMAGE_TAG_EDGE:-edge}
 # Flag to force image build.
 FORCE_IMAGE_BUILD=${FORCE_IMAGE_BUILD:-}
 # Path prefix to Dockerfiles extension that is used as a name of the service.
 FILE_EXTENSION_PREFIX=${FILE_EXTENSION_PREFIX:-.docker/Dockerfile.}
 # CLI Image name
-CLI_IMAGE=${DOCKERHUB_NAMESPACE:-govcms8lagoon}/govcms8
+CLI_IMAGE=${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
 
 for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
     service=${file/$FILE_EXTENSION_PREFIX/}
+
+    # Support govcms8lagoon/govcms8 & govcms/govcms
+    if [[ "$service" == "govcms" && "$GOVCMS_CLI_IMAGE_NAME" == "govcms8" ]]; then
+      service=govcms8
+    fi
 
     version_tag=$IMAGE_VERSION_TAG
     [ "$IMAGE_VERSION_TAG_PREFIX" != "" ] && version_tag=${IMAGE_VERSION_TAG/$IMAGE_VERSION_TAG_PREFIX/}
