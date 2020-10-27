@@ -273,6 +273,19 @@ if (getenv('LAGOON')) {
   }
 }
 
+// Allow projects to increase the HTTP client timeout for CLI requests.
+// This will impact migrations that rely on external services and other
+// HTTP requests that the Drupal request library makes.
+//
+// This has only been added to affect CLI because this timeout can hold
+// PHP processes if a remote request is unavailable, as sites can do
+// inline HTTP requests this is a performance risk.
+if (defined('STDIN') || in_array(PHP_SAPI, ['cli', 'cli-server'])) {
+  if (is_numeric($http_client_timeout = getenv('GOVCMS_HTTP_CLIENT_TIMEOUT'))) {
+    $settings['http_client_config']['timeout'] = $http_client_timeout;
+  }
+}
+
 // Enforce correct solr server configuration (GOVCMS-4634)
 // Fix for 8.5.0 and the solr upgrade.
 $config['search_api.server.lagoon_solr']['backend_config']['connector_config']['path'] = '/';
