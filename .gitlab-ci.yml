@@ -190,7 +190,7 @@ test:drupal_versions:
     - schedules
   artifacts:
     paths:
-      - modules.csv
+      - $CSV_LOCATION
 
 deploy:edge:
   <<: *deploy
