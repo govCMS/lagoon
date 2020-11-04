@@ -35,3 +35,6 @@ $config['environment_indicator.indicator']['name'] = 'Production';
 
 // Disable temporary file deletion (GOVCMSD8-576).
 $config['system.file']['temporary_maximum_age'] = 0;
+if (is_numeric($file_gc = getenv('GOVCMS_FILE_TEMP_MAX_AGE'))) {
+  $config['system.file']['temporary_maximum_age'] = $file_gc;
+}
