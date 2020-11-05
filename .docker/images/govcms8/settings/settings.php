@@ -184,7 +184,7 @@ if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
     if ($redis->connect($redis_host, $redis_port, 1) === FALSE) {
       throw new \Exception('Redis server unreachable.');
     }
-    
+
     $response = $redis->ping();
     if (strpos($response, 'PONG') === FALSE) {
       throw new \Exception('Redis could be reached but is not responding correctly.');
@@ -249,7 +249,7 @@ if (getenv('LAGOON') && (getenv('ENABLE_REDIS'))) {
 if (getenv('LAGOON')) {
   $settings['file_public_path'] = 'sites/default/files';
   $settings['file_private_path'] = 'sites/default/files/private';
-  $config['system.file']['path']['temporary'] = 'sites/default/files/private/tmp';
+  $settings['file_temp_path'] = 'sites/default/files/private/tmp';
 }
 
 
