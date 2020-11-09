@@ -226,6 +226,17 @@ deploy:edge9:
   only:
     - 9.x
 
+deploy:9latest:
+  <<: *deploy
+  variables:
+    <<: *vars
+    IMAGE_TAG_EDGE: 9.x-latest
+    DOCKERHUB_NAMESPACE: "govcms"
+    COMPOSE_PROJECT_NAME: "govcmslagoon"
+    GOVCMS_CLI_IMAGE_NAME: "govcms"
+  only:
+    - 9.x
+
 # @TODO: Allow automatic deploys of latest and tags after
 # the process has been validated.
 # deploy:latest:

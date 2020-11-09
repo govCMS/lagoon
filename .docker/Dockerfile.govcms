@@ -3,6 +3,7 @@ ARG PHP_IMAGE_VERSION
 
 FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal-${LAGOON_IMAGE_VERSION} as builder
 
+ARG GOVCMS_PROJECT_VERSION
 ARG COMPOSER_AUTH
 ARG GITHUB_TOKEN
 
@@ -19,8 +20,8 @@ RUN wget -O /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download
 RUN wget -O /usr/local/bin/jq "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64" \
   && chmod +x /usr/local/bin/jq
 
-RUN sed -i -e "/govcms\/govcms/ s!\^1.0!${GOVCMS_PROJECT_VERSION}!" /app/composer.json \
-    && sed -i -e "/drupal\/core-recommended/ s!\^8.8!${DRUPAL_CORE_VERSION}!" /app/composer.json
+RUN sed -i -e "/govcms-poc\/govcms/ s!2.x-dev!${GOVCMS_PROJECT_VERSION}!" /app/composer.json \
+    && sed -i -e "/drupal\/core-recommended/ s!\^9.0!${DRUPAL_CORE_VERSION}!" /app/composer.json
 
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 

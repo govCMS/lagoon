@@ -21,8 +21,7 @@ services:
       context: .
       dockerfile: $PWD/.docker/Dockerfile.govcms
       args:
-        GOVCMS_PROJECT_VERSION: ${GOVCMS_PROJECT_VERSION:-^1.0}
-        DRUPAL_CORE_VERSION: ${DRUPAL_CORE_VERSION:-^8.8}
+        GOVCMS_PROJECT_VERSION: ${GOVCMS_PROJECT_VERSION:-2.x-dev}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
         PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.4}
         COMPOSER_AUTH: ${COMPOSER_AUTH:-}
