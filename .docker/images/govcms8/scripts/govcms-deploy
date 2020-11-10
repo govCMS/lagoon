@@ -36,8 +36,9 @@ read_replica_enabled () {
 
 # Database updates, cache rebuild, optional config imports.
 common_deploy () {
-  drush updb -y
+  drush eval "\Drupal::service('extension.list.theme')->reset()->getList();"
   drush cr
+  drush updb -y
 
   # Base configuration import with development environment overrides.
   if [ "$config_count" -gt 0 ]; then
