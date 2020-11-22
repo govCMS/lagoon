@@ -201,8 +201,6 @@ deploy:edge:
     COMPOSE_PROJECT_NAME: "govcms8lagoon"
   only:
     - develop
-  except:
-    - schedules
 
 deploy:beta:
   <<: *deploy
@@ -213,8 +211,16 @@ deploy:beta:
     COMPOSE_PROJECT_NAME: "govcms8lagoon"
   only:
     - master
-  except:
-    - schedules
+
+deploy:9x:
+  << : *deploy
+  variables:
+    <<: *vars
+    IMAGE_TAG_EDGE: 9.x-edge
+    DOCKERHUB_NAMESPACE: "govcms8lagoon"
+    COMPOSE_PROJECT_NAME: "govcms8lagoon"
+  only:
+    - 9.x
 
 # @TODO: Allow automatic deploys of latest and tags after
 # the process has been validated.
