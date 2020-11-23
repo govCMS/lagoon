@@ -1,7 +1,7 @@
 ARG CLI_IMAGE
 FROM ${CLI_IMAGE} as cli
 
-FROM amazeeio/solr:7.5-drupal
+FROM uselagoon/solr-7.7-drupal
 COPY --from=cli /app/web/modules/contrib/search_api_solr/solr-conf-templates/7.x/ /solr-conf/conf/
 
 USER root
