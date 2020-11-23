@@ -11,6 +11,8 @@ stages:
   - test
   - deploy
 
+# .env is used by the docker build process to inject
+# software versions for govcms etc.
 .before_script_common: &before_script_common |-
   cp .env.default .env
 
@@ -73,7 +75,7 @@ stages:
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - ahoy build
   script:
-    - ahoy push
+    - .docker/push.sh
 
 validate:containers:
   stage: validate
