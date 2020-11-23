@@ -201,8 +201,6 @@ deploy:edge:
     COMPOSE_PROJECT_NAME: "govcms8lagoon"
   only:
     - develop
-  except:
-    - schedules
 
 deploy:beta:
   <<: *deploy
@@ -213,8 +211,6 @@ deploy:beta:
     COMPOSE_PROJECT_NAME: "govcms8lagoon"
   only:
     - master
-  except:
-    - schedules
 
 # @TODO: Allow automatic deploys of latest and tags after
 # the process has been validated.
