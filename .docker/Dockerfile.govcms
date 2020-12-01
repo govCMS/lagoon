@@ -54,5 +54,10 @@ COPY modules/ /app/web/sites/all/modules/
 COPY .docker/images/govcms8/settings/ /app/web/sites/default/
 RUN chmod 444 /app/web/sites/default/settings.php
 
+# Sanitize as an entrypoint to ensure that potentially vulnerable
+# files are removed when the container is started.
+COPY .docker/sanitize.sh /lagoon/entrypoints/20-sanitize.sh
+RUN chmod +x /lagoon/entrypoints/20-sanitize.sh
+
 # Define where the Drupal Root is located
 ENV WEBROOT=web

@@ -10,7 +10,10 @@ RUN apk add --no-cache --update clamav clamav-libunrar --repository http://dl-cd
 
 COPY .docker/images/php/00-govcms.ini /usr/local/etc/php/conf.d/
 COPY --from=cli /app /app
+
 COPY .docker/sanitize.sh /app/sanitize.sh
+COPY .docker/sanitize.sh /lagoon/entrypoints/20-sanitize.sh
+RUN chmod +x /lagoon/entrypoints/20-sanitize.sh
 
 RUN /app/sanitize.sh \
   && rm -rf /app/sanitize.sh

@@ -13,7 +13,10 @@ COPY .docker/images/nginx/drupal /etc/nginx/conf.d/drupal
 RUN fix-permissions /etc/nginx
 
 COPY --from=cli /app /app
+
 COPY .docker/sanitize.sh /app/sanitize.sh
+COPY .docker/sanitize.sh /lagoon/entrypoints/20-sanitize.sh
+RUN chmod +x /lagoon/entrypoints/20-sanitize.sh
 
 RUN /app/sanitize.sh \
   && rm -rf /app/sanitize.sh
