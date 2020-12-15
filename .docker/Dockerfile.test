@@ -12,21 +12,15 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 COPY --from=cli /app /app
-COPY .docker/scripts/phpunit /app/web/profiles/contrib/govcms/.docker/phpunit
-COPY .docker/scripts/lint-govcms /app/web/profiles/contrib/govcms/.docker/scripts/lint-govcms
-COPY .docker/scripts/lint-theme /app/web/profiles/contrib/govcms/.docker/scripts/lint-theme
+COPY .docker/scripts/ /usr/bin/
 
 RUN cp -r /app/web/profiles/contrib/govcms/tests /app/ \
     && echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/memory.ini \
     && composer install -d /app/tests -n --ansi --prefer-dist --no-suggest \
     && rm -rf /usr/local/etc/php/conf.d/memory.ini \
-    && mv /app/web/profiles/contrib/govcms/.docker/scripts/lint-govcms /usr/bin/lint-govcms \
     && chmod +x /usr/bin/lint-govcms \
-    && mv /app/web/profiles/contrib/govcms/.docker/scripts/lint-theme /usr/bin/lint-theme \
     && chmod +x /usr/bin/lint-theme \
-    && mv /app/web/profiles/contrib/govcms/.docker/scripts/behat /usr/bin/behat \
     && chmod +x /usr/bin/behat \
-    && mv /app/web/profiles/contrib/govcms/.docker/phpunit /usr/bin/phpunit \
     && chmod +x /usr/bin/phpunit
 
 COPY .docker/images/test/drutiny /usr/bin/drutiny
