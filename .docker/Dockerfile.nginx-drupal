@@ -2,7 +2,7 @@ ARG CLI_IMAGE
 ARG LAGOON_IMAGE_VERSION
 FROM ${CLI_IMAGE} as cli
 
-FROM amazeeio/nginx-drupal:${LAGOON_IMAGE_VERSION}
+FROM uselagoon/nginx-drupal:${LAGOON_IMAGE_VERSION}
 
 # nginx config.
 COPY .docker/images/nginx/no-robots.sh /lagoon/entrypoints/20-no-robots.sh
