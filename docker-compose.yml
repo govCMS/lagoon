@@ -106,6 +106,7 @@ services:
       dockerfile: $PWD/.docker/Dockerfile.solr
       args:
         CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
+        LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/solr
     ports:
       - "8983" # Find port on host with `docker-compose port solr 8983`
