@@ -14,6 +14,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 COPY --from=cli /app /app
 COPY .docker/scripts/phpunit /app/web/profiles/contrib/govcms/.docker/phpunit
 COPY .docker/scripts/lint-govcms /app/web/profiles/contrib/govcms/.docker/scripts/lint-govcms
+COPY .docker/scripts/lint-theme /app/web/profiles/contrib/govcms/.docker/scripts/lint-theme
 
 RUN cp -r /app/web/profiles/contrib/govcms/tests /app/ \
     && echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/memory.ini \
