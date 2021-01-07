@@ -50,6 +50,7 @@ stages:
     - mkdir -p $HOME/bin
     - export PATH=$PATH:$HOME/bin
     - mv container-diff-linux-amd64 $HOME/bin/container-diff
+    - sleep 10
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - ahoy build
   script:
