@@ -81,7 +81,7 @@ validate:containers:
     - docker-compose config -q
 
 build:containers:
-  image: docker/19-dind
+  image: docker:19-dind
   variables:
     <<: *vars
     DOCKER_REGISTRY_HOST: $CI_REGISTRY/
