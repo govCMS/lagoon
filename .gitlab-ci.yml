@@ -3,7 +3,7 @@
 image: govcms/govcms-ci:latest
 
 services:
-  - "docker:dind"
+  - "dind"
 
 stages:
   - validate
