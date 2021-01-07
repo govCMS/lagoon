@@ -3,7 +3,7 @@
 image: govcms/govcms-ci:latest
 
 services:
-  - "dind"
+  - "docker:dind"
 
 stages:
   - validate
@@ -81,6 +81,7 @@ validate:containers:
     - docker-compose config -q
 
 build:containers:
+  image: docker/19-dind
   variables:
     <<: *vars
     DOCKER_REGISTRY_HOST: $CI_REGISTRY/
