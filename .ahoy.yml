@@ -12,7 +12,7 @@ commands:
 
   build:
     usage: Build project.
-    cmd: docker-compose up -d --build "$@"
+    cmd: docker-compose build --no-cache; docker-compose up -d "$@"
 
   cli:
     usage: Start a shell inside TEST container.
