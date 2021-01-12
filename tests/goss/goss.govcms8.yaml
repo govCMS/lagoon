@@ -25,7 +25,7 @@ file:
     exists: true
     filetype: file
     contains:
-    - "Lagoon Drupal 8 configuration file."
+    - "Drupal settings entry point."
   /usr/bin/govcms-deploy:
     exists: true
     mode: "0755"

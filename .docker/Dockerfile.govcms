@@ -52,8 +52,5 @@ RUN mkdir -p /app/web/sites/default/files/private \
 
 COPY modules/ /app/web/sites/all/modules/
 
-COPY .docker/images/govcms/settings/ /app/web/sites/default/
-RUN chmod 444 /app/web/sites/default/settings.php
-
 # Define where the Drupal Root is located
 ENV WEBROOT=web
