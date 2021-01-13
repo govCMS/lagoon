@@ -1,9 +1,8 @@
 ---
-
-image: govcms/govcms-ci:latest
+image: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci${GOVCMS_CI_IMAGE_VERSION}
 
 services:
-  - "docker:dind"
+  - gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci/dind:latest
 
 stages:
   - validate
