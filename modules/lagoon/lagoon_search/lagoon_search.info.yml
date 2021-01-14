@@ -5,6 +5,7 @@ version: 8.x-1.1
 
 type: module
 core: 8.x
+core_version_requirement: ^8 || ^9
 
 dependencies:
   - search_api_solr:search_api_solr
