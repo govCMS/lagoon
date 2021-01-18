@@ -23,6 +23,7 @@ stages:
   IMAGE_VERSION_TAG_PREFIX: ""
   IMAGE_VERSION_TAG: ""
   IMAGE_TAG_EDGE: $CI_COMMIT_SHA
+  DOCKER_HOST: tcp://localhost:2375
 
 .test: &test
   variables:
