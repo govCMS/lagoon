@@ -22,6 +22,7 @@ class RobotsTxtTest extends TestCase {
       ['multi.subdomain.govcms.gov.au'],
       ['www2.govcms.gov.au'],
       ['test.govcms.gov.au'],
+      ['test.govcms.amazee.io'],
     ];
   }
 
