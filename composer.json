@@ -24,7 +24,7 @@
     "require": {
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "dev-master",
-        "govcms-poc/govcms": "2.x-dev",
+        "govcms/govcms": "2.x-dev",
         "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "9.x-dev",
         "webmozart/path-util": "^2.3"
