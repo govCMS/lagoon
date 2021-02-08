@@ -11,7 +11,7 @@ DOCKERHUB_NAMESPACE=${DOCKERHUB_NAMESPACE:-govcms8lagoon}
 IMAGE_VERSION_TAG=${IMAGE_VERSION_TAG:-}
 # Docker image tag prefix to be stripped from tag. Use " " (space) value to
 # prevent stripping of the version.
-IMAGE_VERSION_TAG_PREFIX=${IMAGE_VERSION_TAG_PREFIX:-8.x-}
+IMAGE_VERSION_TAG_PREFIX=${IMAGE_VERSION_TAG_PREFIX:-9.x-}
 # Docker image edge tag.
 IMAGE_TAG_EDGE=${IMAGE_TAG_EDGE:-edge}
 # Flag to force image build.

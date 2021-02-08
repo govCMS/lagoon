@@ -23,7 +23,6 @@ services:
       args:
         GOVCMS_PROJECT_VERSION: ${GOVCMS_PROJECT_VERSION:-2.x-dev}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
-        PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.4}
         COMPOSER_AUTH: ${COMPOSER_AUTH:-}
         GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
@@ -38,7 +37,6 @@ services:
       args:
         CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
-        PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.4}
         SITE_AUDIT_VERSION: ${SITE_AUDIT_VERSION:-7.x-3.x}
         COMPOSER_AUTH: ${COMPOSER_AUTH:-}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/test
@@ -72,7 +70,6 @@ services:
       args:
         CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
-        PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION:-7.4}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/php
     << : *default-volumes
     environment:
