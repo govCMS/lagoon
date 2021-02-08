@@ -218,7 +218,7 @@ deploy:edge9:
   <<: *deploy
   variables:
     <<: *vars
-    IMAGE_TAG_EDGE: edge-9.x
+    IMAGE_TAG_EDGE: 9.x-edge
     DOCKERHUB_NAMESPACE: "govcms8lagoon"
     COMPOSE_PROJECT_NAME: "govcms8lagoon"
   only:
