@@ -18,11 +18,6 @@ stages:
   export $(echo $(cat .env.default | sed 's/#.*//g'| xargs) | envsubst)
 
 .variables: &vars
-  # LAGOON_IMAGE_VERSION: "v1.1.2"
-  # DRUPAL_CORE_VERSION: "8.7.9 "
-  # GOVCMS_PROJECT_VERSION: "1.x-dev"
-  # SITE_AUDIT_VERSION: "7.x-3.x"
-  # DOCKERHUB_NAMESPACE: "govcms8lagoon"
   IMAGE_VERSION_TAG_PREFIX: ""
   IMAGE_VERSION_TAG: ""
   IMAGE_TAG_EDGE: $CI_COMMIT_SHA
@@ -87,7 +82,6 @@ build:containers:
   variables:
     <<: *vars
     DOCKER_REGISTRY_HOST: $CI_REGISTRY/
-    DOCKERHUB_NAMESPACE: dof-dev/govcms8lagoon
   stage: build
   before_script:
     - *before_script_common
@@ -195,33 +189,14 @@ test:drupal_versions:
     paths:
       - $CSV_LOCATION
 
-deploy:edge:
-  <<: *deploy
-  variables:
-    <<: *vars
-    IMAGE_TAG_EDGE: edge
-    DOCKERHUB_NAMESPACE: "govcms8lagoon"
-    COMPOSE_PROJECT_NAME: "govcms8lagoon"
-  only:
-    - develop
-
-deploy:beta:
-  <<: *deploy
-  variables:
-    <<: *vars
-    IMAGE_TAG_EDGE: beta
-    DOCKERHUB_NAMESPACE: "govcms8lagoon"
-    COMPOSE_PROJECT_NAME: "govcms8lagoon"
-  only:
-    - master
-
 deploy:9-edge:
   <<: *deploy
   variables:
     <<: *vars
     IMAGE_TAG_EDGE: 9.x-edge
-    DOCKERHUB_NAMESPACE: "govcms8lagoon"
-    COMPOSE_PROJECT_NAME: "govcms8lagoon"
+    DOCKERHUB_NAMESPACE: "govcms"
+    COMPOSE_PROJECT_NAME: "govcmslagoon"
+    GOVCMS_CLI_IMAGE_NAME: "govcms"
   only:
     - 9.x
 
@@ -234,7 +209,7 @@ deploy:9-latest:
     COMPOSE_PROJECT_NAME: "govcmslagoon"
     GOVCMS_CLI_IMAGE_NAME: "govcms"
   only:
-    - 9.x
+    - 9.x # @todo: 9.x-stable, tags, release branches?
 
 # @TODO: Allow automatic deploys of latest and tags after
 # the process has been validated.
