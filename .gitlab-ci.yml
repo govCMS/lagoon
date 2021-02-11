@@ -11,6 +11,8 @@ stages:
   - test
   - deploy
 
+# .env is used by the docker build process to inject
+# software versions for govcms etc.
 .before_script_common: &before_script_common |-
   cp .env.default .env
   export $(echo $(cat .env.default | sed 's/#.*//g'| xargs) | envsubst)
@@ -69,40 +71,17 @@ stages:
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - ahoy build
   script:
-    - ahoy push
+    - .docker/push.sh
 
 validate:containers:
   stage: validate
   script:
     - docker-compose config -q
 
-##
-## Legacy images are built as govcms8lagoon/govcms8.
-##
-build:legacy-containers:
-  variables:
-    <<: *vars
-    DOCKER_REGISTRY_HOST: $CI_REGISTRY/
-    DOCKERHUB_NAMESPACE: govcms8lagoon
-    GOVCMS_CLI_IMAGE_NAME: govcms8
-  stage: build
-  before_script:
-    - *before_script_common
-  script:
-    # @TODO: Re-instate container caching.
-    # - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
-    - ahoy -v build
-    - docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 1m
-    # @TODO: Re-instate container caching.
-    # - .docker/push.sh
-
 build:containers:
   variables:
     <<: *vars
     DOCKER_REGISTRY_HOST: $CI_REGISTRY/
-    DOCKERHUB_NAMESPACE: govcms
-    GOVCMS_CLI_IMAGE_NAME: govcms
   stage: build
   before_script:
     - *before_script_common
@@ -210,28 +189,6 @@ test:drupal_versions:
     paths:
       - $CSV_LOCATION
 
-deploy:legacy-edge:
-  <<: *deploy
-  variables:
-    <<: *vars
-    IMAGE_TAG_EDGE: edge
-    DOCKERHUB_NAMESPACE: "govcms8lagoon"
-    COMPOSE_PROJECT_NAME: "govcms8lagoon"
-    GOVCMS_CLI_IMAGE_NAME: "govcms8"
-  only:
-    - develop
-
-deploy:legacy-beta:
-  <<: *deploy
-  variables:
-    <<: *vars
-    IMAGE_TAG_EDGE: beta
-    DOCKERHUB_NAMESPACE: "govcms8lagoon"
-    COMPOSE_PROJECT_NAME: "govcms8lagoon"
-    GOVCMS_CLI_IMAGE_NAME: "govcms8"
-  only:
-    - master
-
 deploy:8-edge:
   <<: *deploy
   variables:
@@ -242,6 +199,17 @@ deploy:8-edge:
     GOVCMS_CLI_IMAGE_NAME: "govcms"
   only:
     - 8.x
+
+deploy:8-latest:
+  <<: *deploy
+  variables:
+    <<: *vars
+    IMAGE_TAG_EDGE: 8.x-latest
+    DOCKERHUB_NAMESPACE: "govcms"
+    COMPOSE_PROJECT_NAME: "govcmslagoon"
+    GOVCMS_CLI_IMAGE_NAME: "govcms"
+  only:
+    - 8.x # @todo: 8.x-stable, tags, release branches?
 
 # @TODO: Allow automatic deploys of latest and tags after
 # the process has been validated.
