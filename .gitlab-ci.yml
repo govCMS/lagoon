@@ -245,7 +245,6 @@ deploy:8-edge:
     COMPOSE_PROJECT_NAME: "govcmslagoon"
     GOVCMS_CLI_IMAGE_NAME: "govcms"
   only:
-    - develop
     - 8.x
 
 # @TODO: Allow automatic deploys of latest and tags after
