@@ -221,6 +221,7 @@ deploy:legacy-edge:
     IMAGE_TAG_EDGE: edge
     DOCKERHUB_NAMESPACE: "govcms8lagoon"
     COMPOSE_PROJECT_NAME: "govcms8lagoon"
+    GOVCMS_CLI_IMAGE_NAME: "govcms8"
   only:
     - develop
 
