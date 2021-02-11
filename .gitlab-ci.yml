@@ -13,13 +13,9 @@ stages:
 
 .before_script_common: &before_script_common |-
   cp .env.default .env
+  export $(echo $(cat .env.default | sed 's/#.*//g'| xargs) | envsubst)
 
 .variables: &vars
-  # LAGOON_IMAGE_VERSION: "v1.1.2"
-  # DRUPAL_CORE_VERSION: "8.7.9 "
-  # GOVCMS_PROJECT_VERSION: "1.x-dev"
-  # SITE_AUDIT_VERSION: "7.x-3.x"
-  # DOCKERHUB_NAMESPACE: "govcms8lagoon"
   IMAGE_VERSION_TAG_PREFIX: ""
   IMAGE_VERSION_TAG: ""
   IMAGE_TAG_EDGE: $CI_COMMIT_SHA
