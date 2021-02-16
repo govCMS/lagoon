@@ -4,7 +4,9 @@ ahoyapi: v2
 commands:
   up:
     usage: Build project.
-    cmd: docker-compose up -d "$@"
+    cmd: |
+      docker-compose up -d "$@" &&
+      docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m;
 
   down:
     usage: Delete project.
@@ -12,7 +14,9 @@ commands:
 
   build:
     usage: Build project.
-    cmd: docker-compose build --no-cache; docker-compose up -d "$@"
+    cmd: |
+      docker-compose build --no-cache; docker-compose up -d "$@" &&
+      docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m;
 
   cli:
     usage: Start a shell inside TEST container.
