@@ -16,7 +16,6 @@ stages:
 .before_script_common: &before_script_common |-
   cp .env.default .env
   export $(echo $(cat .env.default | sed 's/#.*//g'| xargs) | envsubst)
-  env
 
 .variables: &vars
   IMAGE_VERSION_TAG_PREFIX: ""
