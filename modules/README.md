@@ -11,6 +11,8 @@ These modules/themes allow database updates to complete without failure for earl
 
   * `module_filter`
   * `restui`
+  * `page_manager`
+  * `page_manager_ui`
   * `event_log_track_*`
   * `govcms_admin_theme`
   * `govcmsui`
