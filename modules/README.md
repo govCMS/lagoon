@@ -10,6 +10,7 @@ Several placeholder modules and themes are shipped in this folder that are not y
 These modules/themes allow database updates to complete without failure for early pre-release testing.
 
   * `module_filter`
+  * `restui`
   * `event_log_track_*`
   * `govcms_admin_theme`
   * `govcmsui`
