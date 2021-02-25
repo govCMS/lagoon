@@ -13,6 +13,7 @@ These modules/themes allow database updates to complete without failure for earl
   * `restui`
   * `page_manager`
   * `page_manager_ui`
+  * `permissions_by_entity`
   * `event_log_track_*`
   * `govcms_admin_theme`
   * `govcmsui`
