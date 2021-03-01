@@ -14,6 +14,7 @@ These modules/themes allow database updates to complete without failure for earl
   * `page_manager`
   * `page_manager_ui`
   * `permissions_by_entity`
+  * `permissions_by_term`
   * `event_log_track_*`
   * `govcms_admin_theme`
   * `govcmsui`
