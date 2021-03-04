@@ -5,6 +5,7 @@ FROM uselagoon/php-7.4-cli-drupal:${LAGOON_IMAGE_VERSION} as builder
 ARG GOVCMS_PROJECT_VERSION
 ARG COMPOSER_AUTH
 ARG GITHUB_TOKEN
+ARG GOVCMS_COMPOSER_VERSION
 
 COPY composer.* /app/
 
@@ -27,7 +28,9 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 # Set the Github OAuth token only when the variable is set.
 RUN [[ ! -z "${GITHUB_TOKEN}" ]]  && composer config -g github-oauth.github.com ${GITHUB_TOKEN} || echo "Personal Github OAuth token is not set."
 RUN composer global remove hirak/prestissimo \
-    && composer self-update \
+    && if [[ "${GOVCMS_COMPOSER_VERSION}" -eq 1 ]]; then GOVCMS_COMPOSER_VERSION="--1"; else if [[ "${GOVCMS_COMPOSER_VERSION}" -eq 2 ]]; then GOVCMS_COMPOSER_VERSION="--2"; fi; fi; \
+    composer self-update ${GOVCMS_COMPOSER_VERSION}\
+    && composer --version\
     && composer update -d /app \
     && composer clearcache
 
