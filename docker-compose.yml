@@ -25,6 +25,7 @@ services:
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
         COMPOSER_AUTH: ${COMPOSER_AUTH:-}
         GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+        GOVCMS_COMPOSER_VERSION: ${GOVCMS_COMPOSER_VERSION:-2}
     image: ${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
     << : *default-volumes
     environment:
