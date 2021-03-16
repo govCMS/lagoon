@@ -23,7 +23,7 @@
     ],
     "require": {
         "composer/installers": "^1.2",
-        "cweagans/composer-patches": "dev-master",
+        "cweagans/composer-patches": "^1.7",
         "govcms/govcms": "2.x-dev",
         "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "9.x-dev",
