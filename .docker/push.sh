@@ -21,6 +21,14 @@ FILE_EXTENSION_PREFIX=${FILE_EXTENSION_PREFIX:-.docker/Dockerfile.}
 # CLI Image name
 CLI_IMAGE=${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
 
+if [[ -n $CI_COMMIT_REF_SLUG ]]; then
+  if [[ "$CI_COMMIT_REF_SLUG" =~ 1.x ]]; then
+    IMAGE_TAG_EDGE="8.x-$IMAGE_TAG_EDGE";
+  else
+    IMAGE_TAG_EDGE="9.x-$IMAGE_TAG_EDGE";
+  fi
+fi
+
 for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
     service=${file/$FILE_EXTENSION_PREFIX/}
 
@@ -43,12 +51,12 @@ for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
     # Tag images with 'edge' tag and push.
     echo "==> Tagged and pushed \"$service\" image to $DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE"
     docker tag $DOCKERHUB_NAMESPACE/$service $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
-    docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
+    # docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
 
     # Tag images with version tag, if provided, and push.
     if [ "$version_tag" != "" ]; then
       echo "==> Tagging and pushing \"$service\" image to $DOCKERHUB_NAMESPACE/$service:$version_tag"
       docker tag $DOCKERHUB_NAMESPACE/$service $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
-      docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
+      # docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
     fi
 done

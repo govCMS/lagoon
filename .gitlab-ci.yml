@@ -11,174 +11,45 @@ stages:
   - test
   - deploy
 
-# .env is used by the docker build process to inject
-# software versions for govcms etc.
-.before_script_common: &before_script_common |-
-  cp .env.default .env
-  export $(echo $(cat .env.default | sed 's/#.*//g'| xargs) | envsubst)
-
-.variables: &vars
+# ---
+# Alias definitions.
+# ---
+.variables: &variables
   IMAGE_VERSION_TAG_PREFIX: ""
   IMAGE_VERSION_TAG: ""
   IMAGE_TAG_EDGE: $CI_COMMIT_SHA
   DOCKER_HOST: tcp://localhost:2375
 
-.test: &test
-  variables:
-    << : *vars
+.before_script_build: &before_script_build
   before_script:
-    - *before_script_common
-    # @TODO: Re-instate container caching.
-    # - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    # - IMAGE_TAG_EDGE=$CI_COMMIT_SHA DOCKER_REGISTRY_HOST=$CI_REGISTRY/ DOCKERHUB_NAMESPACE=dof-dev/govcms8lagoon .docker/pull.sh
+    - export $(grep -v '^#' .env.default | xargs)
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
-    - ahoy build
-    - ahoy up
-
-.test-diff: &test-diff
-  variables:
-    <<: *vars
-    DOCKER_CONFIG: ~/.docker
-  stage: test
-  artifacts:
-    paths:
-      - $CI_PROJECT_DIR/logs
-  before_script:
-    - curl -LO https://storage.googleapis.com/container-diff/latest/container-diff-linux-amd64 && chmod +x container-diff-linux-amd64
-    - mkdir -p $HOME/bin
-    - export PATH=$PATH:$HOME/bin
-    - mv container-diff-linux-amd64 $HOME/bin/container-diff
-    - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
-    - ahoy build
-  script:
-    - mkdir logs
-    - |
-      for SERVICE in chrome govcms8 mariadb-drupal php redis solr test varnish-drupal; do
-        $HOME/bin/container-diff diff --type=file daemon://${DOCKERHUB_NAMESPACE}/$SERVICE remote://registry.hub.docker.com/${DOCKERHUB_NAMESPACE}/$SERVICE:latest --output logs/$SERVICE.txt
-      done
-  needs:
-    - build:containers
-
-.deploy: &deploy
-  stage: deploy
-  before_script:
-    - *before_script_common
-    # @TODO: Re-instate container caching.
-    # - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    # - IMAGE_TAG_EDGE=$CI_COMMIT_SHA DOCKER_REGISTRY_HOST=$CI_REGISTRY/ DOCKERHUB_NAMESPACE=dof-dev/govcms8lagoon .docker/pull.sh
-    # - docker logout
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
-    - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - ahoy build
-  script:
-    - .docker/push.sh
+# ---
 
-validate:containers:
+# ---
+# Job Definitions
+# ---
+validate:images:
   stage: validate
   script:
     - docker-compose config -q
 
-build:containers:
-  variables:
-    <<: *vars
-    DOCKER_REGISTRY_HOST: $CI_REGISTRY/
+build:images:
   stage: build
-  before_script:
-    - *before_script_common
-  script:
-    # @TODO: Re-instate container caching.
-    # - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
-    - ahoy -v build
-    - docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 1m
-    # @TODO: Re-instate container caching.
-    # - .docker/push.sh
-
-#
-# Container diffing requires pushing images into the gitlab registry.
-# This should be reinstated when container caching has been ironed out.
-#
-# test:diff-edge:
-#   <<: *test-diff
-#   variables:
-#     <<: *vars
-#     IMAGE_TAG_EDGE: edge
-#     IMAGE_VERSION_TAG: edge
-#   only:
-#     - develop
-
-# test:diff-beta:
-#   <<: *test-diff
-#   variables:
-#     <<: *vars
-#     IMAGE_TAG_EDGE: beta
-#     IMAGE_VERSION_TAG: beta
-#   only:
-#     - master
-
-# test:diff-latest:
-#   <<: *test-diff
-#   variables:
-#     <<: *vars
-#     IMAGE_TAG_EDGE: latest
-#     IMAGE_VERSION_TAG: latest
-#   only:
-#     - tags
-
-test:containers:
-  <<: *test
-  stage: test
-  script:
-    - ./tests/goss/run_all.sh
-  needs:
-    - build:containers
-
-test:redis:
-  <<: *test
-  stage: test
-  script:
-    - ahoy -v install
-    - docker-compose exec -T --env ENABLE_REDIS=true cli drush status
-    - |
-      if [ $(docker-compose exec -T redis redis-cli KEYS '*' | wc -l) -le 1 ]; then
-        echo 'Redis fail: No valid cache keys.'
-        exit 1
-      else
-        echo "Redis success: Redis contains $redisKeys keys."
-      fi
-  needs:
-    - build:containers
-
-test:site_install:
-  <<: *test
-  stage: test
-  script:
-    - ahoy -v install -- install_configure_form.update_status_module='array(FALSE,FALSE)'
-  needs:
-    - build:containers
-
-test:nginx:
-  <<: *test
-  stage: test
-  script:
-    # Wait for nginx container.
-    - docker-compose exec -T test dockerize -wait tcp://nginx:8080 -timeout 1m
-    # Validate nginx configuration.
-    - docker-compose exec -T nginx nginx -t
-    # Validate composer.json and composer.lock configuration for tests.
-    - composer validate --strict -d .docker/images/nginx/tests
-    # Install dependencies for tests.
-    - composer install -d .docker/images/nginx/tests
-    # Run tests and store logs in artifacts directory.
-    - .docker/images/nginx/tests/vendor/bin/phpunit -c .docker/images/nginx/tests/phpunit.xml
-  needs:
-    - build:containers
-
-test:drupal_versions:
-  <<: *test
-  stage: test
   variables:
-    << : *vars
+    <<: *variables
+    DOCKER_REGISTRY_HOST: $CI_REGISTRY/
+  <<: *before_script_build
+  script:
+    - echo "Build successful"
+
+info:modules:
+  stage: build
+  variables:
+    <<: *variables
+  <<: *before_script_build
   script:
     - ahoy -v install -- install_configure_form.update_status_module='array(FALSE,FALSE)'
     - docker-compose exec -T cli drush status
@@ -189,46 +60,62 @@ test:drupal_versions:
     paths:
       - $CSV_LOCATION
 
-deploy:8-edge:
-  <<: *deploy
+test:ahoy:
+  stage: test
   variables:
-    <<: *vars
-    IMAGE_TAG_EDGE: 8.x-edge
+    <<: *variables
+  <<: *before_script_build
+  script:
+    - ahoy up
+    - ahoy test-$AHOY_TEST
+  parallel:
+    matrix:
+      - AHOY_TEST:
+          - 'goss'
+          - 'redis'
+          - 'install'
+          - 'nginx'
+  needs:
+    - build:images
+
+deploy:edge:
+  stage: deploy
+  variables:
+    <<: *variables
+    IMAGE_TAG_EDGE: $TAG
     DOCKERHUB_NAMESPACE: "govcms"
     COMPOSE_PROJECT_NAME: "govcmslagoon"
     GOVCMS_CLI_IMAGE_NAME: "govcms"
+  <<: *before_script_build
+  script:
+    - ahoy info
+    - ahoy push
+  parallel:
+    matrix:
+      - TAG: ["edge"]
   only:
-    - 8.x
+    - 1.x-develop
+    - 2.x-develop
+  needs:
+    - test:ahoy
 
-deploy:8-latest:
-  <<: *deploy
+deploy:beta:
+  stage: deploy
   variables:
-    <<: *vars
-    IMAGE_TAG_EDGE: 8.x-latest
+    <<: *variables
+    IMAGE_TAG_EDGE: $TAG
     DOCKERHUB_NAMESPACE: "govcms"
     COMPOSE_PROJECT_NAME: "govcmslagoon"
     GOVCMS_CLI_IMAGE_NAME: "govcms"
+  <<: *before_script_build
+  script:
+    - ahoy info
+    - ahoy push
+  parallel:
+    matrix:
+      - TAG: ["beta"]
   only:
-    - 8.x # @todo: 8.x-stable, tags, release branches?
-
-# @TODO: Allow automatic deploys of latest and tags after
-# the process has been validated.
-# deploy:latest:
-#   <<: *deploy
-#   variables:
-#     <<: *vars
-#     IMAGE_TAG_EDGE: latest
-#     DOCKERHUB_NAMESPACE: "govcms8lagoon"
-#     COMPOSE_PROJECT_NAME: "govcms8lagoon"
-#   only:
-#     - tags
-
-# deploy:tag:
-#   <<: *deploy
-#   variables:
-#     <<: *vars
-#     IMAGE_TAG_EDGE: $CI_COMMIT_TAG
-#     DOCKERHUB_NAMESPACE: "govcms8lagoon"
-#     COMPOSE_PROJECT_NAME: "govcms8lagoon"
-#   only:
-#     - tags
+    - 1.x-master
+    - 2.x-master
+  needs:
+    - test:ahoy
