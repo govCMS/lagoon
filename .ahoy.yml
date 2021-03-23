@@ -56,15 +56,11 @@ commands:
 
   push:
     usage: Push all docker images.
-    cmd: |
-      export $(grep -v '^#' .env.default | xargs)
-      . .docker/push.sh
+    cmd: . .docker/push.sh
 
   release:
     usage: Push all docker images.
-    cmd: |
-      export $(grep -v '^#' .env.default | xargs)
-      . .docker/release.sh
+    cmd: . .docker/release.sh
 
   audit-site:
     usage: Run site audit
@@ -87,3 +83,51 @@ commands:
   test-phpunit:
     usage: Run PHPUnit tests.
     cmd: docker-compose exec cli phpunit --testsuite govcms
+
+  test-redis:
+    usage: Verify redis can accept connections.
+    cmd: |
+      ahoy -v install
+      docker-compose exec -T --env ENABLE_REDIS=true cli drush status
+      if [ $(docker-compose exec -T redis redis-cli KEYS '*' | wc -l) -le 1 ]; then
+        echo 'Redis fail: No valid cache keys.'
+        exit 1
+      else
+        echo "Redis success: Redis contains $redisKeys keys."
+      fi
+  test-goss:
+    usage: Validate images with dgoss.
+    cmd: ./tests/goss/run_all.sh
+
+  test-install:
+    usage: Test a blank install.
+    cmd: ahoy -v install -- install_configure_form.update_status_module='array(FALSE,FALSE)'
+
+  test-nginx:
+    usage: Validate the nginx image.
+    cmd: |
+      docker-compose exec -T test dockerize -wait tcp://nginx:8080 -timeout 1m
+      docker-compose exec -T nginx nginx -t
+      composer validate --strict -d .docker/images/nginx/tests
+      composer install -d .docker/images/nginx/tests
+      .docker/images/nginx/tests/vendor/bin/phpunit -c .docker/images/nginx/tests/phpunit.xml
+  info:
+    usage: Print build info to the current window
+    cmd: |
+      echo "[info]: GovCMS Lagoon build information"
+      echo "---"
+      echo "[image variables]"
+      echo "  - Image version tag prefix: $IMAGE_VERSION_TAG_PREFIX"
+      echo "  - Image version tag: $IMAGE_VERSION_TAG"
+      echo "  - Image tag edge: $IMAGE_TAG_EDGE"
+      echo "  - Image version tag: $IMAGE_VERSION_TAG"
+      echo "  - Image version tag: $IMAGE_VERSION_TAG"
+      echo "  - CLI Image name: $GOVCMS_CLI_IMAGE_NAME"
+      echo "[docker variables]:"
+      echo "  - Docker registry: $DOCKER_REGISTRY_HOST"
+      echo "  - Docker namespace: $DOCKERHUB_NAMESPACE"
+      echo "  - Docker namespace: $DOCKERHUB_NAMESPACE"
+      echo "[version variables]:"
+      echo "  - Lagoon: $LAGOON_IMAGE_VERSION"
+      echo "  - Drupal: $DRUPAL_CORE_VERSION"
+      echo "  - GovCMS Project: $GOVCMS_PROJECT_VERSION"
