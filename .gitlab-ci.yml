@@ -82,8 +82,7 @@ deploy:
   stage: deploy
   variables:
     <<: *variables
-    # IMAGE_TAG_EDGE: "${CI_COMMIT_REF_SLUG}-${TAG}"
-    IMAGE_TAG_EDGE: "8.x-${TAG}"
+    IMAGE_TAG_EDGE: "${CI_COMMIT_REF_SLUG}-${TAG}"
     DOCKERHUB_NAMESPACE: "govcms"
     COMPOSE_PROJECT_NAME: "govcmslagoon"
     GOVCMS_CLI_IMAGE_NAME: "govcms"
@@ -93,6 +92,8 @@ deploy:
     - ahoy push
   parallel:
     matrix:
-      - TAG: ["edge"]
+      - TAG: ["edge", "latest"]
+  only:
+    - 8.x
   needs:
     - test:ahoy
