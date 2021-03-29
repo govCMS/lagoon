@@ -21,6 +21,14 @@ FILE_EXTENSION_PREFIX=${FILE_EXTENSION_PREFIX:-.docker/Dockerfile.}
 # CLI Image name
 CLI_IMAGE=${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8}
 
+if [[ -n $CI_COMMIT_REF_SLUG ]]; then
+  if [[ "$CI_COMMIT_REF_SLUG" =~ 1.x ]]; then
+    IMAGE_TAG_EDGE="8.x-$IMAGE_TAG_EDGE";
+  else
+    IMAGE_TAG_EDGE="9.x-$IMAGE_TAG_EDGE";
+  fi
+fi
+
 for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
     service=${file/$FILE_EXTENSION_PREFIX/}
 
