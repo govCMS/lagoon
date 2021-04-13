@@ -51,6 +51,7 @@ info:modules:
     <<: *variables
   <<: *before_script_build
   script:
+    - ahoy up
     - ahoy -v install -- install_configure_form.update_status_module='array(FALSE,FALSE)'
     - docker-compose exec -T cli drush status
     - /govcms/vendor/bin/govcms-module_verify
