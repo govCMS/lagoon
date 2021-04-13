@@ -1,10 +1,9 @@
 ARG CLI_IMAGE
 ARG LAGOON_IMAGE_VERSION
-ARG PHP_IMAGE_VERSION
 ARG COMPOSER_AUTH
 FROM ${CLI_IMAGE} as cli
 
-FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal-${LAGOON_IMAGE_VERSION}
+FROM uselagoon/php-7.4-cli-drupal:${LAGOON_IMAGE_VERSION}
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
@@ -41,6 +40,11 @@ RUN git clone --single-branch --branch=$SITE_AUDIT_VERSION https://github.com/go
     && php -d memory_limit=-1 /usr/local/bin/composer --working-dir=/app/web/sites/all/drutiny/ install --ignore-platform-reqs \
     && rm -Rf /app/web/sites/all/drutiny/.git \
     && chmod +x /usr/bin/drutiny
+
+RUN mkdir -p /usr/share/ca-certificates/letsencrypt \
+    && curl -o /usr/share/ca-certificates/letsencrypt/lets-encrypt-r3.crt https://letsencrypt.org/certs/lets-encrypt-r3.pem \
+    && echo -e "\nletsencrypt/lets-encrypt-r3.crt" >> /etc/ca-certificates.conf \
+    && update-ca-certificates
 
 # Ensure that drush and drush.launcher both work
 ENV WEBROOT=web

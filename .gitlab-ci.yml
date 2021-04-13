@@ -1,9 +1,9 @@
 ---
-
-image: quay.io/govcms/govcms-ci
+image: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci${GOVCMS_CI_IMAGE_VERSION}
 
 services:
-  - "docker:dind"
+  - name: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci/dind:latest
+    command: ["--tls=false"]
 
 stages:
   - validate
@@ -11,19 +11,17 @@ stages:
   - test
   - deploy
 
+# .env is used by the docker build process to inject
+# software versions for govcms etc.
 .before_script_common: &before_script_common |-
   cp .env.default .env
+  export $(echo $(cat .env.default | sed 's/#.*//g'| xargs) | envsubst)
 
 .variables: &vars
-  # LAGOON_IMAGE_VERSION: "v1.1.2"
-  # DRUPAL_CORE_VERSION: "8.7.9 "
-  # GOVCMS_PROJECT_VERSION: "1.x-dev"
-  # SITE_AUDIT_VERSION: "7.x-3.x"
-  # PHP_IMAGE_VERSION: "7.2"
-  DOCKERHUB_NAMESPACE: "govcms8lagoon"
   IMAGE_VERSION_TAG_PREFIX: ""
   IMAGE_VERSION_TAG: ""
   IMAGE_TAG_EDGE: $CI_COMMIT_SHA
+  DOCKER_HOST: tcp://localhost:2375
 
 .test: &test
   variables:
@@ -73,7 +71,7 @@ stages:
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - ahoy build
   script:
-    - ahoy push
+    - .docker/push.sh
 
 validate:containers:
   stage: validate
@@ -84,7 +82,6 @@ build:containers:
   variables:
     <<: *vars
     DOCKER_REGISTRY_HOST: $CI_REGISTRY/
-    DOCKERHUB_NAMESPACE: dof-dev/govcms8lagoon
   stage: build
   before_script:
     - *before_script_common
@@ -177,25 +174,42 @@ test:nginx:
   needs:
     - build:containers
 
-deploy:edge:
-  <<: *deploy
+test:drupal_versions:
+  <<: *test
+  stage: test
   variables:
-    <<: *vars
-    IMAGE_TAG_EDGE: edge
-    DOCKERHUB_NAMESPACE: "govcms8lagoon"
-    COMPOSE_PROJECT_NAME: "govcms8lagoon"
+    << : *vars
+  script:
+    - ahoy -v install -- install_configure_form.update_status_module='array(FALSE,FALSE)'
+    - docker-compose exec -T cli drush status
+    - /govcms/vendor/bin/govcms-module_verify
   only:
-    - develop
+    - schedules
+  artifacts:
+    paths:
+      - $CSV_LOCATION
 
-deploy:beta:
+deploy:8-edge:
   <<: *deploy
   variables:
     <<: *vars
-    IMAGE_TAG_EDGE: beta
-    DOCKERHUB_NAMESPACE: "govcms8lagoon"
-    COMPOSE_PROJECT_NAME: "govcms8lagoon"
+    IMAGE_TAG_EDGE: 8.x-edge
+    DOCKERHUB_NAMESPACE: "govcms"
+    COMPOSE_PROJECT_NAME: "govcmslagoon"
+    GOVCMS_CLI_IMAGE_NAME: "govcms"
   only:
-    - master
+    - 8.x
+
+deploy:8-latest:
+  <<: *deploy
+  variables:
+    <<: *vars
+    IMAGE_TAG_EDGE: 8.x-latest
+    DOCKERHUB_NAMESPACE: "govcms"
+    COMPOSE_PROJECT_NAME: "govcmslagoon"
+    GOVCMS_CLI_IMAGE_NAME: "govcms"
+  only:
+    - 8.x # @todo: 8.x-stable, tags, release branches?
 
 # @TODO: Allow automatic deploys of latest and tags after
 # the process has been validated.

@@ -1,24 +1,38 @@
 #!/usr/bin/env bash
-##
-# GovCMS 8 Drupal deployment script.
-#
+IFS=$'\n\t'
+set -euo pipefail
 
-# Having this set to TRUE, which can be done as a runtime variable against a
-# project environment, implies that we use this environment to test a site against
-# changes like future versions of govcms images. In this scenario the database
-# will be synced from PROD, ignoring any local database state.
-# @todo this variable will get a new name, since it is part of a bigger piece of work around types of environments.
-GOVCMS_TEST_CANARY=${GOVCMS_TEST_CANARY:-FALSE}
+# Ensure lagoon environment is set with the least destructive default.
+LAGOON_ENVIRONMENT_TYPE=${LAGOON_ENVIRONMENT_TYPE:-production}
 
-# Ensure placeholders are replaced in Drush9 alias file.
-sed -i "s/%%PROJECT_NAME%%/$LAGOON_PROJECT/g" /app/drush/sites/govcms.site.yml
-
-# Ensure tmp folder always exists.
-mkdir -p /app/web/sites/default/files/private/tmp/
+# @todo This strategy will be injected from .env or .lagoon.env Currently set to replicate the existing process.
+# Determine the config strategy `import` vs `retain`.
+GOVCMS_DEPLOY_WORKFLOW_CONFIG=${GOVCMS_DEPLOY_WORKFLOW_CONFIG:-import}
+# Determine the content strategy `import` vs `retain`.
+GOVCMS_DEPLOY_WORKFLOW_CONTENT=${GOVCMS_DEPLOY_WORKFLOW_CONTENT:-retain}
+# Space-separated list of Db replica hosts.
+MARIADB_READREPLICA_HOSTS="${MARIADB_READREPLICA_HOSTS:-}"
+# The location of the application directory.
+APP="${APP:-/app}"
 
 # Check for presence of config files.
-config_count=`ls -1 /app/config/default/*.yml 2>/dev/null | wc -l`
-dev_config_count=`ls -1 /app/config/dev/*.yml 2>/dev/null | wc -l`
+set +e # Prevent script failure when assigning 0.
+# shellcheck disable=SC2012,SC2086
+config_count=$(ls -1 $APP/config/default/*.yml 2>/dev/null | wc -l | tr -d ' ')
+# shellcheck disable=SC2012,SC2086
+dev_config_count=$(ls -1 $APP/config/dev/*.yml 2>/dev/null | wc -l | tr -d ' ')
+set -e
+
+echo "Running govcms-deploy"
+echo "Environment type: $LAGOON_ENVIRONMENT_TYPE"
+echo "Config strategy:  $GOVCMS_DEPLOY_WORKFLOW_CONFIG"
+echo "Content strategy: $GOVCMS_DEPLOY_WORKFLOW_CONTENT"
+echo "There are ${config_count} config yaml files, and ${dev_config_count} dev yaml files."
+
+# Ensure tmp folder always exists.
+mkdir -p "$APP/web/sites/default/files/private/tmp"
+
+drush core:status
 
 # Database options to configure the remote to use the read replica when
 # performing read operations.
@@ -29,60 +43,77 @@ read_replica_enabled () {
   fi
 
   if tables=$(drush sqlq 'show tables;' --database=read 2> /dev/null) && [ -n "$tables" ]; then
-    echo "Replica is available, using for database operations."
     dump_opts="--database=read"
   fi
 }
 
 # Database updates, cache rebuild, optional config imports.
 common_deploy () {
-  drush updb -y
-  drush cr
+
+  if [[ "$LAGOON_ENVIRONMENT_TYPE" = "development" && "$GOVCMS_DEPLOY_WORKFLOW_CONTENT" = "import" ]]; then
+    echo "Performing content import."
+    # shellcheck disable=SC2086
+    drush --alias-path=/app/drush/sites @govcms.prod sql:dump --gzip --extra-dump=--no-tablespaces --result-file=/tmp/sync.sql -y
+    drush rsync --alias-path=/app/drush/sites @govcms.prod:/tmp/sync.sql.gz /tmp/ -y
+    gunzip < /tmp/sync.sql.gz | drush sqlc
+    rm /tmp/sync.sql.gz
+  fi
+
+  drush eval "\Drupal::service('extension.list.theme')->reset()->getList();"
+  drush cache:rebuild
+  drush updatedb -y
 
   # Base configuration import with development environment overrides.
-  if [ "$config_count" -gt 0 ]; then
-    drush cim -y sync
-    if [[ ! -z "$LAGOON_ENVIRONMENT_TYPE" && "$LAGOON_ENVIRONMENT_TYPE" != "production" && "$dev_config_count" -gt 0 ]]; then
-      drush cim -y dev --partial
+  if [[ "$GOVCMS_DEPLOY_WORKFLOW_CONFIG" = "import" && "$config_count" -gt 0 ]]; then
+    echo "Performing config import."
+    drush config:import -y sync
+    if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" && "$dev_config_count" -gt 0 ]]; then
+      echo "Performing development config import on non-production site."
+      drush config:import -y --partial --source=../config/dev
     fi
   fi
 
-  if [[ ! -z "$LAGOON_ENVIRONMENT_TYPE" && "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
-    # Enable stage file proxy post db-import.
-    drush en stage_file_proxy -y
+  if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
+    echo "Enable stage_file_proxy in non-prod environments."
+    drush pm:enable stage_file_proxy -y
   fi
+
 }
 
-# Non production environments.
-if [[ "$LAGOON_ENVIRONMENT_TYPE" != "production" ]]; then
-    if ! drush status --fields=bootstrap | grep -q "Successful"; then
-        # Import prod db in Lagoon development environments.
-        if [[ ! -z "$LAGOON_ENVIRONMENT_TYPE" && "$LAGOON_ENVIRONMENT_TYPE" != "local" ]]; then
-          drush sql-drop -y
-          drush sql-sync @govcms.prod @self -y
-          common_deploy
-        else
-          echo "Drupal not installed."
-        fi
+read_replica_enabled
+
+if [[ "$LAGOON_ENVIRONMENT_TYPE" = "production" ]]; then
+
+  if drush status --fields=bootstrap | grep -q "Successful"; then
+    echo "Making a database backup."
+    # shellcheck disable=SC2086
+    mkdir -p "$APP/web/sites/default/files/private/backups/" && drush sql:dump $dump_opts --gzip --extra-dump=--no-tablespaces --result-file="$APP/web/sites/default/files/private/backups/pre-deploy-dump.sql"
+    common_deploy
+  else
+    echo "Drupal is not installed or not operational."
+  fi
+
+else
+
+  if ! drush status --fields=bootstrap | grep -q "Successful"; then
+    echo "Drupal is not installed or not operational."
+
+    if [[ "$LAGOON_ENVIRONMENT_TYPE" = "local" ]]; then
+      echo "Drupal is not installed locally, try ahoy install"
     else
-      # @see comments for GOVCMS_TEST_CANARY above.
-      if [[ "$GOVCMS_TEST_CANARY" = TRUE ]]; then
-        echo "GOVCMS_TEST_CANARY is set, syncing the database."
-        drush sql-drop -y
-        drush sql-sync @govcms.prod @self -y
-      fi
+      # In a non-functioning development site, import the database from production before running import.
+      # Note, this would destroy data in a dev site that was just broken temporarily. Review?
+      # shellcheck disable=SC2086
+      drush --alias-path=/app/drush/sites @govcms.prod sql:dump --gzip --extra-dump=--no-tablespaces --result-file=/tmp/sync.sql -y
+      drush rsync --alias-path=/app/drush/sites @govcms.prod:/tmp/sync.sql.gz /tmp/ -y
+      gunzip < /tmp/sync.sql.gz | drush sqlc
+      rm /tmp/sync.sql.gz
       common_deploy
     fi
-# Production environments.
-else
-  if drush status --fields=bootstrap | grep -q "Successful"; then
-    read_replica_enabled $dump_opts
-
-    mkdir -p /app/web/sites/default/files/private/backups/ && drush sql-dump --gzip --result-file=/app/web/sites/default/files/private/backups/pre-deploy-dump.sql $dump_opts
-    drush config-export sync -y --destination /app/web/sites/default/files/private/backups/config && tar -czf /app/web/sites/default/files/private/backups/config.tar.gz -C /app/web/sites/default/files/private/backups/config . && rm -rf /app/web/sites/default/files/private/backups/config
-    common_deploy
-    drush en -y govcms_lagoon && drush pmu -y govcms_lagoon;
   else
-    echo "Drupal not installed."
+    common_deploy
   fi
+
 fi
+
+echo "Finished running govcms-deploy."

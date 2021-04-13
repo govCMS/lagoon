@@ -11,7 +11,7 @@ for file in $TEST_DIR/goss.*.yaml; do
   service=${file/$prefix/}
   service=${service/.yaml/}
   echo "==> Running tests for \"$service\" service"
-  goss -g $file render > goss.yaml && dgoss run -i -e NGINX_FASTCGI_PASS=localhost govcms8lagoon/$service:latest || ((fails++))
+  goss -g $file render > goss.yaml && dgoss run -i -e NGINX_FASTCGI_PASS=localhost $DOCKERHUB_NAMESPACE/$service:latest || ((fails++))
   rm -Rf goss.yaml
   echo "==> Finished tests for \"$service\" service"
 done

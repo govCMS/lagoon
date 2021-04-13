@@ -1,7 +1,6 @@
 ARG LAGOON_IMAGE_VERSION
-ARG PHP_IMAGE_VERSION
 
-FROM amazeeio/php:${PHP_IMAGE_VERSION}-cli-drupal-${LAGOON_IMAGE_VERSION} as builder
+FROM uselagoon/php-7.4-cli-drupal:${LAGOON_IMAGE_VERSION} as builder
 
 ARG GOVCMS_PROJECT_VERSION
 ARG DRUPAL_CORE_VERSION
@@ -9,6 +8,17 @@ ARG COMPOSER_AUTH
 ARG GITHUB_TOKEN
 
 COPY composer.* /app/
+
+# Copy base file for extensible saas.
+COPY custom /app/custom
+
+# Install yq for YAML parsing.
+RUN wget -O /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64" \
+  && chmod +x /usr/local/bin/yq
+
+# Install jq for JSON parsing.
+RUN wget -O /usr/local/bin/jq "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64" \
+  && chmod +x /usr/local/bin/jq
 
 RUN sed -i -e "/govcms\/govcms/ s!\^1.0!${GOVCMS_PROJECT_VERSION}!" /app/composer.json \
     && sed -i -e "/drupal\/core-recommended/ s!\^8.8!${DRUPAL_CORE_VERSION}!" /app/composer.json
@@ -19,8 +29,6 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 # Set the Github OAuth token only when the variable is set.
 RUN [[ ! -z "${GITHUB_TOKEN}" ]]  && composer config -g github-oauth.github.com ${GITHUB_TOKEN} || echo "Personal Github OAuth token is not set."
 RUN composer install -d /app \
-    # Force drupal-scaffold to run to ensure that the needed files are always created, even if a composer.lock is provided
-    && composer drupal-scaffold \
     && composer clearcache
 
 COPY .docker/sanitize.sh /app/sanitize.sh
@@ -42,8 +50,11 @@ RUN mkdir -p /app/web/sites/default/files/private \
 
 COPY modules/ /app/web/sites/all/modules/
 
-COPY .docker/images/govcms8/settings/ /app/web/sites/default/
-RUN chmod 444 /app/web/sites/default/settings.php
+# Install the R3 intermediary for LE.
+RUN mkdir -p /usr/share/ca-certificates/letsencrypt \
+  && curl -o /usr/share/ca-certificates/letsencrypt/lets-encrypt-r3.crt https://letsencrypt.org/certs/lets-encrypt-r3.pem \
+  && echo -e "\nletsencrypt/lets-encrypt-r3.crt" >> /etc/ca-certificates.conf \
+  && update-ca-certificates
 
 # Define where the Drupal Root is located
 ENV WEBROOT=web
