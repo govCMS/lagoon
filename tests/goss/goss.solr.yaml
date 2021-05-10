@@ -7,7 +7,7 @@ file:
     exists: true
     filetype: file
     contains:
-    - "drupal-8.3.8-solr-7.x"
+    - "drupal-4.1.1-solr-7.x"
   /opt/solr/server/solr/mycores/drupal/conf/solrconfig.xml:
     exists: true
     filetype: file
