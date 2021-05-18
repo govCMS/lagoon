@@ -41,6 +41,10 @@ RUN mkdir -p /usr/share/ca-certificates/letsencrypt \
     && echo -e "\nletsencrypt/lets-encrypt-r3.crt" >> /etc/ca-certificates.conf \
     && update-ca-certificates
 
+# Install yq for YAML parsing.
+RUN wget -O /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64" \
+    && chmod +x /usr/local/bin/yq
+
 # Ensure that drush and drush.launcher both work
 ENV WEBROOT=web
 
