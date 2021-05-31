@@ -117,7 +117,7 @@ services:
       dockerfile: $PWD/.docker/Dockerfile.varnish-drupal
       args:
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
-    image: ${DOCKERHUB_NAMESPACE:-govcmslagoon}/varnish-drupal
+    image: ${DOCKERHUB_NAMESPACE:-govcms}/varnish-drupal
     environment:
       << : *default-environment
       VARNISH_BYPASS: "true"

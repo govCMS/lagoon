@@ -1,6 +1,6 @@
 # GovCMS Lagoon project
 
-[![CircleCI](https://circleci.com/gh/govCMS/lagoon/tree/2.x-master.svg?style=svg)](https://circleci.com/gh/govCMS/lagoon?branch=2.x-master)
+[![GitlabCI](https://projects.govcms.gov.au/dof-dev/lagoon/badges/2.x-master/pipeline.svg)](https://projects.govcms.gov.au/dof-dev/lagoon/-/pipelines)
 
 ## Purpose
 
