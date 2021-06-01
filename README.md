@@ -30,9 +30,6 @@ overwrite it if you do (probably not ideal).
 Running `ahoy build` will build the containers. There are no file mounts from the host, but if you ssh into
 one of the containers (eg `ahoy cli`) you will see the familiar /app/web, etc.
 
-Running `circleci build` will execute the build steps defined in `.circleci/config.yml` it will try to deploy to
-Docker Hub - it's the final step so failure is an option if you are just testing the build.
-
 ## Releasing a govcms/lagoon release to dockerhub
 
 1. Prepare a release branch from master (release/lagoon-x.x.x - replace x with the correct version)
