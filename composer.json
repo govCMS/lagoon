@@ -17,6 +17,10 @@
             "url": "git@github.com:govcms/govcms.git"
         },
         {
+            "type": "vcs",
+            "url": "https://projects.govcms.gov.au/GovCMS/govcms_akamai_purge.git"
+        },
+        {
             "type": "path",
             "url": "custom/composer"
         }
@@ -25,6 +29,7 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.7",
         "govcms/govcms": "2.x-dev",
+        "govcms/govcms_akamai_purge": "dev-master",
         "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "9.x-dev",
         "webmozart/path-util": "^2.3"
