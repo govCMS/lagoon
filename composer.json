@@ -29,7 +29,7 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.7",
         "govcms/govcms": "2.x-dev",
-        "govcms/govcms_akamai_purge": "dev-master",
+        "govcms/govcms_akamai_purge": "^1.0",
         "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "9.x-dev",
         "webmozart/path-util": "^2.3"
