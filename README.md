@@ -1,7 +1,5 @@
 # GovCMS Lagoon project
 
-[![GitlabCI](https://projects.govcms.gov.au/dof-dev/lagoon/badges/2.x-master/pipeline.svg)](https://projects.govcms.gov.au/dof-dev/lagoon/-/pipelines)
-
 ## Purpose
 
 This project is used to create the images required by Lagoon, using the GovCMS distribution - it is only intended to
