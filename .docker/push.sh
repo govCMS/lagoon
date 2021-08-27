@@ -44,19 +44,39 @@ for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
 
     # Only rebuild images if they do not exist or rebuild is forced.
     if [ "$existing_image" == "" ] || [ "$FORCE_IMAGE_BUILD" != "" ]; then
-      echo "==> Building \"$service\" image from file $file for service \"$DOCKERHUB_NAMESPACE/$service\""
-      docker build -f $file -t $DOCKERHUB_NAMESPACE/$service --build-arg CLI_IMAGE=${CLI_IMAGE} .
+      echo "$FORCE_IMAGE_BUILD==> Building \"$service\" image from file $file for service \"$DOCKERHUB_NAMESPACE/$service\""
+      # Match the service's name to Docker file's name
+      case $service in
+        "govcms" | "govcms8")
+          docker-compose build cli
+          ;;
+        "varnish-drupal")
+          docker-compose build varnish
+          ;;
+        "mariadb-drupal")
+          docker-compose build mariadb
+          ;;
+        "nginx-drupal")
+          docker-compose build nginx
+          ;;
+        *)
+          docker-compose build $service
+      esac
     fi
 
     # Tag images with 'edge' tag and push.
-    echo "==> Tagged and pushed \"$service\" image to $DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE"
-    docker tag $DOCKERHUB_NAMESPACE/$service $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
-    docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
+  #  echo "==> Tagged and pushed \"$service\" image to $DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE"
+  #  docker tag $DOCKERHUB_NAMESPACE/$service $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
+  #  docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$IMAGE_TAG_EDGE
 
     # Tag images with version tag, if provided, and push.
     if [ "$version_tag" != "" ]; then
       echo "==> Tagging and pushing \"$service\" image to $DOCKERHUB_NAMESPACE/$service:$version_tag"
-      docker tag $DOCKERHUB_NAMESPACE/$service $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
-      docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
+      if [[ "$service" == "chrome" ]]; then
+        docker tag selenium/standalone-chrome $DOCKERHUB_NAMESPACE/chrome:$version_tag
+      else
+        docker tag $DOCKERHUB_NAMESPACE/$service $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
+      fi
+      #docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
     fi
 done
