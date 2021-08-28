@@ -40,7 +40,7 @@ for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
     version_tag=$IMAGE_VERSION_TAG
     [ "$IMAGE_VERSION_TAG_PREFIX" != "" ] && version_tag=${IMAGE_VERSION_TAG/$IMAGE_VERSION_TAG_PREFIX/}
 
-    existing_image=$(docker images -q $DOCKERHUB_NAMESPACE/$service)
+    existing_image=$(docker images -q $DOCKERHUB_NAMESPACE/$service:latest)
 
     # Only rebuild images if they do not exist or rebuild is forced.
     if [ "$existing_image" == "" ] || [ "$FORCE_IMAGE_BUILD" != "" ]; then
@@ -59,6 +59,9 @@ for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
         "nginx-drupal")
           docker-compose build nginx
           ;;
+        "chrome")
+          docker build -f $file -t $DOCKERHUB_NAMESPACE/$service .
+          ;;
         *)
           docker-compose build $service
       esac
@@ -72,11 +75,7 @@ for file in $(echo $FILE_EXTENSION_PREFIX"*"); do
     # Tag images with version tag, if provided, and push.
     if [ "$version_tag" != "" ]; then
       echo "==> Tagging and pushing \"$service\" image to $DOCKERHUB_NAMESPACE/$service:$version_tag"
-      if [[ "$service" == "chrome" ]]; then
-        docker tag selenium/standalone-chrome $DOCKERHUB_NAMESPACE/chrome:$version_tag
-      else
-        docker tag $DOCKERHUB_NAMESPACE/$service $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
-      fi
+      docker tag $DOCKERHUB_NAMESPACE/$service $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
       docker push $DOCKER_REGISTRY_HOST$DOCKERHUB_NAMESPACE/$service:$version_tag
     fi
 done
