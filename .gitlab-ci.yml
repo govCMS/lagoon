@@ -116,7 +116,6 @@ deploy:beta:
     matrix:
       - TAG: ["beta"]
   only:
-    - 1.x-master
-    - 2.x-master
+    - /^release/1.x/.*$/@dof-dev/lagoon
   needs:
     - test:ahoy
