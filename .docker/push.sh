@@ -24,6 +24,8 @@ CLI_IMAGE=${DOCKERHUB_NAMESPACE:-govcms8lagoon}/${GOVCMS_CLI_IMAGE_NAME:-govcms8
 if [[ -n $CI_COMMIT_REF_SLUG ]]; then
   if [[ "$CI_COMMIT_REF_SLUG" =~ 1.x ]]; then
     IMAGE_TAG_EDGE="8.x-$IMAGE_TAG_EDGE";
+  elif [[ "$CI_COMMIT_REF_SLUG" =~ govcms8 ]]; then
+    IMAGE_TAG_EDGE="$IMAGE_TAG_EDGE";
   else
     IMAGE_TAG_EDGE="9.x-$IMAGE_TAG_EDGE";
   fi
