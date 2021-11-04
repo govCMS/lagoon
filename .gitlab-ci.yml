@@ -1,5 +1,5 @@
 ---
-image: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci${GOVCMS_CI_IMAGE_VERSION}
+image: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci/govcms-ci-buildx
 
 services:
   - name: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci/dind:latest
@@ -19,18 +19,39 @@ stages:
   IMAGE_VERSION_TAG: ""
   IMAGE_TAG_EDGE: $CI_COMMIT_SHA
   DOCKER_HOST: tcp://localhost:2375
+  BUILDKIT_INLINE_CACHE: '1'
+  DOCKER_DRIVER: overlay2
 
 .before_script_build: &before_script_build
   before_script:
+    - cp .env.default .env
+    - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
     - export $(grep -v '^#' .env.default | xargs)
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
-    - ahoy build
-# ---
+    - ahoy build y
 
 # ---
 # Job Definitions
 # ---
+deploy:multiarch:
+  stage: deploy
+  variables:
+    <<: *variables
+  script:
+    - cp .env.default .env
+    - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
+    - docker buildx create --name govcms-amd-arm --platform linux/amd64,linux/arm64 tcp://localhost:2375
+    - docker buildx ls
+    - export $(grep -v '^#' .env.default | xargs)
+    - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - ahoy publish y
+  only:
+    - buildx-silicon
+  needs:
+    - test:ahoy
+  
 validate:images:
   stage: validate
   script:

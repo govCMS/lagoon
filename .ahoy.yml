@@ -13,10 +13,37 @@ commands:
     cmd: docker-compose down
 
   build:
-    usage: Build project.
+    usage: Build project locally (single-local architecture only).
     cmd: |
-      docker-compose build --no-cache; docker-compose up -d "$@" &&
-      docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m;
+      cat .env | grep -v "#" | grep -v -e '^$'
+      if [ "$1" == "y" ]; then
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache --load
+        docker-compose up -d
+        docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m
+      else
+        ahoy confirm "Are you sure environment variables are correct? Update .env if not." &&
+        # Run this if confirm returns true
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache --load &&
+          docker-compose up -d "$@" &&
+          docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m ||
+        # Run this if confirm returns false
+        echo "OK, nothing to do."
+      fi
+
+  # Compile
+  publish:
+    usage: Build multi-arch images and publish to dockerhub.
+    cmd: |
+      cat .env | grep -v "#" | grep -v -e '^$'
+      if [ "$1" == "y" ]; then
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml -f bake.hcl --builder govcms-amd-arm --push
+      else
+        ahoy confirm "Running this command will build multi-arch images and publish to dockerhub. Are you sure environment variables are correct?" &&
+        # Run this if confirm returns true
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml -f bake.hcl --builder govcms-amd-arm --push ||
+        # Run this if confirm returns false
+        echo "OK, probably a wise choice..."
+      fi
 
   cli:
     usage: Start a shell inside TEST container.
@@ -140,3 +167,6 @@ commands:
       echo "  - Drupal: $DRUPAL_CORE_VERSION"
       echo "  - GovCMS Project: $GOVCMS_PROJECT_VERSION"
 
+  confirm:
+    cmd: read -r -p "${@} [y/N] " response; [ ${response} = "y" ]
+    hide: true
