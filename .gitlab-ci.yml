@@ -12,6 +12,22 @@ stages:
   - deploy
 
 # ---
+# Common workflow rules.
+# ---
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "2.x-develop"
+      variables:
+        DEPLOY_TAG: "9.x-edge"
+    - if: $CI_COMMIT_REF_NAME == "1.x-develop"
+      variables:
+        DEPLOY_TAG: "8.x-edge"
+    - if: $CI_COMMIT_REF_NAME == "buildx-silicon"
+      variables:
+        DEPLOY_TAG: "example-tag"
+    - when: always # Run the pipeline in other cases
+
+# ---
 # Alias definitions.
 # ---
 .variables: &variables
@@ -40,6 +56,10 @@ deploy:multiarch:
     <<: *variables
   script:
     - cp .env.default .env
+    - echo $DEPLOY_TAG
+    - sed -i -e "s/^GOVCMS_RELEASE_TAG.*/GOVCMS_RELEASE_TAG=$DEPLOY_TAG/" .env
+    - cat .env
+    - exit 1
     - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
     - docker buildx create --name govcms-amd-arm --platform linux/amd64,linux/arm64 tcp://localhost:2375
     - docker buildx ls
@@ -49,6 +69,7 @@ deploy:multiarch:
     - ahoy publish y
   only:
     - buildx-silicon
+    - 2.x-develop
   needs:
     - test:ahoy
   
