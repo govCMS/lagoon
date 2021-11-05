@@ -17,13 +17,15 @@ commands:
     cmd: |
       cat .env | grep -v "#" | grep -v -e '^$'
       if [ "$1" == "y" ]; then
-        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache --load
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache cli --load
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --load
         docker-compose up -d
         docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m
       else
         ahoy confirm "Are you sure environment variables are correct? Update .env if not." &&
         # Run this if confirm returns true
-        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache --load &&
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache cli --load
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --load &&
           docker-compose up -d "$@" &&
           docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m ||
         # Run this if confirm returns false
@@ -36,10 +38,12 @@ commands:
     cmd: |
       cat .env | grep -v "#" | grep -v -e '^$'
       if [ "$1" == "y" ]; then
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml -f bake.hcl --builder govcms-amd-arm --push cli
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml -f bake.hcl --builder govcms-amd-arm --push
       else
         ahoy confirm "Running this command will build multi-arch images and publish to dockerhub. Are you sure environment variables are correct?" &&
         # Run this if confirm returns true
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml -f bake.hcl --builder govcms-amd-arm --push cli
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml -f bake.hcl --builder govcms-amd-arm --push ||
         # Run this if confirm returns false
         echo "OK, probably a wise choice..."

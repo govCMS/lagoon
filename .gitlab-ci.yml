@@ -16,15 +16,35 @@ stages:
 # ---
 workflow:
   rules:
+    ## D9
     - if: $CI_COMMIT_REF_NAME == "2.x-develop"
       variables:
         DEPLOY_TAG: "9.x-edge"
+    - if: $CI_COMMIT_REF_NAME == "2.x-master"
+      variables:
+        DEPLOY_TAG: "9.x-latest"
+    - if: $CI_COMMIT_REF_NAME =~ /^release\/2.x\//
+      variables:
+        DEPLOY_TAG: "9.x-beta"
+
+    ## Testing
+    - if: $CI_COMMIT_REF_NAME == "buildx-silicon" ## Remove after testing.
+      variables:
+        DEPLOY_TAG: "9.x-edge"
+
+    ## D8
     - if: $CI_COMMIT_REF_NAME == "1.x-develop"
       variables:
         DEPLOY_TAG: "8.x-edge"
-    - if: $CI_COMMIT_REF_NAME == "buildx-silicon"
+    - if: $CI_COMMIT_REF_NAME == "1.x-master"
       variables:
-        DEPLOY_TAG: "example-tag"
+        DEPLOY_TAG: "8.x-latest"
+
+    ## Release tags.
+    - if: $CI_COMMIT_TAG != null
+      variables:
+        DEPLOY_TAG: $CI_COMMIT_TAG
+
     - when: always # Run the pipeline in other cases
 
 # ---
@@ -40,12 +60,16 @@ workflow:
 
 .before_script_build: &before_script_build
   before_script:
+    - if [ -z "$DEPLOY_TAG" ]; then echo "DEPLOY_TAG must be set for an actionable build."; exit 1; fi
     - cp .env.default .env
+    - sed -i -e "s/^GOVCMS_RELEASE_TAG.*/GOVCMS_RELEASE_TAG=$DEPLOY_TAG/" .env
+    - cat .env
     - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
-    - export $(grep -v '^#' .env.default | xargs)
+    - export $(grep -v '^#' .env | xargs)
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - ahoy build y
+    - docker image list
 
 # ---
 # Job Definitions
@@ -56,23 +80,25 @@ deploy:multiarch:
     <<: *variables
   script:
     - cp .env.default .env
-    - echo $DEPLOY_TAG
     - sed -i -e "s/^GOVCMS_RELEASE_TAG.*/GOVCMS_RELEASE_TAG=$DEPLOY_TAG/" .env
     - cat .env
-    - exit 1
     - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
     - docker buildx create --name govcms-amd-arm --platform linux/amd64,linux/arm64 tcp://localhost:2375
     - docker buildx ls
-    - export $(grep -v '^#' .env.default | xargs)
+    - export $(grep -v '^#' .env | xargs)
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - ahoy publish y
   only:
     - buildx-silicon
+    - 1.x-develop
     - 2.x-develop
+    - 1.x-master
+    - 2.x-master
+    - tags
   needs:
-    - test:ahoy
-  
+  - test:ahoy
+
 validate:images:
   stage: validate
   script:
@@ -119,44 +145,3 @@ test:ahoy:
           - 'nginx'
   needs:
     - build:images
-
-deploy:edge:
-  stage: deploy
-  variables:
-    <<: *variables
-    IMAGE_TAG_EDGE: $TAG
-    DOCKERHUB_NAMESPACE: "govcms"
-    COMPOSE_PROJECT_NAME: "govcmslagoon"
-    GOVCMS_CLI_IMAGE_NAME: "govcms"
-  <<: *before_script_build
-  script:
-    - ahoy info
-    - ahoy push
-  parallel:
-    matrix:
-      - TAG: ["edge"]
-  only:
-    - 1.x-develop
-    - 2.x-develop
-  needs:
-    - test:ahoy
-
-deploy:beta:
-  stage: deploy
-  variables:
-    <<: *variables
-    IMAGE_TAG_EDGE: $TAG
-    DOCKERHUB_NAMESPACE: "govcms"
-    COMPOSE_PROJECT_NAME: "govcmslagoon"
-    GOVCMS_CLI_IMAGE_NAME: "govcms"
-  <<: *before_script_build
-  script:
-    - ahoy info
-    - ahoy push
-  parallel:
-    matrix:
-      - TAG: ["beta"]
-  only:
-    - /^release/2.x/.*$/@dof-dev/lagoon
-  needs:
-    - test:ahoy
