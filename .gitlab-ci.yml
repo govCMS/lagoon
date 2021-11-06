@@ -28,7 +28,7 @@ workflow:
         DEPLOY_TAG: "9.x-beta"
 
     ## Testing
-    - if: $CI_COMMIT_REF_NAME == "buildx-silicon" ## Remove after testing.
+    - if: $CI_COMMIT_REF_NAME == "feature/multiarch-apple-silicon" ## Remove after testing.
       variables:
         DEPLOY_TAG: "9.x-edge"
 
@@ -90,7 +90,7 @@ deploy:multiarch:
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - ahoy publish y
   only:
-    - buildx-silicon
+    - feature/multiarch-apple-silicon
     - 1.x-develop
     - 2.x-develop
     - 1.x-master
