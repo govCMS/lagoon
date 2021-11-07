@@ -24,7 +24,7 @@ commands:
       else
         ahoy confirm "Are you sure environment variables are correct? Update .env if not." &&
         # Run this if confirm returns true
-        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache cli --load
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache cli --load &&
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --load &&
           docker-compose up -d "$@" &&
           docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m ||
