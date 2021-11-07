@@ -43,7 +43,7 @@ commands:
       else
         ahoy confirm "Running this command will build multi-arch images and publish to dockerhub. Are you sure environment variables are correct?" &&
         # Run this if confirm returns true
-        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml -f bake.hcl --builder govcms-amd-arm --push cli
+        env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml -f bake.hcl --builder govcms-amd-arm --push cli &&
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml -f bake.hcl --builder govcms-amd-arm --push ||
         # Run this if confirm returns false
         echo "OK, probably a wise choice..."
