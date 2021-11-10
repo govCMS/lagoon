@@ -1,5 +1,5 @@
 ---
-image: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci${GOVCMS_CI_IMAGE_VERSION}
+image: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci/govcms-ci-buildx
 
 services:
   - name: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci/dind:latest
@@ -12,6 +12,48 @@ stages:
   - deploy
 
 # ---
+# Common workflow rules.
+# ---
+workflow:
+  rules:
+    ## D9
+    - if: $CI_COMMIT_REF_NAME == "2.x-develop"
+      variables:
+        DEPLOY_TAG: "9.x-edge"
+    - if: $CI_COMMIT_REF_NAME == "2.x-master"
+      variables:
+        DEPLOY_TAG: "9.x-latest"
+    - if: $CI_COMMIT_REF_NAME =~ /^release\/2.x\//
+      variables:
+        DEPLOY_TAG: "9.x-beta"
+
+    ## Testing
+    - if: $CI_COMMIT_REF_NAME == "feature/multiarch-apple-silicon" ## Remove after testing.
+      variables:
+        DEPLOY_TAG: "9.x-edge"
+    - if: $CI_COMMIT_REF_NAME == "feature/multiarch-apple-silicon-8.x" ## Remove after testing.
+      variables:
+        DEPLOY_TAG: "8.x-edge"
+
+    ## D8
+    - if: $CI_COMMIT_REF_NAME == "1.x-develop"
+      variables:
+        DEPLOY_TAG: "8.x-edge"
+    - if: $CI_COMMIT_REF_NAME == "1.x-master"
+      variables:
+        DEPLOY_TAG: "8.x-latest"
+    - if: $CI_COMMIT_REF_NAME =~ /^release\/1.x\//
+      variables:
+        DEPLOY_TAG: "8.x-beta"
+
+    ## Release tags.
+    - if: $CI_COMMIT_TAG != null
+      variables:
+        DEPLOY_TAG: $CI_COMMIT_TAG
+
+    - when: always # Run the pipeline in other cases
+
+# ---
 # Alias definitions.
 # ---
 .variables: &variables
@@ -19,18 +61,51 @@ stages:
   IMAGE_VERSION_TAG: ""
   IMAGE_TAG_EDGE: $CI_COMMIT_SHA
   DOCKER_HOST: tcp://localhost:2375
+  BUILDKIT_INLINE_CACHE: '1'
+  DOCKER_DRIVER: overlay2
 
 .before_script_build: &before_script_build
   before_script:
-    - export $(grep -v '^#' .env.default | xargs)
+    - if [ -z "$DEPLOY_TAG" ]; then echo "DEPLOY_TAG must be set for an actionable build."; exit 1; fi
+    - cp .env.default .env
+    - sed -i -e "s/^GOVCMS_RELEASE_TAG.*/GOVCMS_RELEASE_TAG=$DEPLOY_TAG/" .env
+    - cat .env
+    - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
+    - export $(grep -v '^#' .env | xargs)
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
-    - ahoy build
-# ---
+    - ahoy build y
+    - docker image list
 
 # ---
 # Job Definitions
 # ---
+deploy:multiarch:
+  stage: deploy
+  variables:
+    <<: *variables
+  script:
+    - cp .env.default .env
+    - sed -i -e "s/^GOVCMS_RELEASE_TAG.*/GOVCMS_RELEASE_TAG=$DEPLOY_TAG/" .env
+    - cat .env
+    - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
+    - docker buildx create --name govcms-amd-arm --platform linux/amd64,linux/arm64 tcp://localhost:2375
+    - docker buildx ls
+    - export $(grep -v '^#' .env | xargs)
+    - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - ahoy publish y
+  only:
+    - feature/multiarch-apple-silicon
+    - feature/multiarch-apple-silicon-8.x
+    - 1.x-develop
+    - 2.x-develop
+    - 1.x-master
+    - 2.x-master
+    - tags
+  needs:
+  - test:ahoy
+
 validate:images:
   stage: validate
   script:
@@ -51,7 +126,6 @@ info:modules:
     <<: *variables
   <<: *before_script_build
   script:
-    - ahoy up
     - ahoy -v install -- install_configure_form.update_status_module='array(FALSE,FALSE)'
     - docker-compose exec -T cli drush status
     - /govcms/vendor/bin/govcms-module_verify
@@ -78,45 +152,3 @@ test:ahoy:
           - 'nginx'
   needs:
     - build:images
-
-deploy:edge:
-  stage: deploy
-  variables:
-    <<: *variables
-    IMAGE_TAG_EDGE: $TAG
-    DOCKERHUB_NAMESPACE: "govcms"
-    COMPOSE_PROJECT_NAME: "govcmslagoon"
-    GOVCMS_CLI_IMAGE_NAME: "govcms"
-  <<: *before_script_build
-  script:
-    - ahoy info
-    - ahoy push
-  parallel:
-    matrix:
-      - TAG: ["edge"]
-  only:
-    - 1.x-develop
-    - 2.x-develop
-    - /^release/1.x/.*$/@dof-dev/lagoon
-  needs:
-    - test:ahoy
-
-deploy:beta:
-  stage: deploy
-  variables:
-    <<: *variables
-    IMAGE_TAG_EDGE: $TAG
-    DOCKERHUB_NAMESPACE: "govcms"
-    COMPOSE_PROJECT_NAME: "govcmslagoon"
-    GOVCMS_CLI_IMAGE_NAME: "govcms"
-  <<: *before_script_build
-  script:
-    - ahoy info
-    - ahoy push
-  parallel:
-    matrix:
-      - TAG: ["beta"]
-  only:
-    - /^release/1.x/.*$/@dof-dev/lagoon
-  needs:
-    - test:ahoy
