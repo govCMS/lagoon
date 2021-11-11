@@ -12,8 +12,13 @@ COPY composer.* /app/
 # Copy base file for extensible saas.
 COPY custom /app/custom
 
-# Install yq/jq for YAML/JSON parsing.
-RUN apk add yq jq
+# Install yq for YAML parsing.
+RUN case $(uname -m) in x86_64)  ARCH="amd64" ;; aarch64) ARCH="arm64" ;; *) ARCH="amd64" ;; esac \
+  && wget -O /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_${ARCH}" \
+  && chmod +x /usr/local/bin/yq
+
+# Install jq for YAML/JSON parsing.
+RUN apk add jq
 
 RUN sed -i -e "/govcms\/govcms/ s!\^1.0!${GOVCMS_PROJECT_VERSION}!" /app/composer.json \
     && sed -i -e "/drupal\/core-recommended/ s!\^8.8!${DRUPAL_CORE_VERSION}!" /app/composer.json
