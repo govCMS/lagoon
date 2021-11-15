@@ -67,6 +67,8 @@ workflow:
 .before_script_build: &before_script_build
   before_script:
     - if [ -z "$DEPLOY_TAG" ]; then echo "DEPLOY_TAG must be set for an actionable build."; exit 1; fi
+    # Latest tags need a confirmation var (provided manually: DEPLOY_LATEST)
+    - if [[ "$DEPLOY_TAG" == "8.x-latest"  ||  "$DEPLOY_TAG" == "9.x-latest" ]] && [ -z "$DEPLOY_LATEST" ]; then echo "DEPLOY_LATEST must be set to progress with 'latest' tags."; exit 1; fi
     - cp .env.default .env
     - sed -i -e "s/^GOVCMS_RELEASE_TAG.*/GOVCMS_RELEASE_TAG=$DEPLOY_TAG/" .env
     - cat .env
