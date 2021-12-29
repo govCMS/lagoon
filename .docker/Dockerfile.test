@@ -13,10 +13,11 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 COPY --from=cli /app /app
 COPY .docker/scripts/ /usr/bin/
 
+# Don't restrict the memory limit for the test image.
+RUN echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/99-memory-limit.ini
+
 RUN cp -r /app/web/profiles/contrib/govcms/tests /app/ \
-    && echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/memory.ini \
     && composer install -d /app/tests -n --ansi --prefer-dist --no-suggest \
-    && rm -rf /usr/local/etc/php/conf.d/memory.ini \
     && chmod +x /usr/bin/lint-govcms \
     && chmod +x /usr/bin/lint-theme \
     && chmod +x /usr/bin/behat \
