@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "composer/installers": "^1.2",
+        "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
         "govcms/govcms": "2.x-dev",
         "govcms/govcms-custom": "*",
