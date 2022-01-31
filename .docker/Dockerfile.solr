@@ -15,8 +15,8 @@ RUN sed -i -e "s#SEARCH_API_SOLR_MIN_SCHEMA_VERSION#4.2.6#g" /solr-conf/conf/sch
     && sed -i -e "s#SEARCH_API_SOLR_JUMP_START_CONFIG_SET#1#g" /solr-conf/conf/solrconfig.xml \
     && sed -i -e "s#drupal-8.3.8-solr-7.x#drupal-4.2.6-solr-7.x-1#g" /opt/solr/server/solr/mycores/drupal/conf/schema.xml \
     && sed -i -e "s#drupal-8.3.8-solr-7.x#drupal-4.2.6-solr-7.x-1#g" /opt/solr/server/solr/mycores/drupal/conf/solrconfig.xml \
-    && sed -i -e "s#drupal-4.1.1-solr-7.x-1#drupal-4.2.6-solr-7.x-1#g" /opt/solr/server/solr/mycores/drupal/conf/schema.xml \
-    && sed -i -e "s#drupal-4.1.1-solr-7.x-1#drupal-4.2.6-solr-7.x-1#g" /opt/solr/server/solr/mycores/drupal/conf/solrconfig.xml
+    && sed -i -e "s#drupal-4.2.1-solr-7.x-1#drupal-4.2.6-solr-7.x-1#g" /opt/solr/server/solr/mycores/drupal/conf/schema.xml \
+    && sed -i -e "s#drupal-4.2.1-solr-7.x-1#drupal-4.2.6-solr-7.x-1#g" /opt/solr/server/solr/mycores/drupal/conf/solrconfig.xml
 
 USER solr
 RUN precreate-core drupal /solr-conf/conf
