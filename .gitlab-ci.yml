@@ -26,6 +26,9 @@ workflow:
     - if: $CI_COMMIT_REF_NAME =~ /^release\/2.x\//
       variables:
         DEPLOY_TAG: "9.x-beta"
+    - if: $CI_COMMIT_REF_NAME == "feature/2.x/drupal-9.3"
+      variables:
+        DEPLOY_TAG: "9.3-edge"
 
     ## Testing
     - if: $CI_COMMIT_REF_NAME == "feature/multiarch-apple-silicon" ## Remove after testing.
@@ -97,6 +100,7 @@ deploy:multiarch:
     - 2.x-develop
     - 1.x-master
     - 2.x-master
+    - feature/2.x/drupal-9.3
     - tags
   needs:
   - test:ahoy
