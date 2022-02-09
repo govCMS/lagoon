@@ -10,6 +10,9 @@ COPY .docker/images/nginx/no-robots.sh /lagoon/entrypoints/20-no-robots.sh
 COPY .docker/images/nginx/helpers/ /etc/nginx/helpers/
 COPY .docker/images/nginx/drupal /etc/nginx/conf.d/drupal
 
+COPY .docker/images/nginx/conf/ /etc/nginx/conf.d/
+COPY .docker/images/nginx/govcms-redirects-map.conf /etc/nginx/govcms-redirects-map.conf
+
 RUN fix-permissions /etc/nginx
 
 COPY --from=cli /app /app
