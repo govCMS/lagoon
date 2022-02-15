@@ -31,7 +31,7 @@ RUN composer validate \
     && composer update -d /app \
     && composer clearcache
 
-RUN composer require govcms/scaffold-tooling:dev-9.x-develop -d /app
+RUN composer require govcms/scaffold-tooling:dev-9.x-php8 -d /app
 
 COPY .docker/sanitize.sh /app/sanitize.sh
 
