@@ -40,13 +40,12 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
+            "phpstan/extension-installer": true,
             "composer/installers": true,
             "cweagans/composer-patches": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
             "drupal/core-composer-scaffold": true,
-            "oomphinc/composer-installers-extender": true,
-		    "phpstan/extension-installer": true,
-		    "dealerdirect/phpcodesniffer-composer-installer": true
-
+            "oomphinc/composer-installers-extender": true
         }
     },
     "autoload": {
