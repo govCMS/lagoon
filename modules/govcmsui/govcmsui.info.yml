@@ -1,4 +1,0 @@
-name: govcms_ui
-type: theme
-core_version_requirement: ^8.8 || ^9
-base theme: false
