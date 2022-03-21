@@ -26,6 +26,9 @@ workflow:
     - if: $CI_COMMIT_REF_NAME =~ /^release\/2.x\//
       variables:
         DEPLOY_TAG: "9.x-beta"
+    - if: $CI_COMMIT_REF_NAME == "feature/govcms-7334-akamai-purge"
+      variables:
+        DEPLOY_TAG: "9.x-akamai-purge"
 
     ## Testing
     - if: $CI_COMMIT_REF_NAME == "feature/multiarch-apple-silicon" ## Remove after testing.

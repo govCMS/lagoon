@@ -1,104 +1,110 @@
 {
-    "name": "govcms/lagoon",
-    "description": "Tooling to run GovCMS on Lagoon",
-    "type": "project",
-    "license": "GPL-2.0-or-later",
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.drupal.org/8"
-        },
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:govcms/govcms.git"
-        },
-        {
-            "type": "path",
-            "url": "custom/composer"
-        }
-    ],
-    "require": {
-        "composer/installers": "^2.0",
-        "cweagans/composer-patches": "^1.7",
-        "govcms/govcms": "2.x-dev",
-        "govcms/govcms-custom": "*",
-        "govcms/scaffold-tooling": "3.1.10",
-        "webmozart/path-util": "^2.3"
+  "name": "govcms/lagoon",
+  "description": "Tooling to run GovCMS on Lagoon",
+  "type": "project",
+  "license": "GPL-2.0-or-later",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
     },
-    "require-dev": {
-        "drupal/core-dev": "^9.0"
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
     },
-    "conflict": {
-        "drupal/drupal": "*"
+    {
+      "type": "vcs",
+      "url": "git@github.com:govcms/govcms.git"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "phpstan/extension-installer": true,
-            "composer/installers": true,
-            "cweagans/composer-patches": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "drupal/core-composer-scaffold": true,
-            "oomphinc/composer-installers-extender": true
-        }
-    },
-    "autoload": {
-        "classmap": [
-            "scripts/composer/ScriptHandler.php"
-        ]
-    },
-    "scripts": {
-        "pre-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "pre-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
-        ],
-        "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
-        ]
-    },
-    "extra": {
-        "patchLevel": {
-            "drupal/core": "-p2"
-        },
-        "enable-patching": true,
-        "patches-file": "custom/composer/patches.json",
-        "installer-types": ["bower-asset", "npm-asset"],
-        "drupal-scaffold": {
-            "locations": {
-                "web-root": "web/"
-            }
-        },
-        "installer-paths": {
-            "web/core": [
-                "type:drupal-core"
-            ],
-            "web/libraries/{$name}": [
-                "type:drupal-library", "type:bower-asset", "type:npm-asset"
-            ],
-            "web/modules/contrib/{$name}": [
-                "type:drupal-module"
-            ],
-            "web/profiles/contrib/{$name}": [
-                "type:drupal-profile"
-            ],
-            "web/themes/contrib/{$name}": [
-                "type:drupal-theme"
-            ],
-            "drush/Commands/{$name}": [
-                "type:drupal-drush"
-            ]
-        }
+    {
+      "type": "path",
+      "url": "custom/composer"
     }
+  ],
+  "require": {
+    "composer/installers": "^2.0",
+    "cweagans/composer-patches": "^1.7",
+    "govcms/govcms": "2.x-dev",
+    "govcms/govcms-custom": "*",
+    "drupal/govcms_akamai_purge-govcms_akamai_purge": "^1.0",
+    "govcms/scaffold-tooling": "3.1.10",
+    "webmozart/path-util": "^2.3"
+  },
+  "require-dev": {
+    "drupal/core-dev": "^9.0"
+  },
+  "conflict": {
+    "drupal/drupal": "*"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "phpstan/extension-installer": true,
+      "composer/installers": true,
+      "cweagans/composer-patches": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "drupal/core-composer-scaffold": true,
+      "oomphinc/composer-installers-extender": true
+    }
+  },
+  "autoload": {
+    "classmap": [
+      "scripts/composer/ScriptHandler.php"
+    ]
+  },
+  "scripts": {
+    "pre-install-cmd": [
+      "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+    ],
+    "pre-update-cmd": [
+      "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+    ],
+    "post-install-cmd": [
+      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+      "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+    ],
+    "post-update-cmd": [
+      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+    ]
+  },
+  "extra": {
+    "patchLevel": {
+      "drupal/core": "-p2"
+    },
+    "enable-patching": true,
+    "patches-file": "custom/composer/patches.json",
+    "installer-types": [
+      "bower-asset",
+      "npm-asset"
+    ],
+    "drupal-scaffold": {
+      "locations": {
+        "web-root": "web/"
+      }
+    },
+    "installer-paths": {
+      "web/core": [
+        "type:drupal-core"
+      ],
+      "web/libraries/{$name}": [
+        "type:drupal-library",
+        "type:bower-asset",
+        "type:npm-asset"
+      ],
+      "web/modules/contrib/{$name}": [
+        "type:drupal-module"
+      ],
+      "web/profiles/contrib/{$name}": [
+        "type:drupal-profile"
+      ],
+      "web/themes/contrib/{$name}": [
+        "type:drupal-theme"
+      ],
+      "drush/Commands/{$name}": [
+        "type:drupal-drush"
+      ]
+    }
+  }
 }
