@@ -96,6 +96,7 @@ deploy:multiarch:
     - ahoy publish y
   only:
     - feature/multiarch-apple-silicon
+    - feature/govcms-7334-akamai-purge
     - 1.x-develop
     - 2.x-develop
     - 1.x-master
