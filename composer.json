@@ -27,6 +27,8 @@
     "govcms/govcms": "2.x-dev",
     "govcms/govcms-custom": "*",
     "drupal/govcms_akamai_purge-govcms_akamai_purge": "^1.0",
+    "drupal/purger": "^3.2",
+    "drupal/purge_purger_http": "^1.0",
     "govcms/scaffold-tooling": "3.1.10",
     "webmozart/path-util": "^2.3"
   },
