@@ -56,5 +56,8 @@ RUN mkdir -p /usr/share/ca-certificates/letsencrypt \
   && echo -e "\nletsencrypt/lets-encrypt-r3.crt" >> /etc/ca-certificates.conf \
   && update-ca-certificates
 
+# Install shipshape.
+COPY --from=ghcr.io/salsadigitalauorg/shipshape:latest /usr/local/bin/shipshape /usr/local/bin/shipshape
+
 # Define where the Drupal Root is located
 ENV WEBROOT=web
