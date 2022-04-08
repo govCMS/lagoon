@@ -52,41 +52,80 @@
     "require-dev": {
         "drupal/core-dev": "^9.0"
     },
-    "conflict": {
-        "drupal/drupal": "*"
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "phpstan/extension-installer": true,
-            "composer/installers": true,
-            "cweagans/composer-patches": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "drupal/core-composer-scaffold": true,
-            "oomphinc/composer-installers-extender": true
-        }
+    {
+      "type": "vcs",
+      "url": "git@github.com:govcms/govcms.git"
     },
-    "autoload": {
-        "classmap": [
-            "scripts/composer/ScriptHandler.php"
-        ]
+    {
+      "type": "path",
+      "url": "custom/composer"
+    }
+  ],
+  "require": {
+    "composer/installers": "^2.0",
+    "cweagans/composer-patches": "^1.7",
+    "govcms/govcms": "dev-feature/2.x/php8",
+    "govcms/govcms-custom": "*",
+    "govcms/scaffold-tooling": "dev-feature/9.x-php8",
+    "webmozart/path-util": "^2.3"
+  },
+  "require-dev": {
+    "drupal/core-dev": "^9.0"
+  },
+  "conflict": {
+    "drupal/drupal": "*"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "phpstan/extension-installer": true,
+      "composer/installers": true,
+      "cweagans/composer-patches": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "drupal/core-composer-scaffold": true,
+      "oomphinc/composer-installers-extender": true
+    }
+  },
+  "autoload": {
+    "classmap": [
+      "scripts/composer/ScriptHandler.php"
+    ]
+  },
+  "scripts": {
+    "pre-install-cmd": [
+      "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+    ],
+    "pre-update-cmd": [
+      "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+    ],
+    "post-install-cmd": [
+      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+      "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+    ],
+    "post-update-cmd": [
+      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+    ]
+  },
+  "extra": {
+    "patchLevel": {
+      "drupal/core": "-p2"
     },
-    "scripts": {
-        "pre-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "pre-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
-        ],
-        "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
-        ]
+    "enable-patching": true,
+    "patches-file": "custom/composer/patches.json",
+    "installer-types": [
+      "bower-asset",
+      "npm-asset"
+    ],
+    "drupal-scaffold": {
+      "locations": {
+        "web-root": "web/"
+      }
     },
     "extra": {
         "patchLevel": {
@@ -121,4 +160,5 @@
             ]
         }
     }
+  }
 }
