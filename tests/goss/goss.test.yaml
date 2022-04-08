@@ -11,13 +11,6 @@ file:
     exists: false
 
 command:
-  drutiny:
-    exit-status: 0
-    stdout:
-    - Available commands
-    - profile:list
-    stderr: []
-    timeout: 10000
 
   find /app/ -type f -size +1M -printf '%k\t%p\n':
     exit-status: 0
