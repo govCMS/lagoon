@@ -94,7 +94,7 @@
         },
         "enable-patching": true,
         "patches-file": "custom/composer/patches.json",
-        "installer-types": ["bower-asset", "npm-asset"],
+        "installer-types": [],
         "drupal-scaffold": {
             "locations": {
                 "web-root": "web/"
@@ -105,7 +105,7 @@
                 "type:drupal-core"
             ],
             "web/libraries/{$name}": [
-                "type:drupal-library", "type:bower-asset", "type:npm-asset"
+                "type:drupal-library"
             ],
             "web/modules/contrib/{$name}": [
                 "type:drupal-module"
