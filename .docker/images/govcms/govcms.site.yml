@@ -10,11 +10,11 @@
 # @deprecrated 8.2
 prod:
   root: /app
-  host: ssh.lagoon.svc
+  host: ssh-lagoon.govcms.amazee.io
   user: ${env.LAGOON_PROJECT}-master
   uri: nginx-${env.LAGOON_PROJECT}-master.govcms.amazee.io
   ssh:
-    options: -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 2020 -F /dev/null
+    options: -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 30831 -F /dev/null
 
 ci.prod:
   root: /app
