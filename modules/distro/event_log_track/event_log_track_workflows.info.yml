@@ -1,0 +1,3 @@
+name: event_log_track_workflows
+type: module
+core_version_requirement: ^8 || ^9 || ^10

@@ -34,7 +34,7 @@
         },
         {
             "type": "vcs",
-            "url": "git@github.com:govcms/govcms.git"
+            "url": "git@github.com:stooit/govcms.git"
         },
         {
             "type": "path",
@@ -44,13 +44,13 @@
     "require": {
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
-        "govcms/govcms": "2.x-dev",
+        "govcms/govcms": "feature/10.x-dev",
         "govcms/govcms-custom": "*",
-        "govcms/scaffold-tooling": "4.1.1",
+        "govcms/scaffold-tooling": "10.x-develop-dev",
         "webmozart/path-util": "^2.3"
     },
     "require-dev": {
-        "drupal/core-dev": "^9.0"
+        "drupal/core-dev": "^10.0"
     },
     "conflict": {
         "drupal/drupal": "*"
