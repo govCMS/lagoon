@@ -1,5 +1,10 @@
 version: '3.0'
 
+# Mount for easier dev
+x-volumes: &default-volumes
+  volumes:
+    - ./modules:/app/web/modules/custom:${VOLUME_FLAGS:-delegated}
+
 services:
   cli:
     build:
@@ -13,6 +18,8 @@ services:
     image: ${DOCKERHUB_NAMESPACE:-govcms}/${GOVCMS_CLI_IMAGE_NAME:-govcms}:${GOVCMS_RELEASE_TAG:-latest}
     environment:
       LAGOON_ROUTE: ${LOCALDEV_URL:-http://govcmslagoon.docker.amazee.io}
+    << : *default-volumes
+
 
   test:
     build:
@@ -42,6 +49,8 @@ services:
     networks:
       - amazeeio-network
       - default
+    << : *default-volumes
+
 
   php:
     build:
@@ -52,6 +61,8 @@ services:
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
         LAGOON_ROUTE: ${LOCALDEV_URL:-http://govcmslagoon.docker.amazee.io}
     image: ${DOCKERHUB_NAMESPACE:-govcms}/php:${GOVCMS_RELEASE_TAG:-latest}
+    << : *default-volumes
+
 
   mariadb:
     build:
