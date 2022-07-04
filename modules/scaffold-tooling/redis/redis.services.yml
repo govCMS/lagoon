@@ -1,0 +1,18 @@
+services:
+  cache.backend.redis:
+    class: Drupal\redis\Cache\CacheBackendFactory
+    arguments: ['@redis.factory', '@cache_tags.invalidator.checksum', '@serialization.phpserialize']
+  redis.factory:
+    class: Drupal\redis\ClientFactory
+  redis.lock.factory:
+    class: Drupal\redis\Lock\LockFactory
+    arguments: ['@redis.factory']
+  redis.flood.factory:
+    class: Drupal\redis\Flood\FloodFactory
+    arguments: ['@redis.factory', '@request_stack']
+  queue.redis_reliable:
+    class: Drupal\redis\Queue\ReliableQueueRedisFactory
+    arguments: ['@redis.factory', '@settings']
+  queue.redis:
+    class: Drupal\redis\Queue\QueueRedisFactory
+    arguments: ['@redis.factory', '@settings']

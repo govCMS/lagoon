@@ -1,0 +1,5 @@
+system.lagoon_logs_settings:
+  title: 'Lagoon Logs settings'
+  parent: system.admin_config_development
+  description: 'Configure Lagoon Logs.'
+  route_name: lagoon_logs.settings

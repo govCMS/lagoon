@@ -1,0 +1,7 @@
+govcms_akamai_purge.path:
+  path: '/admin/config/services/govcms-akamai-purge-paths'
+  defaults:
+    _form: 'Drupal\govcms_akamai_purge\Form\PathPurgeForm'
+    _title: 'Purge paths'
+  requirements:
+    _permission: 'administer govcms_akamai_purge paths'

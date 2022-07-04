@@ -1,0 +1,11 @@
+{
+  "name": "drupal/govcms_akamai_purge",
+  "description": "Formats tags according to Akamai's criteria and sends purge requests to the GovCMS Akamai Purge Service.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "drupal/core": "~8.9 || ^9",
+    "drupal/purge_purger_http": "^1.0",
+    "drupal/purge_queuer_coretags": "^3.2"
+  }
+}

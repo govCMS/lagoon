@@ -1,0 +1,20 @@
+enabled: true
+# Default behaviour: block unchecked files.
+outage_action: 0
+overridden_schemes: []
+# Default scan mode: Daemon (over TCP/IP).
+scan_mode: 0
+# Default verbosity: quiet.
+verbosity: 0
+
+# Per-scan-mode params.
+mode_executable:
+  executable_path: '/usr/bin/clamscan'
+  executable_parameters: ''
+
+mode_daemon_tcpip:
+  hostname: 'localhost'
+  port: 3310
+
+mode_daemon_unixsocket:
+  unixsocket: '/var/clamav/clamd'

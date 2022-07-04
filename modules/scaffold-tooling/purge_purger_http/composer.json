@@ -1,0 +1,22 @@
+{
+    "name": "drupal/purge_purger_http",
+    "type": "drupal-module",
+    "description": "Generic and highly configurable purger that makes HTTP requests, best suits custom configurations.",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Niels van Mourik",
+            "homepage": "http://www.nielsvm.org"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "drupal/core": "^8.8.6 || ^9",
+        "drupal/purge": "^3.0.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-8.x-1.x": "1.x-dev"
+        }
+    }
+}

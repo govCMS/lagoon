@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Contains module hooks.
+ */
+
+use Drupal\govcms_akamai_purge\Hash;
+use Drupal\purge\Plugin\Purge\Invalidation\TagInvalidation;
+use Drupal\purge\Plugin\Purge\Invalidation\InvalidationInterface;
+
+/**
+ * Implements hook_tokens_alter().
+ */
+function govcms_akamai_purge_tokens_alter(&$replacements, $context, $bubbleable_metadata) {
+  if ($context['type'] != 'invalidations') {
+    return;
+  }
+  if (empty($context['data']['invalidations'])) {
+    return;
+  }
+  if (!$context['data']['invalidations'][0] instanceof InvalidationInterface) {
+    return;
+  }
+  $purge_token = getenv('AKAMAI_PURGE_TOKEN');
+  $lagoon_project = getenv('LAGOON_PROJECT');
+  $lagoon_branch = getenv('LAGOON_GIT_SAFE_BRANCH');
+  // Do not alter tokens if no token or project.
+  if (!$purge_token || !$lagoon_project || !$lagoon_branch) {
+    return;
+  }
+  $tag_prefix = $lagoon_project . '-' . $lagoon_branch . ':';
+
+  $join = function ($invalidations, $separator) use ($tag_prefix) {
+    $expressions = [];
+    $debug_cacheability_headers = \Drupal::getContainer()
+      ->getParameter('http.response.debug_cacheability_headers');
+    /** @var \Drupal\purge\Plugin\Purge\Invalidation\InvalidationInterface $invalidation */
+    foreach ($invalidations as $invalidation) {
+      if (!$invalidation instanceof TagInvalidation) {
+        continue;
+      }
+      if (!$invalidation->getProperty('govcms')) {
+        continue;
+      }
+      if (is_string($expression = $invalidation->getExpression())) {
+        if (!$debug_cacheability_headers) {
+          $expressions[] = Hash::cacheTag($expression, $tag_prefix);
+        }
+        else {
+          $expressions[] = $tag_prefix . $expression;
+        }
+      }
+    }
+    return implode($separator, $expressions);
+  };
+
+  foreach ($context['tokens'] as $name => $original) {
+    switch ($name) {
+      case 'separated_pipe':
+        $replacements[$original] = $join($context['data']['invalidations'], '|');
+        break;
+
+      case 'separated_comma':
+        $replacements[$original] = $join($context['data']['invalidations'], ',');
+        break;
+
+      case 'separated_tab':
+        $replacements[$original] = $join($context['data']['invalidations'], "\t");
+        break;
+    }
+  }
+
+}

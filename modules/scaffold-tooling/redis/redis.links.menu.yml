@@ -1,0 +1,5 @@
+redis.statistics_overview:
+  title: 'Redis'
+  parent: system.admin_reports
+  description: 'Redis usage statistics'
+  route_name: redis.report

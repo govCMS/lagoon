@@ -1,0 +1,7 @@
+lagoon_logs.settings:
+  path: '/admin/config/development/lagoon_logs'
+  defaults:
+    _form: '\Drupal\lagoon_logs\Form\LagoonLogsSettingsForm'
+    _title: 'Lagoon Logs configuration'
+  requirements:
+    _permission: 'administer site configuration'

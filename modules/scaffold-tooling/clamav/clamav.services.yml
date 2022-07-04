@@ -1,0 +1,8 @@
+services:
+  clamav:
+    class: Drupal\clamav\Scanner
+    arguments:
+      - '@clamav_config'
+
+  clamav_config:
+    class: Drupal\clamav\Config

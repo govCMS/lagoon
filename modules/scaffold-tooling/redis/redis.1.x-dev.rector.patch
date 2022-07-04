@@ -1,0 +1,26 @@
+diff --git a/src/Cache/CacheBase.php b/src/Cache/CacheBase.php
+index 61b2d74..b59441a 100644
+--- a/src/Cache/CacheBase.php
++++ b/src/Cache/CacheBase.php
+@@ -313,7 +313,7 @@ abstract class CacheBase implements CacheBackendInterface {
+     // Check expire time, allow to have a cache invalidated explicitly, don't
+     // check if already invalid.
+     if ($cache->valid) {
+-      $cache->valid = $cache->expire == Cache::PERMANENT || $cache->expire >= REQUEST_TIME;
++      $cache->valid = $cache->expire == Cache::PERMANENT || $cache->expire >= \Drupal::time()->getRequestTime();
+ 
+       // Check if invalidateTags() has been called with any of the items's tags.
+       if ($cache->valid && !$this->checksumProvider->isValid($cache->checksum, $cache->tags)) {
+diff --git a/tests/src/Functional/Lock/RedisLockFunctionalTest.php b/tests/src/Functional/Lock/RedisLockFunctionalTest.php
+index 14f3815..b859a46 100644
+--- a/tests/src/Functional/Lock/RedisLockFunctionalTest.php
++++ b/tests/src/Functional/Lock/RedisLockFunctionalTest.php
+@@ -27,7 +27,7 @@ class RedisLockFunctionalTest extends LockFunctionalTest {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     // Write the containers_yaml update by hand, since writeSettings() doesn't

@@ -1,0 +1,17 @@
+{
+    "name": "drupal/lagoon_logs",
+    "description": "Lagoon_logs D8 is a convenience wrapper for monolog.",
+    "type": "drupal-module",
+    "authors": [
+        {
+            "name": "Blaize Kaye",
+            "homepage": "https://www.drupal.org/u/bomoko",
+            "role": "Maintainer"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^1.24.0 || ^2.0"
+    },
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev"
+}

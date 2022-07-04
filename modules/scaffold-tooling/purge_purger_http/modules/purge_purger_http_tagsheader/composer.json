@@ -1,0 +1,22 @@
+{
+    "name": "drupal/purge_purger_http_tagsheader",
+    "type": "drupal-module",
+    "description": "Exports the Purge-Cache-Tags response header to support tag-based invalidation. You only need this for custom setups under your own control.",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Niels van Mourik",
+            "homepage": "http://www.nielsvm.org"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "drupal/core": "^8.8.6 || ^9",
+        "drupal/purge": "^3.0.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-8.x-3.x": "3.x-dev"
+        }
+    }
+}

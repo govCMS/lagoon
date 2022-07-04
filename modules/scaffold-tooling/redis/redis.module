@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Redis module.
+ *
+ * This file is a placeholder for other modules that need the Redis client for
+ * something else than lock and cache.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\redis\ClientFactory;
+
+/**
+ * Implements hook_help().
+ */
+function redis_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.redis':
+      if (ClientFactory::hasClient()) {
+        $messages = '<p><strong>' . t("Current connected client uses the <em>@name</em> library.", ['@name' => ClientFactory::getClientName()]) . '</strong></p>';
+      }
+      else {
+        $messages = '<p><strong>' . t('No redis connection configured.') . '</strong></p>';
+      }
+      return $messages;
+  }
+}

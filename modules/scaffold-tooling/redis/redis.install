@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Redis install related functions.
+ */
+
+use \Drupal\redis\ClientFactory;
+
+/**
+ * Implements hook_requirements().
+ */
+function redis_requirements($phase) {
+
+  // This module is configured via settings.php file. Using any other phase
+  // than runtime to proceed to some consistency checks is useless.
+  if ('runtime' !== $phase) {
+    return [];
+  }
+
+  $requirements = [];
+
+  if (ClientFactory::hasClient()) {
+    $requirements['redis'] = [
+      'title'       => "Redis",
+      'value'       => t("Connected, using the <em>@name</em> client.", ['@name' => ClientFactory::getClientName()]),
+      'severity'    => REQUIREMENT_OK,
+    ];
+  }
+  else {
+    $requirements['redis'] = [
+      'title'       => "Redis",
+      'value'       => t("Not connected."),
+      'severity'    => REQUIREMENT_WARNING,
+      'description' => t("No Redis client connected, this module is therefore not used. Ensure that Redis is configured correctly, or disable this module."),
+    ];
+  }
+
+  return $requirements;
+}

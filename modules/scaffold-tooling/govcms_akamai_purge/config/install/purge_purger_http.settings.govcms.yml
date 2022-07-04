@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - govcms_akamai_purge
+  enforced:
+    module:
+      - govcms_akamai_purge
+id: govcms
+label: govcms_akamai_purger
+name: 'GovCMS Akamai Purger'
+invalidationtype: tag
+hostname: akamai-purge-service
+port: 8080
+path: /purge
+request_method: POST
+scheme: http
+verify: '0'
+body: '{"bundled_tags": "[invalidations:separated_pipe]"}'
+body_content_type: application/json
+runtime_measurement: true
+timeout: !!float 1
+connect_timeout: !!float 1
+cooldown_time: !!float 0
+max_requests: 100
+http_errors: true

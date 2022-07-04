@@ -1,0 +1,3 @@
+name: purge_queuer_coretags
+type: module
+core_version_requirement: ^8 || ^9 || ^10

@@ -1,0 +1,48 @@
+clamav.settings:
+  type: config_object
+  label: 'Clam AV settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Enabled'
+    outage_action:
+      type: integer
+      label: 'Outage Action'
+    overridden_schemes:
+      label: 'Overridden schemes'
+      type: sequence
+      sequence:
+        type: string
+    scan_mode:
+      type: integer
+      label: 'Scan Mode'
+    verbosity:
+      type: integer
+      label: 'Verbosity'
+    mode_executable:
+      type: mapping
+      label: 'Mode executable'
+      mapping:
+        executable_path:
+          type: string
+          label: 'Executable path'
+        executable_parameters:
+          type: string
+          label: 'Executable parameters'
+    mode_daemon_tcpip:
+      type: mapping
+      label: 'Mode Daemon TCPIP'
+      mapping:
+        hostname:
+          type: string
+          label: 'Host name'
+        port:
+          type: integer
+          label: 'Port number'
+    mode_daemon_unixsocket:
+      type: mapping
+      label: 'Mode Daemon Unix socket'
+      mapping:
+        unixsocket:
+          type: string
+          label: 'Unix socket path'

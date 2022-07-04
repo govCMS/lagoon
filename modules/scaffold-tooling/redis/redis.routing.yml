@@ -1,0 +1,7 @@
+redis.report:
+  path: '/admin/reports/redis'
+  defaults:
+    _controller: '\Drupal\redis\Controller\ReportController::overview'
+    _title: 'Redis'
+  requirements:
+    _permission: 'access site reports'
