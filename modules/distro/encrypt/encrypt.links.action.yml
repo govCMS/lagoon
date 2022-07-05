@@ -1,0 +1,6 @@
+entity.encryption_profile.add_form:
+  route_name: 'entity.encryption_profile.add_form'
+  title: 'Add Encryption Profile'
+  appears_on:
+    - entity.encryption_profile.collection
+

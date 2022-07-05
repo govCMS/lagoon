@@ -1,0 +1,6 @@
+services:
+  username_enumeration_prevention.user_route_subscriber:
+    class: Drupal\username_enumeration_prevention\UserRouteEventSubscriber
+    arguments: ['@router.route_provider', '@entity_type.manager', '@cache.default']
+    tags:
+      - name: event_subscriber

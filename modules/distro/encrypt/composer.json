@@ -1,0 +1,5 @@
+{
+  "name": "drupal/encrypt",
+  "description": "Provides an API for two-way encryption.",
+  "type": "drupal-module"
+}

@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * @file
+ * Installation related functions for GA Login module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function ga_login_requirements($phase) {
+  $requirements = [];
+
+  $requirements['ga_login'] = [
+    'title' => t('Google Login Authenticator'),
+  ];
+
+  if (class_exists('\Otp\Otp')) {
+    $version = method_exists('\Otp\OtpInterface', 'checkHotpResync') ? '2.1.0 or newer' : '2.0.0';
+
+    $requirements['ga_login']['severity'] = REQUIREMENT_OK;
+    $requirements['ga_login']['value'] = t('Third-party libraries');
+    $requirements['ga_login']['description'] = t('One Time Passwords (christian-riesen/otp) @version is installed', ['@version' => $version]);
+  }
+  else {
+    $requirements['ga_login']['severity'] = REQUIREMENT_ERROR;
+    $requirements['ga_login']['value'] = t('Third-party libraries');
+    $requirements['ga_login']['description'] = t("Please install the 'christian-riesen/otp' library via composer. See the module README for instructions.");
+  }
+
+  return $requirements;
+}
+
+/**
+ * Set TOTP time limit to 1 min if set to the old default value of 15 mins.
+ */
+function ga_login_update_8001() {
+  $config = \Drupal::configFactory()->getEditable('tfa.settings');
+
+  if (in_array('tfa_totp', $config->get('allowed_validation_plugins'))) {
+    $time_skew = $config->get('validation_plugin_settings.tfa_totp.time_skew');
+
+    if (!empty($time_skew) && $time_skew == 30) {
+      $config
+        ->set('validation_plugin_settings.tfa_totp.time_skew', 2)
+        ->save();
+
+      \Drupal::logger('ga_login')->info('TOTP time skew changed to limit valid code lifespan to one minute.');
+    }
+  }
+}
+
+/**
+ * Update plugin names from tfa prefix to ga_login.
+ */
+function ga_login_update_8002() {
+  /** @var \Drupal\Core\Config\Config $config */
+  $config = \Drupal::configFactory()->getEditable('tfa.settings');
+
+  // Update default_validation_plugin.
+  $old_plugins = ['tfa_hotp', 'tfa_totp'];
+  $new_plugins = ['ga_login_hotp', 'ga_login_totp'];
+  $config->set('default_validation_plugin', str_replace($old_plugins, $new_plugins, $config->get('default_validation_plugin')));
+
+  // Update validation_plugin_settings.
+  $validation_plugins = $config->get('validation_plugin_settings');
+  foreach ($validation_plugins as $key => $validation_plugin) {
+    switch ($key) {
+      case 'tfa_hotp':
+      case 'tfa_totp':
+        $new_key = str_replace('tfa_', 'ga_login_', $key);
+        $validation_plugins[$new_key] = $validation_plugin;
+        unset($validation_plugins[$key]);
+        break;
+    }
+  }
+  $config->set('validation_plugin_settings', $validation_plugins);
+
+  // Update allowed_validation_plugins.
+  $allowed_validation_plugins = $config->get('allowed_validation_plugins');
+  foreach ($allowed_validation_plugins as $key => $allowed_validation_plugin) {
+    switch ($key) {
+      case 'tfa_hotp':
+      case 'tfa_totp':
+        $new_key = str_replace('tfa_', 'ga_login_', $key);
+        $allowed_validation_plugins[$new_key] = $new_key;
+        unset($allowed_validation_plugins[$key]);
+        break;
+    }
+  }
+  $config->set('allowed_validation_plugins', $allowed_validation_plugins);
+
+  $config->save();
+}
+
+/**
+ * Update plugin names from tfa prefix to ga_login in users_data.
+ */
+function ga_login_update_8003(&$sandbox) {
+  /** @var \Drupal\user\UserData $user_data */
+  $user_data = \Drupal::service('user.data');
+  $tfa_settings = $user_data->get('tfa', NULL, 'tfa_user_settings');
+
+  // Setup batch.
+  if (!isset($sandbox['total'])) {
+    $sandbox['total'] = count($tfa_settings);
+    $sandbox['current'] = 0;
+  }
+  $batch_size = 50;
+
+  foreach (array_slice($tfa_settings, $sandbox['current'], $batch_size, TRUE) as $uid => $user_settings) {
+    $changed = FALSE;
+    $plugins = $user_settings['data']['plugins'];
+    $new_plugins = [];
+    foreach ($plugins as $key => $plugin) {
+      switch ($key) {
+        case 'tfa_hotp':
+        case 'tfa_totp':
+          $new_key = str_replace('tfa_', 'ga_login_', $key);
+          $new_plugins[$new_key] = $new_key;
+          $changed = TRUE;
+          break;
+
+        default:
+          $new_plugins[$key] = $key;
+          break;
+      }
+    }
+    if ($changed) {
+      $user_settings['data']['plugins'] = $new_plugins;
+      $user_data->set('tfa', $uid, 'tfa_user_settings', $user_settings);
+    }
+    $sandbox['current']++;
+  }
+
+  if ($sandbox['total'] == 0) {
+    $sandbox['#finished'] = 1;
+  }
+  else {
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+  }
+}

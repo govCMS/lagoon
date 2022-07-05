@@ -1,0 +1,5 @@
+entity.key_config_override.collection:
+  route_name: entity.key_config_override.collection
+  title: 'Key Overrides'
+  base_route: config.sync
+  weight: 150

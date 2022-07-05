@@ -11,9 +11,10 @@ Modules that haven no viable D10 release (e.g no patches yet exist) will have st
 * `stage_file_proxy`: Has [manual patch](https://www.drupal.org/project/stage_file_proxy/issues/3283529) applied.
 * `fast404`: Has [rector patch](https://www.drupal.org/project/fast_404/issues/3287465) applied.
 * `purge`: Has been created as a stub. First needs [8.1 merging](https://www.drupal.org/project/purge/issues/3259320) followed by [D10 readiness](https://www.drupal.org/project/purge/issues/3272193).
+* All other modules only required an updated `core_version_requirement` value.
 
 ### Distribution modules
 * `key`: Has [patch applied](https://www.drupal.org/project/key/issues/3278542) to fix drush commands.
 * `username_enumeration_prevention`: Has rector patch applied.
 * `seckit`: Has rector patch applied.
-* ...
+* ...@todo: Lots to go through here.

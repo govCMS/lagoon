@@ -1,0 +1,145 @@
+# Schema for the configuration files of the Key module.
+
+key.key.*:
+  type: config_entity
+  label: 'Key'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: text
+      label: 'Description'
+    key_type:
+      type: string
+      label: 'Key type'
+    key_type_settings:
+      type: key.type.[%parent.key_type]
+      label: 'Key type settings'
+    key_provider:
+      type: string
+      label: 'Key provider'
+    key_provider_settings:
+      type: key.provider.[%parent.key_provider]
+      label: 'Key provider settings'
+    key_input:
+      type: string
+      label: 'Key input'
+    key_input_settings:
+      type: key.input.[%parent.key_input]
+      label: 'Key input settings'
+
+key.type.authentication:
+  type: sequence
+
+key.type.authentication_multivalue:
+  type: sequence
+
+key.type.user_password:
+  type: sequence
+
+key.type.encryption:
+  type: mapping
+  label: 'Encryption key type settings'
+  mapping:
+      key_size:
+        type: integer
+        label: 'Key size'
+
+key.provider.config:
+  type: mapping
+  label: 'Configuration key provider settings'
+  mapping:
+    key_value:
+      type: string
+      label: 'Key value'
+    base64_encoded:
+      type: boolean
+      label: 'Base64-encoded'
+
+key.provider.file:
+  type: mapping
+  label: 'File key provider settings'
+  mapping:
+    file_location:
+      type: string
+      label: 'File location'
+    base64_encoded:
+      type: boolean
+      label: 'Base64-encoded'
+    strip_line_breaks:
+      type: boolean
+      label: 'Strip trailing line breaks'
+
+key.provider.env:
+  type: mapping
+  label: 'Environment key provider settings'
+  mapping:
+    env_variable:
+      type: string
+      label: 'Environment variable'
+    base64_encoded:
+      type: boolean
+      label: 'Base64-encoded'
+    strip_line_breaks:
+      type: boolean
+      label: 'Strip trailing line breaks'
+
+key.input.none:
+  type: sequence
+
+key.input.text_field:
+  type: mapping
+  label: 'Text field key input settings'
+  mapping:
+      base64_encoded:
+        type: boolean
+        label: 'Base64-encoded'
+
+key.input.textarea_field:
+  type: mapping
+  label: 'Textarea field key input settings'
+  mapping:
+      base64_encoded:
+        type: boolean
+        label: 'Base64-encoded'
+
+key.input.generate:
+  type: mapping
+  label: 'Generate key input settings'
+  mapping:
+      generated:
+        type: boolean
+        label: 'Generated'
+      display_once:
+        type: boolean
+        label: 'Display once'
+
+key.config_override.*:
+  type: config_entity
+  label: 'Key Configuration Override'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    config_type:
+      type: string
+      label: 'Configuration type'
+    config_prefix:
+      type: string
+      label: 'Configuration prefix'
+    config_name:
+      type: string
+      label: 'Configuration name'
+    config_item:
+      type: string
+      label: 'Configuration item'
+    key_id:
+      type: string
+      label: 'Key ID'

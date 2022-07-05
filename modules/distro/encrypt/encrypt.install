@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @file
+ * Install and hook_update_nn functions for the encrypt module.
+ */
+
+/**
+ * Update keys defined with the "aes_encryption" key type to "encryption".
+ */
+function encrypt_update_8001() {
+  $config_factory = \Drupal::configFactory();
+  $updated = FALSE;
+
+  foreach ($config_factory->listAll('key.key.') as $key_config_name) {
+    $key = $config_factory->getEditable($key_config_name);
+    if ($key->get('key_type') == 'aes_encryption') {
+      $key->set('key_type', 'encryption');
+      $key->save(TRUE);
+      $updated = TRUE;
+    }
+  }
+
+  if ($updated) {
+    return t('Changed key type from "aes_encryption" to "encryption" for existing keys.');
+  }
+  else {
+    return t('No changes to existing keys were made because there were no keys defined with the "aes_encryption" key type.');
+  }
+}
+
+/**
+ * Update existing encryption profiles to depend on their keys.
+ */
+function encrypt_update_8002() {
+  $config_factory = \Drupal::configFactory();
+  $updated = FALSE;
+
+  // Get all config profiles.
+  foreach ($config_factory->listAll('encrypt.profile.') as $profile_config_name) {
+    $profile_config = $config_factory->getEditable($profile_config_name);
+
+    // Check if the profile has a key as dependency. It may have other config
+    // dependencies so let's check each.
+    $has_dependency = FALSE;
+    $config_names = $profile_config->get('dependencies.config');
+    if (is_array($config_names)) {
+      foreach ($config_names as $config_name) {
+        if (strpos($config_name, 'key.key') === 0) {
+          $has_dependency = TRUE;
+        }
+      }
+    }
+
+    // Add the dependency.
+    if (!$has_dependency) {
+      $entity_manager = \Drupal::entityTypeManager();
+      $encryption_profile = $entity_manager
+        ->getStorage('encryption_profile')
+        ->load($profile_config->get('id'));
+      if ($encryption_profile) {
+        $config_names = (is_array($config_names) ? $config_names : []);
+        $config_names[] = 'key.key.' . $encryption_profile->getEncryptionKeyId();
+        $profile_config->set('dependencies.config', $config_names);
+        $profile_config->save(TRUE);
+        $updated = TRUE;
+      }
+    }
+  }
+
+  if ($updated) {
+    return t('Added configuration dependencies on keys for existing profiles.');
+  }
+  else {
+    return t('No changes were made because there were no profiles without a configuration dependency on their key.');
+  }
+}
+
+/**
+ * Set new allow_deprecated_plugins configuration property to default value.
+ */
+function encrypt_update_8003() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('encrypt.settings');
+  $config->set('allow_deprecated_plugins', FALSE);
+  $config->save(TRUE);
+}

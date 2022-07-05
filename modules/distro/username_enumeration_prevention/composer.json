@@ -1,0 +1,7 @@
+{
+  "name": "drupal/username_enumeration_prevention",
+  "description": "Prevents username enumeration on password reset and user pages.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://www.drupal.org/project/username_enumeration_prevention"
+}

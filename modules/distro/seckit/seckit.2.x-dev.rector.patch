@@ -1,0 +1,30 @@
+diff --git a/src/EventSubscriber/SecKitEventSubscriber.php b/src/EventSubscriber/SecKitEventSubscriber.php
+index 42b1f87..6228f82 100644
+--- a/src/EventSubscriber/SecKitEventSubscriber.php
++++ b/src/EventSubscriber/SecKitEventSubscriber.php
+@@ -65,10 +65,10 @@ class SecKitEventSubscriber implements EventSubscriberInterface {
+   /**
+    * Executes actions on the request event.
+    *
+-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
++   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+    *   Event Response Object.
+    */
+-  public function onKernelRequest(GetResponseEvent $event) {
++  public function onKernelRequest(\Symfony\Component\HttpKernel\Event\RequestEvent $event) {
+     $this->request = $event->getRequest();
+ 
+     // Execute necessary functions.
+@@ -80,10 +80,10 @@ class SecKitEventSubscriber implements EventSubscriberInterface {
+   /**
+    * Executes actions on the response event.
+    *
+-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
++   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
+    *   Filter Response Event object.
+    */
+-  public function onKernelResponse(FilterResponseEvent $event) {
++  public function onKernelResponse(\Symfony\Component\HttpKernel\Event\ResponseEvent $event) {
+     $this->response = $event->getResponse();
+ 
+     // Execute necessary functions.

@@ -1,0 +1,11 @@
+entity.key.add_form:
+  route_name: 'entity.key.add_form'
+  title: 'Add Key'
+  appears_on:
+    - entity.key.collection
+
+entity.key_config_override.add_form:
+  route_name: 'entity.key_config_override.add_form'
+  title: 'Add Override'
+  appears_on:
+    - entity.key_config_override.collection

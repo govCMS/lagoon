@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Key module.
+ */
+
+/**
+ * Set default value for stripping trailing line breaks.
+ */
+function key_update_8001() {
+  $updated = FALSE;
+
+  $config_factory = \Drupal::configFactory();
+
+  // Loop through keys.
+  foreach ($config_factory->listAll('key.key.') as $key_config_name) {
+    $key = $config_factory->getEditable($key_config_name);
+
+    // If this key uses the File key provider.
+    if ($key->get('key_provider') == 'file') {
+      $settings = $key->get('key_provider_settings');
+
+      // If the Strip Line Breaks field has not been set.
+      if (!isset($settings['strip_line_breaks'])) {
+        // Set Strip Line Breaks to FALSE and save the configuration.
+        $settings['strip_line_breaks'] = FALSE;
+        $key->set('key_provider_settings', $settings);
+        $key->save(TRUE);
+
+        $updated = TRUE;
+      }
+    }
+  }
+
+  if ($updated) {
+    return t('File key provider settings updated.');
+  }
+}
+
+/**
+ * Add the configuration prefix to existing key configuration overrides.
+ */
+function key_update_8002() {
+  $updated = FALSE;
+
+  $configFactory = \Drupal::configFactory();
+  $entityTypeManager = \Drupal::entityTypeManager();
+
+  // Loop through key configuration overrides.
+  foreach ($configFactory->listAll('key.config_override.') as $name) {
+    $override = $configFactory->getEditable($name);
+
+    if (!$override) {
+      continue;
+    }
+
+    $config_prefix = $override->get('config_prefix');
+    if (isset($config_prefix)) {
+      continue;
+    }
+
+    $config_type = $override->get('config_type');
+    if (!isset($config_type)) {
+      continue;
+    }
+
+    $config_prefix = '';
+    if ($config_type != 'system.simple') {
+      $definition = $entityTypeManager->getDefinition($config_type);
+      $config_prefix = $definition->getConfigPrefix();
+    }
+
+    $override->set('config_prefix', $config_prefix);
+    $override->save(TRUE);
+  }
+
+  if ($updated) {
+    return t('Key configuration overrides updated.');
+  }
+}

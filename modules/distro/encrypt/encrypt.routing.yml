@@ -1,0 +1,47 @@
+entity.encryption_profile.collection:
+  path: '/admin/config/system/encryption/profiles'
+  defaults:
+    _entity_list: 'encryption_profile'
+    _title: 'Encryption profiles'
+  requirements:
+    _permission: 'administer encrypt'
+
+entity.encryption_profile.add_form:
+  path: '/admin/config/system/encryption/profiles/add'
+  defaults:
+    _entity_form: 'encryption_profile.add'
+    _title: 'Add encryption profile'
+  requirements:
+    _permission: 'administer encrypt'
+
+entity.encryption_profile.edit_form:
+  path: '/admin/config/system/encryption/profiles/manage/{encryption_profile}'
+  defaults:
+    _entity_form: 'encryption_profile.edit'
+    _title: 'Edit encryption profile'
+  requirements:
+    _permission: 'administer encrypt'
+
+entity.encryption_profile.delete_form:
+  path: '/admin/config/system/encryption/profiles/manage/{encryption_profile}/delete'
+  defaults:
+    _entity_form: 'encryption_profile.delete'
+    _title: 'Delete encryption profile'
+  requirements:
+    _permission: 'administer encrypt'
+
+entity.encryption_profile.test_form:
+  path: '/admin/config/system/encryption/profiles/manage/{encryption_profile}/test'
+  defaults:
+    _entity_form: 'encryption_profile.test'
+    _title: 'Test encryption profile'
+  requirements:
+    _permission: 'administer encrypt'
+
+encrypt.settings:
+  path: '/admin/config/system/encryption/profiles/settings'
+  defaults:
+    _form: '\Drupal\encrypt\Form\EncryptSettingsForm'
+    _title: 'Encrypt settings'
+  requirements:
+    _permission: 'administer encrypt'

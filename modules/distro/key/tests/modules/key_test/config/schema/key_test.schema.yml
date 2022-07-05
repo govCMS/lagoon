@@ -1,0 +1,22 @@
+key.input.key_test_multi:
+  type: mapping
+  label: 'Multi options'
+  mapping:
+    first:
+      type: string
+      label: 'First'
+    second:
+      type: string
+      label: 'Second'
+
+key.type.key_test_multi:
+  type: mapping
+  label: 'Multi options'
+
+key.provider.key_test_state:
+  type: mapping
+  label: 'State options'
+  mapping:
+    state_key:
+      type: string
+      label: 'State key'

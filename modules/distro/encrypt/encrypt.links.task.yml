@@ -1,0 +1,9 @@
+encrypt.list_tab:
+  route_name: entity.encryption_profile.collection
+  title: List
+  base_route: entity.encryption_profile.collection
+
+encrypt.settings_tab:
+  route_name: encrypt.settings
+  title: Settings
+  base_route: entity.encryption_profile.collection

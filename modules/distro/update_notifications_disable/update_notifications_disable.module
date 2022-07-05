@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Disables updates from all modules
+ */
+
+/**
+ * Implements hook_update_projects_alter().
+ */
+function update_notifications_disable_update_projects_alter(&$projects) {
+  $projects = [];
+}

@@ -1,0 +1,4 @@
+administer encrypt:
+  title: 'Administer encryption settings'
+  description: 'Change encryption settings (does not let them view encrypted data).'
+  restrict access: true

@@ -1,0 +1,18 @@
+services:
+  key.repository:
+    class: Drupal\key\KeyRepository
+    arguments: ['@entity_type.manager', '@plugin.manager.key.key_provider', '@plugin.manager.key.key_type', '@plugin.manager.key.key_input']
+  plugin.manager.key.key_type:
+    class: Drupal\key\Plugin\KeyPluginManager
+    arguments: ['key_type', '@container.namespaces', '@cache.discovery', '@module_handler']
+  plugin.manager.key.key_provider:
+    class: Drupal\key\Plugin\KeyPluginManager
+    arguments: ['key_provider', '@container.namespaces', '@cache.discovery', '@module_handler']
+  plugin.manager.key.key_input:
+    class: Drupal\key\Plugin\KeyPluginManager
+    arguments: ['key_input', '@container.namespaces', '@cache.discovery', '@module_handler']
+  key.config_override:
+    class: \Drupal\key\KeyConfigOverrides
+    arguments: ['@config.factory', '@cache.data']
+    tags:
+      - {name: config.factory.override, priority: 10}

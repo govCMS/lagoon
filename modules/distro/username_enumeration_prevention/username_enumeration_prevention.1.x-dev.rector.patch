@@ -1,0 +1,18 @@
+diff --git a/src/UserRouteEventSubscriber.php b/src/UserRouteEventSubscriber.php
+index e52118e..808bcfa 100644
+--- a/src/UserRouteEventSubscriber.php
++++ b/src/UserRouteEventSubscriber.php
+@@ -60,10 +60,10 @@ class UserRouteEventSubscriber implements EventSubscriberInterface {
+   /**
+    * {@inheritdoc}
+    */
+-  public function onException(GetResponseForExceptionEvent $event) {
++  public function onException(\Symfony\Component\HttpKernel\Event\ExceptionEvent $event) {
+     $routeMatch = RouteMatch::createFromRequest($event->getRequest());
+-    if ($event->getException() instanceof AccessDeniedHttpException && in_array($routeMatch->getRouteName(), $this->getUserRoutes())) {
+-      $event->setException(new NotFoundHttpException());
++    if ($event->getThrowable() instanceof AccessDeniedHttpException && in_array($routeMatch->getRouteName(), $this->getUserRoutes())) {
++      $event->setThrowable(new NotFoundHttpException());
+     }
+   }
+ 

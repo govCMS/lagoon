@@ -1,0 +1,6 @@
+services:
+  encrypt.commands:
+    class: \Drupal\encrypt\Commands\EncryptCommands
+    tags:
+      - { name: drush.command }
+    arguments: ['@encryption']

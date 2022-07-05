@@ -1,0 +1,17 @@
+{
+  "name": "drupal/real_aes",
+  "description": "Provides an Authenticated AES encryption method for Encrypt through the Defuse PHP Encryption library.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://www.drupal.org/project/real_aes",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  ],
+  "require": {
+    "drupal/encrypt": "^3.0",
+    "defuse/php-encryption": "^2.0"
+  }
+}
