@@ -1,0 +1,11 @@
+adminimal-admin-toolbar:
+  version: VERSION
+  css:
+    theme:
+      css/adminimal_admin_toolbar.css: {}
+      css/toolbar.override.css: { weight: 50 }
+google-fonts:
+  version: VERSION
+  css:
+    theme:
+      css/font.css: {}

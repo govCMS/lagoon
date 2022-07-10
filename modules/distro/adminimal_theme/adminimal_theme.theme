@@ -1,0 +1,132 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Adminimal theme.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\File\FileSystemInterface;
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ */
+function adminimal_theme_preprocess_html(&$variables) {
+  // Add adminimal class to the body.
+  if ($variables['attributes'] instanceof Attribute) {
+    $variables['attributes']->addClass('adminimal');
+  }
+  else {
+    $variables['attributes']['class'][] = 'adminimal';
+  }
+
+  // Add library with custom CSS.
+  if (theme_get_setting('custom_css')) {
+    $variables['#attached']['library'][] = 'adminimal_theme/custom-styling';
+  }
+  // Add Open Sans font styles based on the theme setting.
+  if (!theme_get_setting('disable_google_fonts')) {
+    $variables['#attached']['library'][] = 'adminimal_theme/google-fonts';
+  }
+}
+
+/**
+ * Implements hook_form_system_theme_settings_alter().
+ */
+function adminimal_theme_form_system_theme_settings_alter(&$form, FormStateInterface &$form_state, $form_id = NULL) {
+  // Work-around for a core bug affecting admin themes. See issue #943212.
+  if (isset($form_id)) {
+    return;
+  }
+
+  // Get adminimal theme path.
+  global $base_url;
+  $adminimal_path = drupal_get_path('theme', 'adminimal_theme');
+  $old_css_path = $adminimal_path . '/css/custom.css';
+  $custom_css_path = 'public://adminimal-custom.css';
+  $custom_css_dir = str_replace($base_url . '/', "", file_create_url($custom_css_path));
+  $custom_css_url = file_create_url($custom_css_path);
+
+  // Try to create the adminimal-custom.css file automatically.
+  if (!file_exists($custom_css_path)) {
+
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    // Try to migrate from the old css.
+    if (file_exists($old_css_path)) {
+      $file_system->copy($old_css_path, $custom_css_path, FileSystemInterface::EXISTS_ERROR);
+    }
+    // Else create a new blank css file.
+    else {
+      $file_system->saveData("", $custom_css_path, FileSystemInterface::EXISTS_ERROR);
+    }
+
+  }
+
+  // Notify user to remove his old css file.
+  if (file_exists($old_css_path)) {
+    \Drupal::messenger()->addWarning(t('Please delete the old @css_location file, as its no longer used.', ['@css_location file' => $old_css_path]));
+  }
+
+  $form['adminimal_custom'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Adminimal Customization'),
+    '#weight' => -10,
+  ];
+
+  $form['adminimal_custom']['custom_css'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Use "adminimal-custom.css"'),
+    '#description' => t('Include adminimal-custom.css file to override or add custom css code without subthememing/hacking Adminimal Theme.'),
+    '#default_value' => theme_get_setting('custom_css'),
+  ];
+
+  $form['adminimal_custom']['adminimal_custom_check'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Custom CSS file check'),
+    '#weight' => 50,
+    '#states' => [
+      // Hide the settings when the cancel notify checkbox is disabled.
+      'visible' => [
+        ':input[name="custom_css"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
+
+  if (file_exists($custom_css_path)) {
+    $form['adminimal_custom']['adminimal_custom_check']['custom_css_description'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['messages', 'messages--status'],
+      ],
+      'message' => [
+        '#markup' => t('Custom CSS file Found in: @css', ['@css' => $custom_css_dir]),
+      ],
+    ];
+  }
+  else {
+    $form['adminimal_custom']['adminimal_custom_check']['custom_css_not_found'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['messages', 'messages--error'],
+      ],
+      'message' => [
+        '#markup' => t('Custom CSS file not found. You must create the @css file manually.', ['@css' => $custom_css_dir]),
+      ],
+    ];
+  }
+
+  $form['adminimal_theme_settings'] = [
+    '#type' => 'details',
+    '#title' => t('Adminimal theme settings'),
+    '#open' => TRUE,
+  ];
+
+  $form['adminimal_theme_settings']['disable_google_fonts'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Avoid using "Open Sans" font'),
+    '#default_value' => theme_get_setting('disable_google_fonts'),
+    '#description' => t('Useful for languages that are not well supported by the "Open sans" font. Like Japanese for example.'),
+  ];
+}

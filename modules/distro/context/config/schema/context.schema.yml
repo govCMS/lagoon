@@ -1,0 +1,176 @@
+context.context.*:
+  type: config_entity
+  label: 'Context configuration'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    name:
+      type: string
+      label: 'Name'
+    group:
+      type: string
+      label: 'Group'
+    description:
+      type: string
+      label: 'Description'
+    requireAllConditions:
+      type: boolean
+      label: 'Require All Conditions'
+    disabled:
+      type: boolean
+      label: 'Disabled'
+    conditions:
+      type: sequence
+      label: 'Conditions'
+      sequence:
+        type: condition.plugin.[id]
+        label: 'Condition'
+    reactions:
+      type: sequence
+      label: 'Reactions'
+      sequence:
+        type: reaction.plugin.[id]
+        label: 'Reaction'
+    weight:
+      type: integer
+      label: 'Weight'
+
+condition.plugin.request_path_exclusion:
+  type: condition.plugin
+  label: 'Request Path Exclusion Condition'
+  mapping:
+    pages:
+      type: string
+
+condition.plugin.view_inclusion:
+  type: condition.plugin
+  label: 'View Inclusion Condition'
+  mapping:
+    view_inclusion:
+      type: sequence
+      label: 'View Inclusion'
+
+condition.plugin.http_status_code:
+  type: condition.plugin
+  label: 'HTTP Status Code Condition'
+  mapping:
+    status_codes:
+      type: mapping
+      label: 'Status Codes'
+      mapping:
+        200:
+          type: integer
+          label: '200'
+        403:
+          type: integer
+          label: '403'
+        404:
+          type: integer
+          label: '404'
+
+condition.plugin.user_status:
+  type: condition.plugin
+  label: 'User Profile Page Condition'
+  mapping:
+    user_status:
+      type: mapping
+      label: 'User status'
+      mapping:
+        viewing_profile:
+          type: string
+          label: 'viewing_profile'
+        logged_viewing_profile:
+          type: string
+          label: 'logged_viewing_profile'
+        own_page_true:
+          type: string
+          label: 'own_page_true'
+        field_value:
+          type: string
+          label: 'field_value'
+    user_fields:
+      type: string
+      label: 'User fields'
+
+condition.plugin.request_domain:
+  type: condition.plugin
+  label: 'Request domain'
+  mapping:
+    domains:
+      type: string
+      label: 'Domains'
+
+condition.plugin.context_all:
+  type: condition.plugin
+  label: 'Context (all)'
+  mapping:
+    values:
+      type: string
+      label: 'Context (all)'
+
+condition.plugin.context:
+  type: condition.plugin
+  label: 'Context (any)'
+  mapping:
+    values:
+      type: string
+      label: 'Context (any)'
+
+reaction.plugin.menu:
+  type: reaction.plugin
+  mapping:
+    menu_items:
+      type: sequence
+      label: 'Menu items'
+
+reaction.plugin.page_template_suggestions:
+  type: reaction.plugin
+  mapping:
+    suggestions:
+      type: text
+      label: 'Page template suggestions'
+
+reaction.plugin.regions:
+  type: reaction.plugin
+  mapping:
+    regions:
+      type: array
+      label: 'Regions'
+
+reaction.plugin.theme:
+  type: reaction.plugin
+  mapping:
+    theme:
+      type: string
+      label: 'Theme'
+
+reaction.plugin.blocks:
+  type: reaction.plugin
+  mapping:
+    theme:
+      type: string
+      label: 'The theme in which to display the block'
+    include_default_blocks:
+      type: integer
+      label: 'Include blocks from Block layout'
+    saved:
+      type: boolean
+      label: 'Saved'
+
+reaction.plugin.body_class:
+  type: reaction.plugin
+  mapping:
+    body_class:
+      type: string
+      label: 'The class to add to the body'
+
+reaction.plugin.page_title:
+  type: reaction.plugin
+  mapping:
+    page_title:
+      type: string
+      label: 'The title to add to the page'

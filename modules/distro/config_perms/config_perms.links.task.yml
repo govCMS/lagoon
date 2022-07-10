@@ -1,0 +1,6 @@
+# Custom perms entity menu items definition
+entity.custom_perms_entity.collection_task:
+  title: 'Custom permissions'
+  route_name: custom_perms_select_list_form
+  description: 'List Custom permissions forms'
+  base_route: entity.user.collection

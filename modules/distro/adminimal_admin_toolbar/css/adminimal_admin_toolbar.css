@@ -1,0 +1,437 @@
+.adminimal-admin-toolbar .toolbar a {
+  transition: all, 0.2s;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-bar {
+  box-shadow: none;
+  background-color: #2d2d2d;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-menu {
+  background: #333;
+}
+
+.adminimal-admin-toolbar .toolbar-tray .toolbar-menu a,
+.adminimal-admin-toolbar .toolbar-tray .toolbar-menu span {
+  background: transparent;
+  color: #ccc;
+}
+
+#toolbar-item-administration-search-tray label {
+  background: transparent;
+  color: #ccc !important;
+}
+
+.adminimal-admin-toolbar .toolbar-tray .toolbar-menu li {
+  background: #333;
+}
+
+.adminimal-admin-toolbar .toolbar-tray ul li.menu-item {
+  border: none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-horizontal ul ul li.menu-item:first-child {
+  border: none;
+}
+
+.adminimal-admin-toolbar .toolbar-oriented .user-toolbar-tab {
+  float: right;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-vertical {
+  border: none;
+  box-shadow: none;
+}
+
+.adminimal-admin-toolbar .toolbar-tray a,
+.adminimal-admin-toolbar .toolbar-tray span {
+  background: #2d2d2d;
+  color: #bbb;
+}
+
+.adminimal-admin-toolbar .toolbar-tray span {
+  display: block;
+  padding: 1em 1.3333em;
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal a:hover,
+.adminimal-admin-toolbar .toolbar-tray-horizontal a:active,
+.adminimal-admin-toolbar .toolbar-tray-horizontal a:focus {
+  background: #0084d7;
+  color: #fff;
+  text-decoration: none;
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item--expanded:hover > a,
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item--expanded:hover > .toolbar-box > a {
+  background: #0084d7;
+  color: #fff !important;
+}
+
+.adminimal .toolbar .toolbar-bar .toolbar-tab:not(.workspaces-toolbar-tab) > .toolbar-item {
+  color: #bebebe;
+  font-weight: 600;
+}
+
+.adminimal .toolbar .toolbar-bar .toolbar-tab:not(.workspaces-toolbar-tab) > .toolbar-item:hover {
+  background-image: none;
+  background-color: #2d2d2d;
+  color: #fff;
+  text-decoration: none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-bar .toolbar-tab > .toolbar-item.is-active,
+.adminimal-admin-toolbar .toolbar .toolbar-bar .toolbar-tab > .toolbar-item:focus {
+  background-image: none;
+  background-color: rgba(255, 255, 255, .03);
+  text-decoration: none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-horizontal .menu-item + .menu-item,
+[dir="rtl"] .adminimal-admin-toolbar .toolbar .toolbar-tray-horizontal .menu-item + .menu-item,
+.adminimal-admin-toolbar .toolbar .toolbar-tray-horizontal .menu-item:last-child {
+  border-left: none; /* LTR */
+  border-right: none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray .menu-item--active-trail > .toolbar-box a,
+.adminimal-admin-toolbar .toolbar .toolbar-tray a.is-active {
+  color: inherit;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-vertical .menu-item + .menu-item {
+  border: 0 none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray {
+  background-color: #333;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-horizontal {
+  border-bottom: 1px solid #333;
+  box-shadow: none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-vertical {
+  box-shadow: -2px 2px 12px rgba(0,0,0,0.85);
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-toggle-orientation {
+  background-color: #333;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-icon.toolbar-handle > span {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+
+.adminimal-admin-toolbar .toolbar .toolbar-icon.toolbar-handle:focus {
+  background-color: transparent;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-icon.toolbar-handle:before {
+  background-image: url(../images/acacac/chevron-outline-disc-down.svg);
+  transition: .25s;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-icon.toolbar-handle.open:before {
+  background-image: url(../images/ffcfcf/chevron-outline-disc-close.svg) !important;
+  transform: rotate(180deg);
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle:before {
+  background-image: url(../images/acacac/chevron-outline-disc-down.svg);
+  background-size: 100%;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-icon.toolbar-handle:hover:before,
+.adminimal-admin-toolbar .toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle:hover:before,
+.adminimal-admin-toolbar .toolbar .toolbar-menu .toolbar-box:hover .toolbar-icon.toolbar-handle:before {
+  background-image: url(../images/ffffff/chevron-outline-disc-down.svg);
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle.open:before,
+.adminimal-admin-toolbar .toolbar .toolbar-menu .toolbar-box:hover .toolbar-icon.toolbar-handle.open:before {
+  background-image: url(../images/ffffff/chevron-outline-disc-close.svg);
+  background-size: 100%;
+}
+
+.adminimal-admin-toolbar .level-1 .toolbar-handle.open,
+.adminimal-admin-toolbar .toolbar-tray-vertical .level-2 {
+  background: #3b3b3b !important;
+}
+
+.adminimal-admin-toolbar .level-2 .toolbar-handle.open,
+.adminimal-admin-toolbar .toolbar-tray-vertical .level-3 {
+  background: #434343 !important;
+}
+
+.adminimal-admin-toolbar .level-3 .toolbar-handle.open,
+.adminimal-admin-toolbar .toolbar-tray-vertical .level-4 {
+  background: #4c4c4c !important;
+}
+
+.adminimal-admin-toolbar .level-4 .toolbar-handle.open,
+.adminimal-admin-toolbar .toolbar-tray-vertical .level-5 {
+  background: #545454 !important;
+}
+
+/* For WCAG, we are lightening the text on this tier. */
+.adminimal-admin-toolbar .toolbar .level-3 a,
+.adminimal-admin-toolbar .toolbar .level-4 a {
+  color: #d5d5d5 !important;
+}
+
+.adminimal-admin-toolbar .toolbar-handle.open {
+  border-top-left-radius: 10px;
+}
+
+.toolbar .toolbar-tray-vertical .level-3 ul {
+  margin-left: 0 !important;
+}
+
+.adminimal-admin-toolbar .toolbar-tray-vertical .level-3 a {
+  padding-left: 2.75em !important;
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal a:focus,
+.adminimal-admin-toolbar .toolbar-box a:focus {
+  background: #333;
+  text-decoration: none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-vertical .toolbar-menu a {
+  color: #bbb;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-vertical .toolbar-menu a:hover,
+.adminimal-admin-toolbar .toolbar .toolbar-tray-vertical .toolbar-menu a:focus {
+  color: #fff;
+  background: #0084d7;
+  text-decoration: none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-vertical .toolbar-menu ul ul {
+  border: none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-horizontal .toolbar-toggle-orientation {
+  border: none;
+}
+
+.adminimal-admin-toolbar .toolbar .menu-item:hover {
+  background-color: #333;
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item a:focus {
+  background: #4c4c4c;
+}
+
+.adminimal-admin-toolbar .toolbar .menu-item--expanded {
+  background-color: #333;
+}
+.adminimal-admin-toolbar .toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded,
+[dir="rtl"] .adminimal-admin-toolbar .toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded {
+  background-image: none;
+  position: relative;
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .toolbar-menu ul .toolbar-icon {
+  padding: 1em 12px;
+}
+
+.toolbar-tray-horizontal .toolbar-menu:not(:first-child) li.menu-item--expanded > a:focus {
+  background-image: none !important;
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal ul li.menu-item--expanded .menu-item:hover ul {
+  margin: -39px 0 0 200px;
+}
+[dir="rtl"] .adminimal-admin-toolbar .toolbar-tray-horizontal ul li.menu-item--expanded .menu-item:hover ul {
+  margin: -39px 200px 0 0;
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded:after {
+  color: #8eacc0;
+  content: url(../images/0084d7/chevron-right.svg);
+  font-size: 16px;
+  pointer-events: none;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-8px);
+  transition: all .2s;
+}
+
+[dir="rtl"] .adminimal-admin-toolbar .toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded:after {
+  right: auto;
+  left: 5px;
+  top: 30%;
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded:hover:after {
+  content: url(../images/ffffff/chevron-right.svg);
+  transform: translate(6px, -8px);
+}
+
+[dir="rtl"] .adminimal-admin-toolbar .toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded:hover:after {
+  transform-origin: 40% top;
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-menu .toolbar-menu a {
+  color: #bbb;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-menu .toolbar-menu a:hover {
+  color: #fff;
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal ul li.menu-item {
+  border-top: none transparent;
+  border-right: none;
+  border-bottom: none;
+  border-left: none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-horizontal .menu-item:last-child {
+  border-left: none;
+  border-right: none;
+}
+
+.adminimal-admin-toolbar .toolbar .toolbar-tray-horizontal ul  ul li.menu-item:first-child {
+  border-top: 1px solid #0084d7;
+}
+
+/* Removes border top on next consecutive lists after first */
+.adminimal-admin-toolbar .toolbar-tray-horizontal ul ul li li.menu-item:first-child {
+  border-top: none !important;
+}
+
+/* Main menu icons. */
+.adminimal-admin-toolbar .toolbar-icon-admin-toolbar-tools-help:before {
+  background-image: url(../images/acacac/drupal-8.svg);
+  margin-left: 7px;
+  padding: 0px;
+}
+
+.adminimal-admin-toolbar .toolbar-tray-vertical .toolbar-icon-admin-toolbar-tools-help:before {
+  margin-left: 0;
+}
+
+.adminimal-admin-toolbar .toolbar-icon-system-admin-content:before {
+  background-image: url(../images/acacac/file.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-icon-system-admin-structure:before {
+  background-image: url(../images/acacac/orgchart.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-icon-system-themes-page:before {
+  background-image: url(../images/acacac/paintbrush.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-icon-entity-user-collection:before {
+  background-image: url(../images/acacac/people.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-icon-system-modules-list:before {
+  background-image: url(../images/acacac/puzzlepiece.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-icon-system-admin-config:before {
+  background-image: url(../images/acacac/wrench.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-icon-system-admin-reports:before {
+  background-image: url(../images/acacac/barchart.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-icon-help-main:before {
+  background-image: url(../images/acacac/questionmark-disc.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item--expanded:hover .toolbar-icon-admin-toolbar-tools-help:before,
+.adminimal-admin-toolbar .toolbar-icon-admin-toolbar-tools-help:hover:before,
+.adminimal-admin-toolbar .toolbar-icon-admin-toolbar-tools-help:active:before,
+.adminimal-admin-toolbar .toolbar-icon-admin-toolbar-tools-help.is-active:before {
+  background-image: url(../images/ffffff/drupal-8.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item--expanded:hover .toolbar-icon-system-admin-content:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-content:hover:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-content:active:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-content.is-active:before {
+  background-image: url(../images/ffffff/file.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item--expanded:hover .toolbar-icon-system-admin-structure:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-structure:hover:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-structure:active:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-structure.is-active:before {
+  background-image: url(../images/ffffff/orgchart.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item--expanded:hover .toolbar-icon-system-themes-page:before,
+.adminimal-admin-toolbar .toolbar-icon-system-themes-page:hover:before,
+.adminimal-admin-toolbar .toolbar-icon-system-themes-page:active:before,
+.adminimal-admin-toolbar .toolbar-icon-system-themes-page.is-active:before {
+  background-image: url(../images/ffffff/paintbrush.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item--expanded:hover .toolbar-icon-entity-user-collection:before,
+.adminimal-admin-toolbar .toolbar-icon-entity-user-collection:hover:before,
+.adminimal-admin-toolbar .toolbar-icon-entity-user-collection:active:before,
+.adminimal-admin-toolbar .toolbar-icon-entity-user-collection.is-active:before {
+  background-image: url(../images/ffffff/people.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item--expanded:hover .toolbar-icon-system-modules-list:before,
+.adminimal-admin-toolbar .toolbar-icon-system-modules-list:hover:before,
+.adminimal-admin-toolbar .toolbar-icon-system-modules-list:active:before,
+.adminimal-admin-toolbar .toolbar-icon-system-modules-list.is-active:before {
+  background-image: url(../images/ffffff/puzzlepiece.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item--expanded:hover .toolbar-icon-system-admin-config:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-config:hover:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-config:active:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-config.is-active:before {
+  background-image: url(../images/ffffff/wrench.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-tray-horizontal .menu-item--expanded:hover .toolbar-icon-system-admin-reports:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-reports:hover:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-reports:active:before,
+.adminimal-admin-toolbar .toolbar-icon-system-admin-reports.is-active:before {
+  background-image: url(../images/ffffff/barchart.svg);
+}
+
+.adminimal-admin-toolbar .menu-item--expanded:hover .toolbar-icon-help-main:before,
+.adminimal-admin-toolbar .toolbar-icon-help-main:hover:before,
+.adminimal-admin-toolbar .toolbar-icon-help-main:active:before,
+.adminimal-admin-toolbar .toolbar-icon-help-main.is-active:before {
+  background-image: url(../images/ffffff/questionmark-disc.svg);
+}
+
+.adminimal-admin-toolbar .toolbar-tray-vertical .toolbar-icon-admin-toolbar-tools-help {
+  text-indent: 0;
+  transition: none;
+}

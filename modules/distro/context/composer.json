@@ -1,0 +1,21 @@
+{
+  "name": "drupal/context",
+  "description": "Manage contextual conditions and reactions for different portions of your site.",
+  "keywords": ["Drupal", "context", "block", "visibility", "conditions"],
+  "type": "drupal-module",
+  "license": "MIT",
+  "homepage": "https://github.com/oddhill/context",
+  "authors": [
+    {
+      "name": "Christoffer Palm",
+      "email": "christoffer.palm@oddhill.se",
+      "homepage": "http://www.oddhill.se/",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/oddhill/context/issues",
+    "source": "https://github.com/oddhill/context",
+    "docs": "https://github.com/oddhill/context"
+  }
+}

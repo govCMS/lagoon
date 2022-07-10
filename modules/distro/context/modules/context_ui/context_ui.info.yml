@@ -1,0 +1,15 @@
+name: Context UI
+description: 'Provides a simple UI for settings up a site structure using Context.'
+package: Context
+type: module
+core_version_requirement: ^8 || ^9
+configure: entity.context.collection
+
+# Module dependencies.
+dependencies:
+  - context:context
+
+# Information added by Drupal.org packaging script on 2021-08-05
+version: '8.x-4.1'
+project: 'context'
+datestamp: 1628187192

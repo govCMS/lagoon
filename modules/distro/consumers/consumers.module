@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Module implementation file.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function consumers_theme($existing, $type, $theme, $path) {
+  return [
+    'consumer' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for consumer templates.
+ *
+ * Default template: consumer.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An array of elements to display in view mode.
+ *   - node: The node object.
+ *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
+ */
+function template_preprocess_consumer(array &$variables) {
+  $variables['client'] = $variables['elements']['#consumer'];
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['label'] = $variables['elements']['label'];
+  $variables['description'] = $variables['elements']['description'];
+  $variables['image'] = $variables['elements']['image'];
+
+  // Helpful $content variable for templates.
+  $variables += ['content' => []];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_jsonapi_ENTITY_TYPE_filter_access().
+ */
+function consumers_jsonapi_consumer_filter_access(
+  EntityTypeInterface $entity_type,
+  AccountInterface $account
+) {
+  return [
+    JSONAPI_FILTER_AMONG_OWN => AccessResult::allowedIfHasPermission(
+      $account,
+      'view own consumer entities'
+    ),
+  ];
+}

@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Hooks implemented by the config_ignore module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Config\StorageComparer;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function config_ignore_form_config_admin_import_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Load Services that we need.
+  $stock_storage_sync = \Drupal::service('config_filter.storage_factory')->getSyncWithoutExcluded(['config_ignore']);
+  $active_storage_sync = \Drupal::service('config.import_transformer')->transform(\Drupal::service('config.storage.sync'));
+  $storage = \Drupal::service('config.storage');
+
+  // Create two StorageComparer objects, one with the filter enabled and one
+  // as without. We will compare them later to see what changes that has been
+  // ignored.
+  $unfiltered_storage_compare = new StorageComparer($stock_storage_sync, $storage);
+  $filtered_storage_compare = new StorageComparer($active_storage_sync, $storage);
+  $unfiltered_storage_compare->createChangelist();
+  $filtered_storage_compare->createChangelist();
+
+  // Create an array of the changes with the filter on.
+  $config_changes = [];
+  foreach ($filtered_storage_compare->getChangelist() as $config_names) {
+    foreach ($config_names as $config_name) {
+      $config_changes[] = $config_name;
+    }
+  }
+
+  foreach ($unfiltered_storage_compare->getAllCollectionNames() as $collection) {
+    foreach ($unfiltered_storage_compare->getChangelist(NULL, $collection) as $config_change_type => $config_names) {
+      foreach ($config_names as $config_name) {
+        // If the config name exists here, but not in the $config_changes array
+        // the it's because it's getting ignored.
+        if (!in_array($config_name, $config_changes)) {
+          $ignored_config_entities[] = [
+            $config_name,
+            $config_change_type,
+          ];
+        }
+      }
+    }
+  }
+
+  // Build a table of changes that are not going to happen, due to the ignored
+  // config entities.
+  if (!empty($ignored_config_entities)) {
+    $form['ignored'] = [
+      '#type' => 'table',
+      '#header' => ['Config name', 'Action'],
+      '#caption' => t('<h3>The following configuration entities are ignored due to the <a href="@url">Config Ignore Settings</a> and therefore not displayed in the list above</h3>', [
+        '@url' => Url::fromRoute('config_ignore.settings')
+          ->toString(),
+      ]),
+      '#rows' => $ignored_config_entities,
+    ];
+  }
+
+}

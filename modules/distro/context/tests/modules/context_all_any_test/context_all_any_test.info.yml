@@ -1,0 +1,11 @@
+name: 'Context all/any test'
+type: module
+description: 'A support module to test context any and context all conditions.'
+core_version_requirement: ^8.8 || ^9
+package: Testing
+# version: VERSION
+
+# Information added by Drupal.org packaging script on 2021-08-05
+version: '8.x-4.1'
+project: 'context'
+datestamp: 1628187192

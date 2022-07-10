@@ -1,0 +1,4 @@
+services:
+  config_update_ui.cli:
+    class: Drupal\config_update_ui\ConfigUpdateUiCliService
+    arguments: ['@entity_type.manager', '@config_update.config_diff', '@config_update.config_list', '@config_update.config_update']

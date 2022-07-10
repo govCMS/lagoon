@@ -1,0 +1,14 @@
+/**
+ * @file toolbar.override.css
+ */
+
+.toolbar-horizontal .toolbar-tray .menu-item + .menu-item,
+.toolbar .toolbar-tray-horizontal .menu-item:last-child {
+  border-left: none;
+  border-right: none;
+}
+
+.toolbar-horizontal .toolbar-tray {
+  border-bottom-color: #000;
+  box-shadow: none;
+}

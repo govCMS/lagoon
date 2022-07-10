@@ -1,0 +1,6 @@
+services:
+  config_update_ui.commands:
+    class: \Drupal\config_update_ui\Commands\ConfigUpdateUiCommands
+    arguments: ['@config_update_ui.cli']
+    tags:
+      - { name: drush.command }

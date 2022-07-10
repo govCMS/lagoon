@@ -1,0 +1,8 @@
+context_block_config:
+  title: 'Configure block'
+  route_name: 'context.reaction.blocks.block_edit'
+  group: 'context_block'
+context_block_delete:
+  title: 'Remove block from context'
+  route_name: 'context.reaction.blocks.block_delete'
+  group: 'context_block'

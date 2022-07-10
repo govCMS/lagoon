@@ -1,0 +1,260 @@
+diff --git a/composer.json b/composer.json
+index 1901eca..c931227 100644
+--- a/composer.json
++++ b/composer.json
+@@ -6,8 +6,5 @@
+   "support": {
+     "issues": "https://www.drupal.org/project/issues/crop"
+   },
+-  "license": "GPL-2.0+",
+-  "require": {
+-    "drupal/core": "^8.8 || ^9"
+-  }
++  "license": "GPL-2.0-or-later"
+ }
+diff --git a/crop.info.yml b/crop.info.yml
+index aa45b3b..6f6d37a 100644
+--- a/crop.info.yml
++++ b/crop.info.yml
+@@ -1,6 +1,6 @@
+ name: Crop API
+ description: 'Provides storage and API for image crops.'
+-core_version_requirement: '^8.8 || ^9'
++core_version_requirement: '^8.8 || ^9 || ^10'
+ package: Media
+ type: module
+ dependencies:
+diff --git a/src/Entity/Crop.php b/src/Entity/Crop.php
+index 823d9ff..fc5364a 100644
+--- a/src/Entity/Crop.php
++++ b/src/Entity/Crop.php
+@@ -136,7 +136,7 @@ class Crop extends ContentEntityBase implements CropInterface {
+     if ($type) {
+       $query->condition('type', $type);
+     }
+-    return (bool) $query->execute();
++    return (bool) $query->accessCheck(TRUE)->execute();
+   }
+ 
+   /**
+diff --git a/src/Events/AutomaticCrop.php b/src/Events/AutomaticCrop.php
+index cc893d4..4f367af 100644
+--- a/src/Events/AutomaticCrop.php
++++ b/src/Events/AutomaticCrop.php
+@@ -5,7 +5,7 @@ namespace Drupal\crop\Events;
+ use Drupal\Core\Image\ImageInterface;
+ use Drupal\crop\CropInterface;
+ use Drupal\crop\Entity\CropType;
+-use Symfony\Component\EventDispatcher\Event;
++use Symfony\Contracts\EventDispatcher\Event;
+ 
+ /**
+  * Represents automatic crop action as event.
+diff --git a/src/Events/AutomaticCropProviders.php b/src/Events/AutomaticCropProviders.php
+index 05daad3..b2b7a92 100644
+--- a/src/Events/AutomaticCropProviders.php
++++ b/src/Events/AutomaticCropProviders.php
+@@ -2,7 +2,7 @@
+ 
+ namespace Drupal\crop\Events;
+ 
+-use Symfony\Component\EventDispatcher\Event;
++use Symfony\Contracts\EventDispatcher\Event;
+ 
+ /**
+  * Collects "Automatic crop" providers.
+diff --git a/src/Form/CropTypeDeleteForm.php b/src/Form/CropTypeDeleteForm.php
+index 1bd56cc..97359fc 100644
+--- a/src/Form/CropTypeDeleteForm.php
++++ b/src/Form/CropTypeDeleteForm.php
+@@ -68,6 +68,7 @@ class CropTypeDeleteForm extends EntityConfirmFormBase {
+     $count = $this->entityTypeManager->getStorage('crop')->getQuery()
+       ->condition('type', $this->entity->id())
+       ->count()
++      ->accessCheck(TRUE)
+       ->execute();
+     if ($count) {
+       $form['#title'] = $this->getQuestion();
+diff --git a/src/Plugin/ImageEffect/CropEffect.php b/src/Plugin/ImageEffect/CropEffect.php
+index f6930b6..af27c8c 100644
+--- a/src/Plugin/ImageEffect/CropEffect.php
++++ b/src/Plugin/ImageEffect/CropEffect.php
+@@ -222,7 +222,7 @@ class CropEffect extends ConfigurableImageEffectBase implements ContainerFactory
+       /** @var \Drupal\crop\Entity\CropType $crop_type */
+       $crop_type = $this->typeStorage->load($this->configuration['crop_type']);
+       $automatic_crop_event = new AutomaticCrop($image, $crop_type, $this->configuration);
+-      $this->eventDispatcher->dispatch(Events::AUTOMATIC_CROP, $automatic_crop_event);
++      $this->eventDispatcher->dispatch($automatic_crop_event, Events::AUTOMATIC_CROP);
+       $this->crop = $automatic_crop_event->getCrop();
+     }
+ 
+@@ -264,7 +264,7 @@ class CropEffect extends ConfigurableImageEffectBase implements ContainerFactory
+    */
+   public function getAutomaticCropProvidersList() {
+     $event = new AutomaticCropProviders();
+-    $this->eventDispatcher->dispatch(Events::AUTOMATIC_CROP_PROVIDERS, $event);
++    $this->eventDispatcher->dispatch($event, Events::AUTOMATIC_CROP_PROVIDERS);
+ 
+     return $event->getProviders();
+   }
+diff --git a/tests/src/Functional/CropFunctionalTest.php b/tests/src/Functional/CropFunctionalTest.php
+index 5580b82..f788f8d 100644
+--- a/tests/src/Functional/CropFunctionalTest.php
++++ b/tests/src/Functional/CropFunctionalTest.php
+@@ -6,6 +6,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
+ use Drupal\crop\Entity\Crop;
+ use Drupal\crop\Entity\CropType;
+ use Drupal\file\Entity\File;
++use Drupal\file\FileInterface;
+ use Drupal\Tests\BrowserTestBase;
+ 
+ /**
+@@ -16,11 +17,9 @@ use Drupal\Tests\BrowserTestBase;
+ class CropFunctionalTest extends BrowserTestBase {
+ 
+   /**
+-   * Modules to enable.
+-   *
+-   * @var array
++   * {@inheritdoc}
+    */
+-  public static $modules = ['crop', 'file'];
++  protected static $modules = ['crop', 'file'];
+ 
+   /**
+    * Admin user.
+@@ -51,7 +50,7 @@ class CropFunctionalTest extends BrowserTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->adminUser = $this->drupalCreateUser(['administer crop types', 'administer image styles']);
+@@ -97,7 +96,8 @@ class CropFunctionalTest extends BrowserTestBase {
+       'label' => $this->randomMachineName(),
+       'description' => $this->randomGenerator->sentences(10),
+     ];
+-    $this->drupalPostForm('admin/config/media/crop/add', $edit, t('Save crop type'));
++    $this->drupalGet('admin/config/media/crop/add');
++    $this->submitForm($edit, t('Save crop type'));
+     $this->assertSession()->responseContains(t('The crop type %name has been added.', ['%name' => $edit['label']]));
+     $this->cropType = CropType::load($crop_type_id);
+     $this->assertSession()->addressEquals('admin/config/media/crop');
+@@ -119,7 +119,7 @@ class CropFunctionalTest extends BrowserTestBase {
+     $this->drupalGet('admin/config/media/image-styles/manage/' . $this->testStyle->id() . '/add/crop_crop');
+     $option = $this->xpath("//select[@id='edit-data-crop-type']/option");
+     self::assertTrue(strpos($option[0]->getText(), $edit['label']) !== FALSE, 'Crop type label found on image effect page.');
+-    $this->drupalPostForm('admin/config/media/image-styles/manage/' . $this->testStyle->id() . '/add/crop_crop', ['data[crop_type]' => $edit['id']], t('Add effect'));
++    $this->submitForm(['data[crop_type]' => $edit['id']], t('Add effect'));
+     $this->assertSession()->pageTextContains(t('The image effect was successfully applied.'));
+     $this->assertSession()->pageTextContains(t('Manual crop uses @name crop type', ['@name' => $edit['label']]));
+     $this->testStyle = $this->container->get('entity_type.manager')->getStorage('image_style')->loadUnchanged($this->testStyle->id());
+@@ -138,7 +138,8 @@ class CropFunctionalTest extends BrowserTestBase {
+     $this->drupalLogin($this->adminUser);
+ 
+     // Try to create crop type with same machine name.
+-    $this->drupalPostForm('admin/config/media/crop/add', $edit, t('Save crop type'));
++    $this->drupalGet('admin/config/media/crop/add');
++    $this->submitForm($edit, t('Save crop type'));
+     $this->assertSession()->pageTextContains(t('The machine-readable name is already in use. It must be unique.'));
+ 
+ 
+@@ -148,7 +149,8 @@ class CropFunctionalTest extends BrowserTestBase {
+     $this->clickLink(t('Delete'));
+     $this->assertSession()->pageTextContains(t('Are you sure you want to delete the crop type @name?', ['@name' => $edit['label']]));
+ 
+-    $this->drupalPostForm('admin/config/media/crop/manage/' . $edit['id'] . '/delete', [], t('Delete'));
++    $this->drupalGet('admin/config/media/crop/manage/' . $edit['id'] . '/delete');
++    $this->submitForm([], t('Delete'));
+     $this->assertSession()->responseContains(t('The crop type %name has been deleted.', ['%name' => $edit['label']]));
+     $this->assertSession()->pageTextContains(t('No crop types available.'));
+ 
+@@ -161,9 +163,11 @@ class CropFunctionalTest extends BrowserTestBase {
+    */
+   protected function doTestFileUriAlter() {
+     // Get the test file.
+-    \Drupal::service('file_system')->copy(drupal_get_path('module', 'crop') . '/tests/files/sarajevo.png', PublicStream::basePath());
++    $module_path = \Drupal::service('extension.path.resolver')->getPath('module', 'crop');
++    \Drupal::service('file_system')->copy($module_path . '/tests/files/sarajevo.png', PublicStream::basePath());
+     $file_uri = 'public://sarajevo.png';
+-    $file = File::create(['uri' => $file_uri, 'status' => FILE_STATUS_PERMANENT]);
++    $file = File::create(['uri' => $file_uri]);
++    $file->setPermanent();
+     $file->save();
+ 
+     /** @var \Drupal\crop\CropInterface $crop */
+@@ -188,7 +192,14 @@ class CropFunctionalTest extends BrowserTestBase {
+     // Build an image style derivative for the file URI.
+     $image_style_uri = $this->testStyle->buildUri($file_uri);
+ 
+-    $image_style_uri_url = file_create_url($image_style_uri);
++    // @todo Remove conditional when we drop support for Drupal < 9.3.
++    if (\Drupal::hasService('file_url_generator')) {
++      $image_style_uri_url = \Drupal::service('file_url_generator')->generateAbsoluteString($image_style_uri);
++    }
++    else {
++      /** @phpstan-ignore-next-line */
++      $image_style_uri_url = file_create_url($image_style_uri);
++    }
+     $this->assertTrue(strpos($image_style_uri_url, $shortened_hash) !== FALSE, 'The image style URL contains a shortened hash.');
+ 
+     $image_style_url = $this->testStyle->buildUrl($file_uri);
+diff --git a/tests/src/Kernel/CropCRUDTest.php b/tests/src/Kernel/CropCRUDTest.php
+index fabd811..ccb5f6d 100644
+--- a/tests/src/Kernel/CropCRUDTest.php
++++ b/tests/src/Kernel/CropCRUDTest.php
+@@ -13,11 +13,9 @@ use Drupal\crop\Entity\Crop;
+ class CropCRUDTest extends CropUnitTestBase {
+ 
+   /**
+-   * Modules to enable.
+-   *
+-   * @var array
++   * {@inheritdoc}
+    */
+-  public static $modules = ['user', 'image', 'crop', 'file', 'system'];
++  protected static $modules = ['user', 'image', 'crop', 'file', 'system'];
+ 
+   /**
+    * Tests crop type save.
+diff --git a/tests/src/Kernel/CropUnitTestBase.php b/tests/src/Kernel/CropUnitTestBase.php
+index a12fcb5..a6a7915 100644
+--- a/tests/src/Kernel/CropUnitTestBase.php
++++ b/tests/src/Kernel/CropUnitTestBase.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\Tests\crop\Kernel;
+ 
+ use Drupal\Core\StreamWrapper\PublicStream;
++use Drupal\file\FileInterface;
+ use Drupal\KernelTests\KernelTestBase;
+ 
+ /**
+@@ -62,7 +63,7 @@ abstract class CropUnitTestBase extends KernelTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+@@ -113,11 +114,12 @@ abstract class CropUnitTestBase extends KernelTestBase {
+    *   File object.
+    */
+   protected function getTestFile() {
+-    \Drupal::service('file_system')->copy(drupal_get_path('module', 'crop') . '/tests/files/sarajevo.png', PublicStream::basePath());
+-    return $this->fileStorage->create([
+-      'uri' => 'public://sarajevo.png',
+-      'status' => FILE_STATUS_PERMANENT,
+-    ]);
++    $module_path = \Drupal::service('extension.list.module')->getPath('crop');
++    \Drupal::service('file_system')->copy($module_path . '/tests/files/sarajevo.png', PublicStream::basePath());
++    /** @var \Drupal\file\FileInterface $file */
++    $file = $this->fileStorage->create(['uri' => 'public://sarajevo.png']);
++    $file->setPermanent();
++    return $file;
+   }
+ 
+ }

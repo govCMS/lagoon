@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Defines Drupal hooks for context_ui module.
+ */
+
+/**
+ * Implements hook_entity_insert().
+ */
+function context_ui_context_insert($entity) {
+  Drupal::service('context_ui.menu_builder')->addSubMenuItem($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function context_ui_context_update($entity) {
+  Drupal::service('context_ui.menu_builder')->updateSubMenuItem($entity);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function context_ui_context_delete($entity) {
+  Drupal::service('context_ui.menu_builder')->deleteSubMenuItem($entity);
+}

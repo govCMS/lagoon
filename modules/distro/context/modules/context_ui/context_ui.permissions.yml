@@ -1,0 +1,3 @@
+administer contexts:
+  title: 'Administer contexts'
+  description: 'Associate menus, views, blocks, etc. with different contexts to structure your site.'

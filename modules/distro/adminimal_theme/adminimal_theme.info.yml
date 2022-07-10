@@ -1,0 +1,33 @@
+name: Adminimal
+type: theme
+description: 'Drupal administration theme with modern minimalist design.'
+core_version_requirement: ^8.8 || ^9 || ^10
+base theme: seven
+
+libraries:
+  - adminimal_theme/global-styling
+libraries-override:
+  system/base:
+    css:
+      component:
+        /core/themes/stable/css/system/components/system-status-counter.css: /core/themes/seven/css/components/system-status-counter.css
+        /core/themes/stable/css/system/components/system-status-report-counters.css: /core/themes/seven/css/components/system-status-report-counters.css
+        /core/themes/stable/css/system/components/system-status-report-general-info.css: /core/themes/seven/css/components/system-status-report-general-info.css
+
+regions:
+  header: 'Header'
+  pre_content: 'Pre-content'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  sidebar_first: 'First sidebar'
+regions_hidden:
+  - sidebar_first
+
+# Information added by Drupal.org packaging script on 2020-10-06
+version: '8.x-1.6'
+project: 'adminimal_theme'
+datestamp: 1602006939

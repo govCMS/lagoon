@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies: {  }
+name: another_context
+label: another-context
+group: null
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  request_path_exclusion:
+    id: request_path_exclusion
+    negate: true
+    pages: '/user/*'
+    context_mapping: {  }

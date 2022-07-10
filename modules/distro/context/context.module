@@ -1,0 +1,155 @@
+<?php
+
+/**
+ * @file
+ * Defines Drupal hooks for context module.
+ */
+
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Utility\NestedArray;
+use Drupal\context\ContextInterface;
+use Drupal\context\ContextMenuActiveTrail;
+use Drupal\context\Plugin\ContextReaction\Blocks;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_help().
+ */
+function context_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.context':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Context module lets users define conditions for when certain reactions should take place.') . '</p>';
+      $output .= '<p>' . t('An example of a condition could be when viewing a certain node type and blocks should be placed as a reaction when viewing a page with this node type.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Managing context') . '</dt>';
+      $output .= '<dd>' . t('Users with <em>Administer contexts</em> permission can add contextual conditions and reactions for different portions of their site. For each context, they can choose the conditions that trigger this context to be active and choose different aspects of their site that should react to this active context.') . '</dd>';
+      $output .= '<dt>' . t('Adding new custom reactions') . '</dt>';
+      $output .= '<dd>' . t('Reactions for the context module are defined trough the new <a href=":link">Drupal 8 Plugin API</a>.', [':link' => 'https://www.drupal.org/developing/api/8/plugins']) . '</dd>';
+      $output .= '<dd>' . t('The Context module defines a plugin type named ContextReaction that users can extend when creating their own plugins.') . '</dd>';
+      $output .= '<dd>' . t('A context reaction requires a configuration form and execute method. The execution of the plugin is also something that will have to be handled by the author of the reaction.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * Run the body class context reactions if there are any and let them add
+ * classes to the page body.
+ */
+function context_preprocess_html(&$variables) {
+  /** @var \Drupal\context\ContextManager $context_manager */
+  $context_manager = \Drupal::service('context.manager');
+  // Active theme for route.
+  $current_theme = \Drupal::service('theme.negotiator')->determineActiveTheme(Drupal::routeMatch());
+
+  foreach ($context_manager->getActiveReactions('body_class') as $reaction) {
+    $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], $reaction->execute());
+  }
+
+  foreach ($context_manager->getActiveReactions('page_title') as $reaction) {
+    $variables['head_title']['title'] = Markup::create(trim(strip_tags($reaction->execute())));
+  }
+
+  // Disable regions based on regions reaction.
+  foreach ($context_manager->getActiveReactions('regions') as $region_reaction) {
+    $configuration = $region_reaction->getConfiguration();
+    if (isset($configuration['regions'][$current_theme])) {
+      foreach ($configuration['regions'][$current_theme] as $region) {
+        unset($variables['page'][$region]);
+      }
+    }
+  }
+
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function context_preprocess_page_title(&$variables) {
+  /** @var \Drupal\context\ContextManager $context_manager */
+  $context_manager = \Drupal::service('context.manager');
+
+  foreach ($context_manager->getActiveReactions('page_title') as $reaction) {
+    $variables['title'] = $reaction->execute();
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_page_alter().
+ */
+function context_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+  $context_manager = \Drupal::service('context.manager');
+  foreach ($context_manager->getActiveReactions('page_template_suggestions') as $reaction) {
+    $template_suggestions = explode(PHP_EOL, $reaction->execute());
+    $suggestions = array_merge($suggestions, $template_suggestions);
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function context_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // If this is Context form.
+  if ($form_id === 'context_edit_form') {
+    $reactions = $form["reactions"]["#process"];
+    foreach ($reactions as $reaction) {
+      foreach ($reaction as $react) {
+        if (
+          is_object($react) &&
+          property_exists($react, 'entity') &&
+          $react->getEntity()->getEntityTypeId() === 'context'
+        ) {
+
+          // If menu reaction is selected.
+          $entity = $react->getEntity();
+          if (
+            !empty($entity->get('reactions')) &&
+            array_key_exists('menu', $entity->get('reactions'))
+          ) {
+
+            // Verify is the correct context class service is correct.
+            $definition = \Drupal::service('menu.active_trail');
+            if (!$definition instanceof ContextMenuActiveTrail) {
+              // Warn users about this skip.
+              $messenger = \Drupal::messenger();
+              $messenger->addMessage(t(
+                '@module will not work because @service has a different menu service provider.',
+                [
+                  '@module' => 'Context module: "Menu Reactions"',
+                  '@service' => 'menu.active_trail',
+                ]
+              ), $messenger::TYPE_WARNING);
+              $form_state->disableRedirect();
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function context_context_presave(ContextInterface $context) {
+  $context_id = $context->id();
+  // Update the 'context_id' from block reactions.
+  foreach ($context->getReactions() as $reaction) {
+    if ($reaction instanceof Blocks) {
+      foreach ($reaction->getBlocks() as $block) {
+        $config = $block->getConfiguration();
+        if (isset($config['context_id']) && $config['context_id'] != $context_id) {
+          $config['context_id'] = $context_id;
+          $block->setConfiguration($config);
+          $context->save();
+        }
+      }
+    }
+  }
+}

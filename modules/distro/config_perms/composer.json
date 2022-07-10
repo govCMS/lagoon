@@ -1,0 +1,16 @@
+{
+  "name": "drupal/config_perms",
+  "type": "drupal-module",
+  "description": "Allows additional permissions to be created and managed through an administration form.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "http://drupal.org/project/config_perms",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/config_perms",
+    "source": "http://cgit.drupalcode.org/config_perms"
+  },
+  "require": {
+    "drupal/core": "^8 || ^9"
+  }
+}

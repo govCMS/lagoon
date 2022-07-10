@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the context module.
+ */
+
+use Drupal\context\Plugin\ContextReaction\Blocks;
+
+/**
+ * Update all blocks reactions.
+ *
+ * Add in the reaction configuration an additional "context_id" property.
+ */
+function context_update_8001() {
+  foreach (Drupal::service('context.manager')->getContexts() as $context) {
+    foreach ($context->getReactions() as $reaction) {
+      if ($reaction instanceof Blocks) {
+        foreach ($reaction->getBlocks() as $block) {
+          $config = $block->getConfiguration();
+          if (!isset($config['context_id'])) {
+            $config['context_id'] = $context->id();
+            $block->setConfiguration($config);
+            $context->save();
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Update all blocks reactions.
+ *
+ * Add in the reaction configuration an additional "css_class" property.
+ */
+function context_update_8002() {
+  $context_manager = \Drupal::service('context.manager');
+  foreach ($context_manager->getContexts() as $context) {
+    foreach ($context->getReactions() as $reaction) {
+      if ($reaction instanceof Blocks) {
+        foreach ($reaction->getBlocks() as $block) {
+          $configuration = $block->getConfiguration();
+          if (!isset($configuration['css_class'])) {
+            $configuration['css_class'] = '';
+            // Update the block.
+            $reaction->updateBlock($configuration['uuid'], $configuration);
+            $context->save();
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Add default "custom_id" property to all blocks reactions.
+ */
+function context_update_8003() {
+  foreach (Drupal::service('context.manager')->getContexts() as $context) {
+    foreach ($context->getReactions() as $reaction) {
+      if ($reaction instanceof Blocks) {
+        foreach ($reaction->getBlocks() as $block) {
+          $config = $block->getConfiguration();
+          if (!isset($config['custom_id'])) {
+            $config['custom_id'] = preg_replace("/\W+/", "_", $config['id']);
+            $block->setConfiguration($config);
+            $context->save();
+          }
+        }
+      }
+    }
+  }
+  drupal_flush_all_caches();
+}

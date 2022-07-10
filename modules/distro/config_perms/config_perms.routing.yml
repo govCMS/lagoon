@@ -1,0 +1,21 @@
+
+# CustomPermsEntity routing definition
+entity.custom_perms_entity.delete_form:
+  path: '/admin/structure/custom_perms_entity/{custom_perms_entity}/delete'
+  defaults:
+    _entity_form: 'custom_perms_entity.delete'
+    _title: 'Delete Custom perms entity'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+custom_perms_select_list_form:
+  path: '/admin/people/custom-permissions/list'
+  defaults:
+    _title: 'Custom permissions list forms'
+    _form: 'Drupal\config_perms\Form\ConfigPermListForm'
+  requirements:
+    _permission: 'administer config permissions'
+  options:
+    _admin_route: TRUE

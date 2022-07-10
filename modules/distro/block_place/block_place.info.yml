@@ -1,0 +1,14 @@
+name: Place Blocks
+type: module
+description: 'Allow administrators to place blocks from any Drupal page'
+package: Other
+core_version_requirement: ^9 || ^10
+dependencies:
+  - drupal:block
+  - drupal:system
+  - drupal:toolbar
+
+# Information added by Drupal.org packaging script on 2020-05-18
+version: '8.x-1.0'
+project: 'block_place'
+datestamp: 1589789733

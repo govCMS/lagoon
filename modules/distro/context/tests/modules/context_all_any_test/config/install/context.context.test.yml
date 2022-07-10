@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies: {  }
+name: test
+label: test
+group: null
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  http_status_code:
+    id: http_status_code
+    status_codes:
+      200: 200
+    negate: false
+    context_mapping: {  }

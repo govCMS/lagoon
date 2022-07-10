@@ -1,0 +1,17 @@
+services:
+  context.manager:
+    class: Drupal\context\ContextManager
+    arguments: ['@entity_type.manager', '@context.repository', '@context.handler', '@entity.form_builder', '@theme.manager', '@current_route_match']
+  plugin.manager.context_reaction:
+    class: Drupal\context\ContextReactionManager
+    parent: default_plugin_manager
+  context.block_page_display_variant_subscriber:
+    class: Drupal\context\EventSubscriber\BlockPageDisplayVariantSubscriber
+    arguments: ['@context.manager']
+    tags:
+      - { name: event_subscriber }
+  theme.negotiator.context_themeswitcher:
+    class: Drupal\context\Theme\ThemeSwitcherNegotiator
+    arguments: ['@context.manager']
+    tags:
+      - { name: theme_negotiator, priority: 1000 }

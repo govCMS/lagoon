@@ -1,0 +1,41 @@
+language: php
+sudo: false
+
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+matrix:
+  allow_failures:
+    - php: hhvm
+  fast_finish: true
+
+mysql:
+  database: context
+  username: root
+  encoding: utf8
+
+before_script:
+  # Remember the current context test directory for later use in the Drupal
+  # installation.
+  - TESTDIR=$(pwd)
+  # Navigate out of module directory to prevent blown stack by recursive module
+  # lookup.
+  - cd ..
+
+  # Create database.
+  - mysql -e 'create database context'
+  # Export database variable for kernel tests.
+  - export SIMPLETEST_DB=mysql://root:@127.0.0.1/context
+  # Download Drupal 8 core.
+  - travis_retry git clone --branch 8.0.x --depth 1 http://git.drupal.org/project/drupal.git
+  - cd drupal
+
+  # Reference rules in build site.
+  - ln -s $TESTDIR modules/context
+
+script:
+  # Run the PHPUnit tests which also include the kernel tests.
+  - ./vendor/phpunit/phpunit/phpunit -c ./core/phpunit.xml.dist ./modules/context

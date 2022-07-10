@@ -1,0 +1,6 @@
+'administer config permissions':
+  title: 'Administer custom permissions'
+  restrict access: true
+
+permission_callbacks:
+  - Drupal\config_perms\CustomPermissions::permissions

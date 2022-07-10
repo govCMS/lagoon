@@ -1,0 +1,13 @@
+name: 'Contact test views'
+type: module
+description: 'Provides default views for views contact tests.'
+package: Testing
+core_version_requirement: '^8.8 || ^9'
+dependencies:
+  - contact_storage:contact_storage
+  - drupal:language
+
+# Information added by Drupal.org packaging script on 2022-06-21
+version: '8.x-1.2'
+project: 'contact_storage'
+datestamp: 1655840520

@@ -1,0 +1,18 @@
+config_perms.custom_perms_entity.*:
+  type: config_entity
+  label: 'Custom perms entity config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    route:
+      type: string
+      label: 'route'
+    status:
+      type: boolean
+      label: 'status'
+    uuid:
+      type: string

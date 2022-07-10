@@ -1,0 +1,7 @@
+adminimal_admin_toolbar.settings:
+  type: config_object
+  label: 'Adminimal Admin Toolbar settings'
+  mapping:
+    avoid_custom_font:
+      type: boolean
+      label: 'Avoid loading "Open Sans" font'

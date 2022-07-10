@@ -1,0 +1,146 @@
+# Page to lists all contexts.
+entity.context.collection:
+  path: '/admin/structure/context'
+  defaults:
+    _entity_list: 'context'
+    _title: 'Context'
+  requirements:
+    _permission: 'administer contexts'
+
+# Page to add a context.
+entity.context.add_form:
+  path: '/admin/structure/context/add'
+  defaults:
+    _entity_form: 'context.add'
+    _title: 'Add context'
+  requirements:
+    _permission: 'administer contexts'
+
+# Page to remove a context.
+entity.context.delete_form:
+  path: '/admin/structure/context/{context}/delete'
+  defaults:
+    _entity_form: 'context.delete'
+    _title: 'Delete context'
+  requirements:
+    _permission: 'administer contexts'
+
+# Page to duplicate a context.
+entity.context.duplicate_form:
+  path: '/admin/structure/context/{context}/duplicate'
+  defaults:
+    _entity_form: 'context.duplicate'
+    _title: 'Duplicate context'
+  requirements:
+    _permission: 'administer contexts'
+
+# Page to disable a context.
+entity.context.disable_form:
+  path: '/admin/structure/context/{context}/disable'
+  defaults:
+    _entity_form: 'context.disable'
+    _title: 'Disable context'
+  requirements:
+    _permission: 'administer contexts'
+
+# Route to get autocomplete results for context groups.
+context.groups.autocomplete:
+  path: '/admin/structure/context/groups/autocomplete'
+  defaults:
+    _controller: '\Drupal\context_ui\Controller\ContextUIController::groupsAutocomplete'
+  requirements:
+    _permission: 'administer contexts'
+
+## Context conditions.
+
+context.conditions_library:
+  path: '/admin/structure/context/{context}/conditions/library'
+  defaults:
+    _title: 'Add condition'
+    _controller: '\Drupal\context_ui\Controller\ContextUIController::listConditions'
+  requirements:
+    _entity_access: 'context.update'
+
+context.condition_add:
+  path: '/admin/structure/context/{context}/condition/add/{condition_id}'
+  defaults:
+    _controller: '\Drupal\context_ui\Controller\ContextUIController::addCondition'
+  requirements:
+    _entity_access: 'context.update'
+
+context.condition_delete:
+  path: '/admin/structure/context/{context}/condition/delete/{condition_id}'
+  defaults:
+    _form: '\Drupal\context_ui\Form\ConditionDeleteForm'
+  requirements:
+    _entity_access: 'context.update'
+
+## Context reactions.
+
+context.reactions_library:
+  path: '/admin/structure/context/{context}/reactions/library'
+  defaults:
+    _title: 'Add reaction'
+    _controller: '\Drupal\context_ui\Controller\ContextUIController::listReactions'
+  requirements:
+    _entity_access: 'context.update'
+
+context.reaction_add:
+  path: '/admin/structure/context/{context}/reaction/add/{reaction_id}'
+  defaults:
+    _controller: '\Drupal\context_ui\Controller\ContextUIController::addReaction'
+  requirements:
+    _entity_access: 'context.update'
+
+context.reaction_delete:
+  path: '/admin/structure/context/{context}/reaction/delete/{reaction_id}'
+  defaults:
+    _form: '\Drupal\context_ui\Form\ReactionDeleteForm'
+  requirements:
+    _entity_access: 'context.update'
+
+## Context blocks reaction.
+
+# Callback handler for when the theme is changed in the blocks configuration form.
+context.reaction.blocks.regions:
+  path: '/admin/structure/context/{context}/reaction/blocks/regions'
+  defaults:
+    _controller: '\Drupal\context\Reaction\Blocks\Controller\ContextReactionBlocksController::blocksFormThemeSelect'
+  requirements:
+    _entity_access: 'context.update'
+
+# Display a list of all blocks.
+context.reaction.blocks.library:
+  path: '/admin/structure/context/{context}/reaction/blocks/{reaction_id}/library'
+  defaults:
+    _title: 'Add block'
+    _controller: '\Drupal\context\Reaction\Blocks\Controller\ContextReactionBlocksController::blocksLibrary'
+  requirements:
+    _entity_access: 'context.update'
+
+# Display a form to deleta a block.
+context.reaction.blocks.block_delete:
+  path: '/admin/structure/context/{context}/reaction/blocks/delete/{block_id}'
+  defaults:
+    _form: '\Drupal\context\Reaction\Blocks\Form\BlockDeleteForm'
+    _title: 'Delete block'
+  requirements:
+    _entity_access: 'context.update'
+
+# Display a form to add a block.
+context.reaction.blocks.block_add:
+  path: '/admin/structure/context/{context}/reaction/blocks/{reaction_id}/add/{block_id}'
+  defaults:
+    _form: '\Drupal\context\Reaction\Blocks\Form\BlockAddForm'
+    _title: 'Add block'
+  requirements:
+    _entity_access: 'context.update'
+
+# Display a form to edit a block.
+context.reaction.blocks.block_edit:
+  path: '/admin/structure/context/{context}/reaction/blocks/{reaction_id}/edit/{block_id}'
+  defaults:
+    _form: '\Drupal\context\Reaction\Blocks\Form\BlockEditForm'
+    _title: 'Edit block'
+  requirements:
+    _entity_access: 'context.update'

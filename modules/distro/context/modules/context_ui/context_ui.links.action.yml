@@ -1,0 +1,5 @@
+entity.context.add_form:
+  title: 'Add context'
+  route_name: entity.context.add_form
+  appears_on:
+    - entity.context.collection

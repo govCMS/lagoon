@@ -1,0 +1,29 @@
+{
+  "name": "drupal/config_ignore",
+  "description": "Ignore certain configuration during import.",
+  "type": "drupal-module",
+  "homepage": "http://drupal.org/project/config_ignore",
+  "authors": [
+    {
+      "name": "Tommy Lynge Jørgensen",
+      "email": "tlyngej@gmail.com",
+      "homepage": "https://www.drupal.org/u/tlyngej",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Fabian Bircher",
+      "homepage": "https://www.drupal.org/u/bircher",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "http://drupal.org/project/config_ignore",
+    "irc": "irc://irc.freenode.org/drupal-contribute",
+    "source": "https://git.drupalcode.org/project/config_ignore"
+  },
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "require": {
+    "drupal/config_filter": "^1 || ^2"
+  }
+}

@@ -1,0 +1,4 @@
+services:
+  context_ui.menu_builder:
+    class: Drupal\context_ui\MenuBuilder
+    arguments: ['@plugin.manager.menu.link']

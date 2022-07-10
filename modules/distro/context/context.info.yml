@@ -1,0 +1,10 @@
+name: Context
+description: 'Set conditions and configure reactions that should be implemented when conditions pass.'
+package: Context
+type: module
+core_version_requirement: ^8.8 || ^9 || ^10
+
+# Information added by Drupal.org packaging script on 2021-08-05
+version: '8.x-4.1'
+project: 'context'
+datestamp: 1628187192

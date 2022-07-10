@@ -1,0 +1,11 @@
+entity.context.collection:
+  title: 'Context'
+  parent: system.admin_structure
+  description: 'Associate menus, views, blocks, etc. with different contexts to structure your site.'
+  route_name: entity.context.collection
+entity.context.add_form:
+  title: 'Add new context'
+  parent: entity.context.collection
+  description: 'Add a new context.'
+  route_name: entity.context.add_form
+  weight: 0

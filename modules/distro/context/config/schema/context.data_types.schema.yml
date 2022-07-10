@@ -1,0 +1,75 @@
+reaction.plugin:
+  type: mapping
+  label: 'Reaction'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    negate:
+      type: boolean
+      label: 'Negate'
+    uuid:
+      type: uuid
+    reaction_mapping:
+      type: sequence
+      label: 'Reaction assignments'
+      sequence:
+        type: string
+    blocks:
+      type: sequence
+      label: 'Blocks'
+      sequence:
+        type: mapping
+        mapping:
+          uuid:
+            type: string
+          id:
+            type: string
+          label:
+            type: string
+          provider:
+            type: string
+          label_display:
+            type: string
+          region:
+            type: string
+          weight:
+            type: string
+          custom_id:
+            type: string
+          theme:
+            type: string
+          css_class:
+            type: string
+          unique:
+            type: integer
+          context_id:
+            type: string
+          context_mapping:
+            type: sequence
+            label: 'Block Context'
+            sequence:
+              type: string
+
+condition.plugin:
+  type: mapping
+  label: 'Condition'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    negate:
+      type: boolean
+      label: 'Negate'
+    uuid:
+      type: uuid
+    context_mapping:
+      type: sequence
+      label: 'Conditions'
+      sequence:
+        type: string
+    view_inclusion:
+      type: sequence
+      label: 'View Inclusion'
+      sequence:
+        type: string
