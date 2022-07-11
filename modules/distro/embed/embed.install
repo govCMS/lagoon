@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the embed module.
+ */
+
+/**
+ * Moved to embed_post_update_convert_encoded_icon_data().
+ */
+function embed_update_8101() {
+  // This update function has been moved to
+  // embed_post_update_convert_encoded_icon_data().
+}

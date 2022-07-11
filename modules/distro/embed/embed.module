@@ -1,0 +1,114 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_form_FORM_ID_alter() on behalf of ckeditor.module.
+ */
+function ckeditor_form_embed_button_add_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['#validate'][] = 'ckeditor_form_embed_button_add_form_validate';
+}
+
+/**
+ * CKEditor-validation callback for new embed buttons.
+ *
+ * Checks to make sure that when adding a new embed button, its ID will not
+ * conflict with any existing CKEditor buttons.
+ */
+function ckeditor_form_embed_button_add_form_validate(array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\ckeditor\CKEditorPluginManager $ckeditor_plugin_manager */
+  $ckeditor_plugin_manager = \Drupal::service('plugin.manager.ckeditor.plugin');
+
+  // Get a list of all buttons that are provided by all plugins.
+  $button_ids = array_reduce($ckeditor_plugin_manager->getButtons(), function ($result, $item) {
+    return array_merge($result, array_keys($item));
+  }, []);
+
+  // Ensure that button ID is unique.
+  // @todo Should this do a case-insensitive comparison?
+  $button_id = $form_state->getValue('id');
+  if (in_array($button_id, $button_ids)) {
+    $form_state->setErrorByName('id', t('A CKEditor button with ID %id already exists.', ['%id' => $button_id]));
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function embed_form_filter_format_edit_form_alter(array &$form) {
+  $form['#validate'][] = 'embed_filter_format_edit_form_validate';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function embed_form_filter_format_add_form_alter(array &$form) {
+  $form['#validate'][] = 'embed_filter_format_edit_form_validate';
+}
+
+/**
+ * Validate callback for buttons that have a required_filter_plugin_id.
+ */
+function embed_filter_format_edit_form_validate($form, FormStateInterface $form_state) {
+  if ($form_state->getTriggeringElement()['#name'] !== 'op') {
+    return;
+  }
+
+  // Right now we can only validate CKEditor configurations.
+  if ($form_state->getValue(['editor', 'editor']) !== 'ckeditor') {
+    return;
+  }
+
+  $button_group_path = [
+    'editor',
+    'settings',
+    'toolbar',
+    'button_groups',
+  ];
+
+  $buttons_to_validate = [];
+  $buttons = \Drupal::service('plugin.manager.ckeditor.plugin')->getButtons();
+  foreach ($buttons as $plugin_id => $plugin_buttons) {
+    foreach ($plugin_buttons as $button_id => $button) {
+      if (!empty($button['required_filter_plugin_id'])) {
+        $buttons_to_validate[$plugin_id . ':' . $button_id] = $button['required_filter_plugin_id'];
+      }
+    }
+  }
+
+  if ($button_groups = $form_state->getValue($button_group_path)) {
+    $selected_buttons = [];
+    $button_groups = Json::decode($button_groups);
+
+    foreach ($button_groups as $button_row) {
+      foreach ($button_row as $button_group) {
+        $selected_buttons = array_merge($selected_buttons, array_values($button_group['items']));
+      }
+    }
+
+    $get_filter_label = function ($filter_plugin_id) use ($form) {
+      return (string) $form['filters']['order'][$filter_plugin_id]['filter']['#markup'];
+    };
+
+    foreach ($buttons_to_validate as $button_id => $filter_plugin_id) {
+      list($plugin_id, $button_id) = explode(':', $button_id, 2);
+      if (in_array($button_id, $selected_buttons, TRUE)) {
+        $filter_enabled = $form_state->getValue([
+          'filters',
+          $filter_plugin_id,
+          'status',
+        ]);
+
+        if (!$filter_enabled) {
+          $error_message = new TranslatableMarkup('The %filter-label filter must be enabled to use the %button button.', [
+            '%filter-label' => $get_filter_label($filter_plugin_id),
+            '%button' => $buttons[$plugin_id][$button_id]['label'],
+          ]);
+          $form_state->setErrorByName('filters][' . $filter_plugin_id . '][status', $error_message);
+        }
+      }
+    }
+  }
+}
