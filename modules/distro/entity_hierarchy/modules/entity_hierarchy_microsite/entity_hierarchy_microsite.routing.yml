@@ -1,0 +1,7 @@
+entity.eh_microsite_menu_override.add:
+  path: '/admin/structure/entity-hierarchy-microsites/add-menu-item/{target}'
+  defaults:
+    _controller: '\Drupal\entity_hierarchy_microsite\Controller\AddMenuOverride::addMenuOverride'
+    _title_callback: '\Drupal\entity_hierarchy_microsite\Controller\AddMenuOverride::title'
+  requirements:
+    _permission: 'administer entity hierarchy microsites'

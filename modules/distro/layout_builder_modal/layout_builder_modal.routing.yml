@@ -1,0 +1,7 @@
+layout_builder_modal.config:
+  path: '/admin/config/user-interface/layout-builder-modal'
+  defaults:
+    _title: 'Layout Builder Modal configuration'
+    _form: 'Drupal\layout_builder_modal\Form\LayoutBuilderModalSettingsForm'
+  requirements:
+    _permission: 'administer layout builder modal'

@@ -1,0 +1,15 @@
+id: d7_robotstxt_settings
+label: RobotsTxt 7 configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - robotstxt
+  source_module: robotstxt
+process:
+  content: robotstxt
+destination:
+  plugin: config
+  config_name: robotstxt.settings

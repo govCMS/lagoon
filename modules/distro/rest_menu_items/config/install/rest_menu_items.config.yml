@@ -1,0 +1,16 @@
+output_values:
+  key: key
+  title: title
+  description: description
+  uri: uri
+  alias: alias
+  external: external
+  absolute: absolute
+  relative: relative
+  existing: existing
+  weight: weight
+  expanded: expanded
+  enabled: enabled
+  uuid: uuid
+  options: options
+add_fragment: 1

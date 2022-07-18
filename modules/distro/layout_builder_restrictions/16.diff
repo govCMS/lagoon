@@ -1,0 +1,70 @@
+diff --git a/composer.json b/composer.json
+index a31092e616e530b76c7da478b7336a269e73f609..f480b7e8041e7de24530b4dc25286c31c01fbc7d 100644
+--- a/composer.json
++++ b/composer.json
+@@ -18,7 +18,7 @@
+     }
+   ],
+   "require": {
+-    "drupal/core": "^8.8.0 || ^9.0"
++    "drupal/core": "^9.3 || ^10"
+   },
+   "require-dev": {
+     "drupal/dashboards": "^2",
+diff --git a/layout_builder_restrictions.info.yml b/layout_builder_restrictions.info.yml
+index 97229b317a05f9014ec10ba0c33a753abf51119b..6f3d7d55b84a3678d1c0c338d1ce7aa432382465 100644
+--- a/layout_builder_restrictions.info.yml
++++ b/layout_builder_restrictions.info.yml
+@@ -1,13 +1,11 @@
+ name: Layout Builder Restrictions
+-core: 8.x
+-core_version_requirement: ^8 || ^9
++core_version_requirement: ^9.3 || ^10
+ description: 'Manage which fields & layouts are available in Layout Builder'
+ type: module
+ package: 'Layout Builder'
+ php: 7.0
+ configure: layout_builder_restrictions.restriction_plugin_config_form
+ dependencies:
+-  - drupal:system (>=8.5.0-rc1)
+   - drupal:layout_builder
+ test_dependencies:
+   - layout_library:layout_library
+diff --git a/modules/layout_builder_restrictions_by_region/composer.json b/modules/layout_builder_restrictions_by_region/composer.json
+index 0db4c0649048c7e57d821febfedce501ea750855..c553071f5bdeeb9d1e6162d5ba8ad7dade3011ca 100644
+--- a/modules/layout_builder_restrictions_by_region/composer.json
++++ b/modules/layout_builder_restrictions_by_region/composer.json
+@@ -6,7 +6,7 @@
+   "homepage": "https://www.drupal.org/project/layout_builder_restrictions",
+   "license": "GPL-2.0-or-later",
+   "require": {
+-    "drupal/core": "^8.8.0 || ^9.0"
++    "drupal/core": "^8.8.0 || ^9.0 || ^10"
+   },
+   "require-dev": {
+     "drupal/layout_library": "^1"
+diff --git a/modules/layout_builder_restrictions_by_region/layout_builder_restrictions_by_region.info.yml b/modules/layout_builder_restrictions_by_region/layout_builder_restrictions_by_region.info.yml
+index 1ea8f6f7af2c5536ce45216ebc7b11f2e8be958c..b04effc345e3538be14d992da38896ea55bb043f 100644
+--- a/modules/layout_builder_restrictions_by_region/layout_builder_restrictions_by_region.info.yml
++++ b/modules/layout_builder_restrictions_by_region/layout_builder_restrictions_by_region.info.yml
+@@ -1,6 +1,5 @@
+ name: Layout Builder Restrictions By Region
+-core: 8.x
+-core_version_requirement: ^8 || ^9
++core_version_requirement: ^9.3 || ^10
+ description: 'Restricts layouts and blocks per layout region'
+ type: module
+ package: 'Layout Builder'
+diff --git a/src/Traits/PluginHelperTrait.php b/src/Traits/PluginHelperTrait.php
+index 77ee8f5bcb2005d4791341cc0193d94162098ce9..ad57b0947a761cb2b3f8348f3a77eb0b97f54d71 100644
+--- a/src/Traits/PluginHelperTrait.php
++++ b/src/Traits/PluginHelperTrait.php
+@@ -50,7 +50,7 @@ trait PluginHelperTrait {
+     }
+ 
+     // Allow filtering of available blocks by other parts of the system.
+-    $definitions = $this->contextHandler()->filterPluginDefinitionsByContexts($this->getAvailableContexts($section_storage), $definitions);
++    $definitions = $this->contextHandler()->filterPluginDefinitionsByContexts($this->getPopulatedContexts($section_storage), $definitions);
+     $grouped_definitions = $this->getDefinitionsByUntranslatedCategory($definitions);
+     // Create a new category of block_content blocks that meet the context.
+     foreach ($grouped_definitions as $category => $data) {

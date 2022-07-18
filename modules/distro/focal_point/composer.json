@@ -1,0 +1,29 @@
+{
+  "name": "drupal/focal_point",
+  "description": "Focal Point allows content creators to mark the most important part of an image for easier cropping.",
+  "type": "drupal-module",
+  "homepage": "https://drupal.org/project/focal_point",
+  "authors": [
+    {
+      "name": "Alexander Ross (bleen)",
+      "homepage": "https://www.drupal.org/u/bleen",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://drupal.org/project/issues/focal_point",
+    "irc": "irc://irc.freenode.org/drupal-contribute",
+    "source": "https://cgit.drupalcode.org/focal_point"
+  },
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  ],
+  "require": {
+    "drupal/crop": "^1.0 || ^2.0"
+  }
+}

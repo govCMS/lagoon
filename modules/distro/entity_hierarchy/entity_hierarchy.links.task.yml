@@ -1,0 +1,7 @@
+entity_hierarchy.reorder_children:
+  deriver: 'Drupal\entity_hierarchy\Plugin\Derivative\DynamicLocalTasks'
+  weight: 100
+entity.entity_hierarchy_microsite.collection:
+  route_name: entity.entity_hierarchy_microsite.collection
+  base_route: entity.entity_hierarchy_microsite.collection
+  title: 'Microsites'

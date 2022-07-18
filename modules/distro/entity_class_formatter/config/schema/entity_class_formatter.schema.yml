@@ -1,0 +1,16 @@
+field.formatter.settings.entity_class_formatter:
+  type: mapping
+  label: 'Entity Class display format settings'
+  mapping:
+    prefix:
+      type: string
+      label: 'Prefix to be attached before each class'
+    suffix:
+      type: string
+      label: 'Suffix to be attached after each class'
+    attr:
+      type: string
+      label: 'Attribute name to be used instead of class'
+    field:
+      type: string
+      label: 'Referenced entity field name to be used instead of label'

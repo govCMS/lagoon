@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install file for entity_hierarchy_workbench_access.
+ */
+
+/**
+ * Empty hook to rebuild caches to register post update alter hook.
+ */
+function entity_hierarchy_workbench_access_update_8001() {
+
+}

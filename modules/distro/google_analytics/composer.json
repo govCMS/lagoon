@@ -1,0 +1,25 @@
+{
+  "name": "drupal/google_analytics",
+  "description": "Allows your site to be tracked by Google Analytics by adding a Javascript tracking code to every page.",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/google_analytics",
+  "authors": [
+    {
+      "name": "See contributors",
+      "homepage":"https://www.drupal.org/node/49388/committers"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/google_analytics",
+    "source": "https://git.drupalcode.org/project/google_analytics"
+  },
+  "license": "GPL-2.0-or-later",
+  "require-dev": {
+    "drupal/token": "^1.7"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-4.x": "4.x-dev"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Expand menu items and set active-trail according to current path.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\menu_trail_by_path\Form\MenuTrailByPathSettingsForm;
+
+/**
+ * Implements hook_help().
+ */
+function menu_trail_by_path_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the menu_trail_by_path module.
+    case 'help.page.menu_trail_by_path':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Menu Trail By Path sets the active-trail on menu items according to the current url.') . '</p>';
+      $output .= '<h3>' . t('How it works') . '</h3>';
+      $output .= '<p>' . t('For example if you are at yoursite.com/blog/category1/article1</br>Menu Items with these paths will get the active-trail class on them and expand accordingly.') . '</p>';
+      $output .= '<p>' . t('blog</br>blog/category1</br>blog/category1/article1') . '</p>';
+      $output .= '<p>' . t('This is particularly useful if you want a lot of nodes to appear as children of certain nodes / taxonomy term / views / referenced nodes / etc, but do not want to add them all to the menu. eg. hundreds of blog articles.') . '</p>';
+      $output .= '<p>' . t('Menu Trail By Path is best used in conjunction with <a target="_blank" href="@link">Pathauto</a>.', ['@link' => 'https://www.drupal.org/project/pathauto']) . '</p>';
+      return $output;
+
+    default:
+      return '';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function menu_trail_by_path_form_menu_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\system\MenuInterface $menu */
+  $menu = $form_state->getFormObject()->getEntity();
+
+  // Add menu trail third party settings.
+  $form['third_party_settings']['#tree'] = TRUE;
+  $form['third_party_settings']['menu_trail_by_path']['trail_source'] = [
+    '#type' => 'select',
+    '#title' => t('Menu Trail Source'),
+    '#description' => t('Default behavior can be updated on the <a href=":url">settings</a> page.', [':url' => Url::fromRoute('menu_trail_by_path.settings')->toString()]),
+    '#empty_option' => t('Use default behavior'),
+    '#options' => MenuTrailByPathSettingsForm::getTrailSourceOptions(),
+    '#default_value' => $menu->getThirdPartySetting('menu_trail_by_path', 'trail_source'),
+  ];
+}

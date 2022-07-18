@@ -1,0 +1,8 @@
+/**
+ * Wrapped content from core/themes/seven/css/components/form.css.
+ * Maintainers: the import statement presumes a relative location of core css.
+ * The location may need to be adjusted depending on your setup.
+ */
+#layout-builder-modal {
+  @import "../../core/themes/seven/css/components/form";
+}

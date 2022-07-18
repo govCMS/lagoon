@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Update hooks for the Field Group module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function field_group_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    // Check jQuery UI Accordion module for D9.
+    if (version_compare(\Drupal::VERSION, 9) > 0) {
+      if (!\Drupal::moduleHandler()->moduleExists('jquery_ui_accordion')) {
+        $requirements['field_group_jquery_ui_accordion'] = [
+          'title' => t('Field Group'),
+          'value' => t('jQuery UI Accordion not enabled'),
+          'description' => t('If you want to use the Field Group accordion formatter, you will need to install the <a href=":link" target="_blank">jQuery UI Accordion</a> module.', [':link' => 'https://www.drupal.org/project/jquery_ui_accordion']),
+          'severity' => REQUIREMENT_INFO,
+        ];
+      }
+      else {
+        $requirements['field_group_jquery_ui_accordion'] = [
+          'title' => t('Field Group'),
+          'description' => t('The jQuery UI Accordion module is installed'),
+          'severity' => REQUIREMENT_INFO,
+        ];
+      }
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Removed in favor of hook_post_update script.
+ */
+function field_group_update_8301() {
+  // @see field_group_post_update_0001().
+}
+
+/**
+ * Install the 'jquery_ui_accordion' module if it exists.
+ */
+function field_group_update_8302() {
+  try {
+    // Enables the jQuery UI accordion module if it exists.
+    if (\Drupal::service('extension.list.module')
+      ->getName('jquery_ui_accordion')) {
+      \Drupal::service('module_installer')
+        ->install(['jquery_ui_accordion'], TRUE);
+      return t('The "jquery_ui_accordion" module has been installed.');
+    }
+  }
+  catch (\Exception $e) {
+    return t('If you want to use the Field Group accordion formatter, you will need to install the <a href=":link" target="_blank">jQuery UI Accordion</a> module.',
+        [':link' => 'https://www.drupal.org/project/jquery_ui_accordion']);
+  }
+}

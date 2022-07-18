@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\encrypt\Unit;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\encrypt\EncryptionMethodInterface;
 use Drupal\encrypt\EncryptionMethodManager;
 use Drupal\encrypt\EncryptionProfileInterface;
@@ -22,6 +23,7 @@ use Drupal\encrypt\EncryptService;
  */
 class EncryptServiceTest extends UnitTestCase {
 
+  use ProphecyTrait;
   /**
    * Default configuration.
    *
@@ -72,7 +74,7 @@ class EncryptServiceTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Set up a mock EncryptionProfile entity.

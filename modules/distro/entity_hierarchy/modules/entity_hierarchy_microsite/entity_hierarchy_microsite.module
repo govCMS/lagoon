@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @file
+ * Contains main module functionality.
+ */
+
+use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\entity_hierarchy_microsite\EntityHooks;
+use Drupal\entity_hierarchy_microsite\Plugin\Menu\MicrositeMenuItem;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function entity_hierarchy_microsite_entity_update(EntityInterface $node) {
+  if ($node->getEntityTypeId() !== 'node') {
+    return;
+  }
+  \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityHooks::class)->onNodeUpdate($node);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function entity_hierarchy_microsite_node_insert(NodeInterface $node) {
+  \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityHooks::class)->onNodeInsert($node);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function entity_hierarchy_microsite_entity_delete(EntityInterface $node) {
+  if ($node->getEntityTypeId() !== 'node') {
+    return;
+  }
+  \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityHooks::class)->onNodeDelete($node);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function entity_hierarchy_microsite_theme($existing, $type, $theme, $path) {
+  return [
+    'entity_hierarchy_microsite_branding' => [
+      'variables' => [
+        'site_name' => '',
+        'site_logo' => '',
+        'site_home' => '',
+        'microsite' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for menu_edit_form().
+ */
+function entity_hierarchy_microsite_form_menu_edit_form_alter(&$form, FormStateInterface $formState) {
+  if (($object = $formState->getFormObject()) && $object instanceof EntityForm && ($menu = $object->getEntity()) && $menu->id() === 'entity-hierarchy-microsite') {
+    foreach (Element::children($form['links']['links']) as $id) {
+      if (isset($form['links']['links'][$id]['operations']['#links']['delete']) && $form['links']['links'][$id]['#item']->link instanceof MicrositeMenuItem) {
+        $form['links']['links'][$id]['operations']['#links']['delete']['title'] = t('Remove override');
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function entity_hierarchy_microsite_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'entity_update' || $hook === 'entity_delete') {
+    // Our implementation of these hooks needs to go after entity_hierarchy
+    // so that the parent update can run.
+    $definition = $implementations['entity_hierarchy_microsite'];
+    unset($implementations['entity_hierarchy_microsite']);
+    $implementations['entity_hierarchy_microsite'] = $definition;
+  }
+}

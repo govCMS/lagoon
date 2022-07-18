@@ -1,0 +1,24 @@
+{
+  "name": "drupal/robotstxt",
+  "description": "Generates the robots.txt file dynamically and gives you the chance to edit it, on a per-site basis, from the web UI.",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/robotstxt",
+  "authors": [
+    {
+      "name": "hass",
+      "homepage": "https://www.drupal.org/u/hass"
+    },
+    {
+      "name": "See other contributors",
+      "homepage":"https://www.drupal.org/node/53579/committers"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/robotstxt",
+    "source": "https://git.drupal.org/project/robotstxt.git"
+  },
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "drupal/core": "^9.3 || ^10"
+  }
+}

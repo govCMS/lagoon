@@ -1,0 +1,149 @@
+<?php
+
+/**
+ * @file
+ * Installation file for Google Analytics module.
+ */
+
+use Drupal\Core\Url;
+use Drupal\user\Entity\Role;
+
+/**
+ * Implements hook_install().
+ */
+function google_analytics_install() {
+  // Make the default install more user and GDPR friendly.
+  $role = Role::load('authenticated');
+  $role->grantPermission('opt-in or out of google analytics tracking');
+  $success = $role->save();
+  if ($success) {
+    $messenger = \Drupal::messenger();
+    $messenger->addMessage(t('Module %module granted %permission permission to authenticated users.', ['%module' => 'Google Analytics', '%permission' => t('Opt-in or out of tracking')]), 'status');
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Remove cache directory if module is uninstalled.
+ */
+function google_analytics_uninstall() {
+  $javascript_service = \Drupal::service('google_analytics.javascript_cache');
+  $javascript_service->clearGoogleAnalyticsJsCache();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function google_analytics_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $config = \Drupal::config('google_analytics.settings');
+    $ga_accounts = \Drupal::service('google_analytics.accounts');
+
+    // Raise warning if Google user account has not been set yet.
+    if (!$ga_accounts->getDefaultMeasurementId()) {
+      $requirements['google_analytics_account'] = [
+        'title' => t('Google Analytics module'),
+        'description' => t('Google Analytics module has not been configured yet. Please configure its settings from the <a href=":url">Google Analytics settings page</a>.', [':url' => Url::fromRoute('google_analytics.admin_settings_form')->toString()]),
+        'severity' => REQUIREMENT_WARNING,
+        'value' => t('Not configured'),
+      ];
+    }
+    // Raise warning if debugging is enabled.
+    if ($config->get('debug')) {
+      $requirements['google_analytics_debugging'] = [
+        'title' => t('Google Analytics module'),
+        'description' => t('Google Analytics module has debugging enabled. Please disable debugging setting in production sites from the <a href=":url">Google Analytics settings page</a>.', [':url' => Url::fromRoute('google_analytics.admin_settings_form')->toString()]),
+        'severity' => REQUIREMENT_WARNING,
+        'value' => t('Debugging enabled'),
+      ];
+    }
+
+    // Raise warning if php code is being used.
+    if ($config->get('visibility.request_path_mode') && $config->get('visibility.request_path_mode') === '2') {
+      $requirements['google_analytics_php'] = [
+        'title' => t('Google Analytics module'),
+        'description' => t('Using PHP code in Google Analytics is deprecated and not available in Drupal 9. You must move your logic into a custom module, and change the <a href=":url">Page Visibility settings</a> to suppress this message.', [':url' => Url::fromRoute('google_analytics.admin_settings_form')->toString()]),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => t('PHP code exists'),
+      ];
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Migrate create only fields to gtag.js parameters.
+ */
+function google_analytics_update_8300() {
+  $config = \Drupal::configFactory()->getEditable('google_analytics.settings');
+  $create_only_fields = $config->get('codesnippet.create');
+  $parameters = [
+    'client_id' => $create_only_fields['clientId'],
+    'cookie_name' => $create_only_fields['cookieName'],
+    'cookie_domain' => $create_only_fields['cookieDomain'],
+    'cookie_expires' => $create_only_fields['cookieExpires'],
+    'sample_rate' => $create_only_fields['sampleRate'],
+    'site_speed_sample_rate' => $create_only_fields['siteSpeedSampleRate'],
+    'use_amp_client_id' => $create_only_fields['useAmpClientId'],
+    'user_id' => $create_only_fields['userId'],
+  ];
+  $parameters = array_filter($parameters);
+
+  $config
+    ->set('codesnippet.create', $parameters)
+    ->save();
+
+  return t('Migrated create only fields to gtag.js parameters.');
+}
+
+/**
+ * Set default config for tel: link tracking.
+ */
+function google_analytics_update_8301() {
+  \Drupal::configFactory()
+    ->getEditable('google_analytics.settings')
+    ->set('track.tel', TRUE)
+    ->save();
+}
+
+/**
+ * Update existing custom dimensions and metrics to user parameters.
+ */
+function google_analytics_update_8400() {
+  $config = \Drupal::configFactory()->getEditable('google_analytics.settings');
+  $custom_parameters = [];
+  $custom_dimensions = $config->getOriginal('custom.dimension');
+  $custom_metrics = $config->getOriginal('custom.metric');
+
+  // Merge Dimensions
+  if (!empty($custom_dimensions)) {
+    foreach ($custom_dimensions as $key => $dimension) {
+      $custom_parameters['dimension' . $key]['type'] = 'dimension';
+      $custom_parameters['dimension' . $key]['name'] = $dimension['name'];
+      $custom_parameters['dimension' . $key]['value'] = $dimension['value'];
+    }
+  }
+
+  // Merge Metrics
+  if (!empty($custom_metrics)) {
+    foreach ($custom_metrics as $key => $metric) {
+      $custom_parameters['metric' . $key]['type'] = 'metric';
+      $custom_parameters['metric' . $key]['name'] = $metric['name'];
+      $custom_parameters['metric' . $key]['value'] = $metric['value'];
+    }
+  }
+
+  if (!empty($custom_parameters)) {
+    $config->set('custom.parameters', $custom_parameters);
+  }
+  // Remove the legacy settings.
+  $config->clear('custom.metric');
+  $config->clear('custom.dimension');
+
+  // Save the settings
+  $config->save();
+}

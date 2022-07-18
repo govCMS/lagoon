@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.entity_hierarchy_microsite
+label: 'Microsite branding'
+targetEntityType: media
+cache: true

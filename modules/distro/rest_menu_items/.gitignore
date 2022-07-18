@@ -1,0 +1,16 @@
+.sass-cache
+FirePHPCore/*
+.project
+.settings
+.buildpath
+.idea
+nbproject/*
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.dbi
+Thumbs.db
+vendor

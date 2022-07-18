@@ -1,0 +1,490 @@
+<?php
+
+/**
+ * @file
+ * Main file of Linked Field module.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Field\FormatterInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\NestedArray;
+
+/**
+ * Implements hook_field_formatter_settings_summary_alter().
+ *
+ * @param array $summary
+ *   An array of summary messages.
+ * @param array $context
+ *   An associative array.
+ */
+function linked_field_field_formatter_settings_summary_alter(array &$summary, array $context) {
+  /** @var \Drupal\linked_field\LinkedFieldManager $manager */
+  $manager = \Drupal::service('linked_field.manager');
+  $available_attributes = $manager->getAttributes();
+  $settings = $context['formatter']->getThirdPartySettings('linked_field');
+  $summary_items = [];
+
+  // Break when no linked field settings were found.
+  if (!$settings) {
+    return;
+  }
+
+  // Normalize the settings.
+  $linked = $settings['linked'];
+  $type = !isset($settings['type']) ? 'custom' : $settings['type'];
+  $destination = $settings['destination'];
+  $text = isset($settings['advanced']['text']) ? $settings['advanced']['text'] : '';
+
+  if (!$linked) {
+    return;
+  }
+
+  // Display field name instead of machine-readable name.
+  if ($type == 'field') {
+    $entity_type = $context['field_definition']->getTargetEntityTypeId();
+    // @TODO: How could we get bundle for base fields?
+    $bundle = $context['field_definition']->getTargetBundle();
+    $fields = $manager->getDestinationFields($entity_type, $bundle);
+
+    if (isset($fields[$destination])) {
+      $destination = $fields[$destination];
+    }
+  }
+
+  $summary_items[] = t('Destination: <code>@destination</code>', [
+    '@destination' => $destination,
+  ]);
+
+  foreach ($available_attributes as $attribute => $info) {
+    if (empty($settings['advanced'][$attribute])) {
+      continue;
+    }
+
+    // Provide default label / description for attributes.
+    if (!$info['label']) {
+      $info['label'] = str_replace('-', ' ', Unicode::ucfirst($attribute));
+    }
+
+    $summary_items[] = t('@label: <code>@attribute</code>', [
+      '@label' => $info['label'],
+      '@attribute' => $settings['advanced'][$attribute],
+    ]);
+  }
+
+  if ($text) {
+    $summary_items[] = t('Text: @text', ['@text' => $text]);
+  }
+
+  if ($linked && $destination) {
+    $list = [
+      '#theme' => 'item_list',
+      '#items' => $summary_items,
+      '#title' => 'Linked Field',
+    ];
+
+    $summary[] = $list;
+  }
+}
+
+/**
+ * Implements hook_field_formatter_third_party_settings_form().
+ *
+ * @param \Drupal\Core\Field\FormatterInterface $plugin
+ *   The instantiated field formatter plugin.
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+ *   The field definition.
+ * @param string $view_mode
+ *   The entity view mode.
+ * @param array $form
+ *   The (entire) configuration form array.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function linked_field_field_formatter_third_party_settings_form(FormatterInterface $plugin, FieldDefinitionInterface $field_definition, $view_mode, array $form, FormStateInterface $form_state) {
+  /** @var \Drupal\linked_field\LinkedFieldManager $manager */
+  $manager = \Drupal::service('linked_field.manager');
+  $available_attributes = $manager->getAttributes();
+  $settings = $plugin->getThirdPartySettings('linked_field');
+
+  if (in_array($field_definition->getType(), $manager->getFieldTypeBlacklist())) {
+    return;
+  }
+
+  $settings = NestedArray::mergeDeep([
+    'linked' => 0,
+    'type' => 'field',
+    'destination' => '',
+    'advanced' => [
+      'text' => '',
+    ],
+  ], $settings);
+
+  if (!isset($settings['type'])) {
+    $settings['type'] = 'custom';
+  }
+
+  $destination = [
+    'field' => '',
+    'custom' => '',
+  ];
+  $destination[$settings['type']] = $settings['destination'];
+
+  $settings['destination'] = $destination;
+
+  $element['linked'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Link this field'),
+    '#default_value' => $settings['linked'],
+  ];
+
+  // The target bundle is sometimes null so we grab it from form instead.
+  $bundle = $field_definition->getTargetBundle();
+  if (!$bundle) {
+    $bundle = isset($form['#bundle']) ? $form['#bundle'] : NULL;
+  }
+
+  $field_names = [];
+  $fields_available = NULL;
+  if ($bundle) {
+    $field_names = $manager->getDestinationFields($field_definition->getTargetEntityTypeId(), $bundle);
+    $fields_available = count($field_names);
+  }
+
+  // Switch to 'custom' mode if no fields are available.
+  if (!$fields_available) {
+    $settings['type'] = 'custom';
+  }
+
+  $element['type'] = [
+    '#type' => 'radios',
+    '#title' => t('Type'),
+    '#options' => [
+      'field' => t('Field'),
+      'custom' => t('Custom'),
+    ],
+    // Use "custom" as default value to support updates from older versions.
+    '#default_value' => !isset($settings['type']) ? 'custom' : $settings['type'],
+    '#states' => [
+      'visible' => [
+        'input[name$="[third_party_settings][linked_field][linked]"]' => ['checked' => TRUE],
+      ],
+    ],
+    '#attributes' => [
+      'class' => ['container-inline'],
+    ],
+  ];
+
+  $element['destination'] = [
+    '#type' => 'container',
+    '#element_validate' => ['linked_field_element_validate_destination'],
+    '#states' => [
+      'visible' => [
+        'input[name$="[third_party_settings][linked_field][linked]"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
+
+  if (!$fields_available) {
+    $element['destination']['field_message'] = [
+      '#type' => 'container',
+      '#states' => [
+        'visible' => [
+          'input[name$="[third_party_settings][linked_field][type]"]' => ['value' => 'field'],
+        ],
+      ],
+    ];
+
+    $element['destination']['field_message']['message'] = [
+      '#theme' => 'status_messages',
+      '#message_list' => [
+        'warning' => [
+          t('No fields are available for linking, please choose the <em>custom</em> type.'),
+        ],
+      ],
+    ];
+  }
+
+  $element['destination']['field'] = [
+    '#type' => 'select',
+    '#title' => t('Field'),
+    '#options' => $field_names,
+    '#disabled' => !$fields_available,
+    '#empty_option' => t('- Select -'),
+    '#default_value' => $settings['destination'],
+    '#description' => t('The value of that field will be used as link destination.'),
+    '#states' => [
+      'visible' => [
+        'input[name$="[third_party_settings][linked_field][type]"]' => ['value' => 'field'],
+      ],
+      'required' => [
+        'input[name$="[third_party_settings][linked_field][linked]"]' => ['checked' => TRUE],
+        'input[name$="[third_party_settings][linked_field][type]"]' => ['value' => 'field'],
+      ],
+    ],
+  ];
+
+  $element['destination']['custom'] = [
+    '#type' => 'textfield',
+    '#title' => t('Destination'),
+    '#default_value' => $settings['destination']['custom'],
+    '#description' => t('Tokens are supported. Internal path must be prefixed with a <code>internal:/</code>.'),
+    '#states' => [
+      'visible' => [
+        'input[name$="[third_party_settings][linked_field][type]"]' => ['value' => 'custom'],
+      ],
+      'required' => [
+        'input[name$="[third_party_settings][linked_field][linked]"]' => ['checked' => TRUE],
+        'input[name$="[third_party_settings][linked_field][type]"]' => ['value' => 'custom'],
+      ],
+    ],
+  ];
+
+  $destination = \Drupal::destination()->getAsArray();
+  $config_path = Url::fromRoute('linked_field.config', [], ['query' => $destination])->toString();
+
+  $element['advanced'] = [
+    '#type' => 'details',
+    '#title' => t('Advanced'),
+    '#description' => t('Manage available attributes <a href="@config">here</a>.', ['@config' => $config_path]),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#states' => [
+      'visible' => [
+        'input[name$="[third_party_settings][linked_field][linked]"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
+
+  foreach ($available_attributes as $attribute => $info) {
+    // Provide default label / description for attributes.
+    if (!$info['label']) {
+      $info['label'] = str_replace('-', ' ', Unicode::ucfirst($attribute));
+    }
+    if (!$info['description']) {
+      $info['description'] = t('Enter value for <code>@attribute</code> attribute.', ['@attribute' => $attribute]);
+    }
+
+    $element['advanced'][$attribute] = [
+      '#type' => 'textfield',
+      '#title' => $info['label'],
+      '#description' => $info['description'],
+      '#default_value' => isset($settings['advanced'][$attribute]) ? $settings['advanced'][$attribute] : '',
+    ];
+  }
+
+  $element['advanced']['text'] = [
+    '#type' => 'textfield',
+    '#title' => t('Text'),
+    '#default_value' => isset($settings['advanced']['text']) ? $settings['advanced']['text'] : '',
+    '#description' => t('Here you can enter a token which will be used as link text. Note that the actual field output will be overridden.'),
+  ];
+
+  if (\Drupal::moduleHandler()->moduleExists('token')) {
+    $element['token'] = [
+      '#type' => 'item',
+      '#theme' => 'token_tree_link',
+      '#token_types' => 'all',
+      '#states' => [
+        'visible' => [
+          'input[name$="[third_party_settings][linked_field][linked]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+  }
+
+  // Make sure empty Linked Field configuration is not stored.
+  $element['#element_validate'][] = 'linked_field_element_validate';
+
+  return $element;
+}
+
+/**
+ * Element validate function for Linked Field.
+ *
+ * @param array $element
+ *   The structured array whose children shall be rendered.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function linked_field_element_validate($element, FormStateInterface $form_state) {
+  $parents = array_slice($element['linked']['#parents'], 0, 3);
+  $settings = NestedArray::getValue($form_state->getValues(), $parents);
+
+  if (!is_array($settings) || !isset($settings['third_party_settings']['linked_field'])) {
+    return;
+  }
+
+  $linked_field = &$settings['third_party_settings']['linked_field'];
+
+  // Remove empty Linked Field configuration form 3rd party settings.
+  if (empty($linked_field['linked'])) {
+    unset($settings['third_party_settings']['linked_field']);
+  }
+  else {
+    // Remove empty attributes from configuration.
+    foreach ($linked_field['advanced'] as $attribute => $value) {
+      if (!mb_strlen(trim($value))) {
+        unset($linked_field['advanced'][$attribute]);
+      }
+    }
+  }
+
+  // Set adjusted settings back into form state.
+  $form_state->setValue($parents, $settings);
+}
+
+/**
+ * Implements hook_entity_display_build_alter().
+ *
+ * @param array $build
+ *   A render array.
+ * @param array $context
+ *   An associative array.
+ */
+function linked_field_entity_display_build_alter(array &$build, array $context) {
+  /** @var \Drupal\linked_field\LinkedFieldManager $manager */
+  $manager = \Drupal::service('linked_field.manager');
+
+  foreach (Element::children($build) as $field_name) {
+    $element = &$build[$field_name];
+    $settings = $manager->getFieldDisplaySettings($context['display'], $field_name);
+
+    // Continue to next if no Linked Field settings were found.
+    if (!count($settings)) {
+      continue;
+    }
+
+    // Normalize the settings.
+    $destination = isset($settings['destination']) ? $settings['destination'] : FALSE;
+    $linked = isset($settings['linked']) ? $settings['linked'] : FALSE;
+    $destination_type = isset($settings['type']) ? $settings['type'] : 'custom';
+
+    // If the destination field isn't filled for this field, we shouldn't
+    // do anything. Continue to the next field.
+    if (!$destination || !$linked) {
+      continue;
+    }
+
+    if (isset($element['#entity_type']) && isset($element['#object'])) {
+      $replace_tokens = [$element['#entity_type'] => $element['#object']];
+    }
+    else {
+      $replace_tokens = [];
+    }
+
+    foreach (Element::children($element) as $delta) {
+      $destination = $manager->getDestination($destination_type, $destination, $context);
+
+      // We need special handling for the token destination type.
+      if ($destination_type == 'custom') {
+        $destination = $manager->replaceToken($destination, $replace_tokens, ['clear' => TRUE]);
+        // Try to grab the href attribute if the replaced token is a link.
+        preg_match('/<a.* href="([^"]+)".*>/', $destination, $match);
+        $destination = isset($match[1]) ? $match[1] : $destination;
+      }
+
+      $attributes = ['href' => ''];
+      foreach ($settings['advanced'] as $attribute => $value) {
+        if ($attribute == 'text') {
+          continue;
+        }
+
+        $attributes[$attribute] = Html::escape($manager->replaceToken($value, $replace_tokens, ['clear' => TRUE]));
+      }
+
+      // Would be better to have own set with allowed tags so that only
+      // inline elements are allowed.
+      $text = '';
+      if (isset($settings['advanced']['text'])) {
+        $text = Xss::filterAdmin($manager->replaceToken($settings['advanced']['text'], $replace_tokens, ['clear' => TRUE]));
+      }
+
+      // Continue to next field if destination is empty.
+      if (!$destination) {
+        continue;
+      }
+
+      $url = $manager->buildDestinationUrl($destination);
+      if (!$url) {
+        continue;
+      }
+
+      // Finally set 'href' attribute for link.
+      $attributes['href'] = $url;
+
+      // Render the field if no custom text was set in the configuration.
+      if (!$text) {
+        $renderer = \Drupal::service('renderer');
+
+        if ($renderer->hasRenderContext()) {
+          $rendered = $renderer->render($element[$delta]);
+        }
+        else {
+          $rendered = $renderer->renderRoot($element[$delta]);
+        }
+      }
+      else {
+        $rendered = $text;
+      }
+
+      $build[$field_name][$delta] = [
+        '#markup' => $manager->linkHtml($rendered, $attributes),
+      ];
+    }
+  }
+}
+
+/**
+ * Form element validation handler for destination field in settings form.
+ *
+ * @param array $element
+ *   The structured array whose children shall be rendered.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function linked_field_element_validate_destination(array $element, FormStateInterface &$form_state) {
+  $fields = $form_state->getValue('fields');
+  // We check whether 'fields' exists in the form_state values.
+  if ($fields) {
+    $field_name = $element['#array_parents'][1];
+    $settings = $fields[$field_name]['settings_edit_form']['third_party_settings']['linked_field'];
+    $linked = $settings['linked'];
+    $type = $settings['type'];
+    $destination = $settings['destination'][$type];
+
+    // If this field should be linked, the destination field is required.
+    if ($linked) {
+      if (!$destination) {
+        $form_state->setErrorByName($element[$type], t('!name field is required.', ['!name' => $element[$type]['#title']]));
+      }
+      else {
+        $field = &$fields[$field_name]['settings_edit_form']['third_party_settings']['linked_field'];
+
+        $field['destination'] = $field['destination'][$type];
+
+        if ($type == 'custom') {
+          $destination = $field['destination'];
+
+          // Prevent validating URL with tokens.
+          if (strpos($destination, '[') === FALSE || strpos($destination, ']') === FALSE) {
+            try {
+              Url::fromUri($destination);
+            }
+            catch (\Exception $e) {
+              $form_state->setError($element, t('Destination is invalid.'));
+              return;
+            }
+          }
+        }
+
+        $form_state->setValue('fields', $fields);
+      }
+    }
+  }
+}

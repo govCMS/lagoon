@@ -1,0 +1,4 @@
+services:
+  linked_field.manager:
+    class: Drupal\linked_field\LinkedFieldManager
+    arguments: ['@config.factory', '@path.validator', '@token','@entity_field.manager','@entity_type.manager']

@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Contains main module functions.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function entity_hierarchy_test_base_field_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'entity_test') {
+    return [
+      'parents' => BaseFieldDefinition::create('entity_reference_hierarchy')
+        ->setCardinality(1)->setSetting('target_type', 'entity_test')
+        ->setLabel('Parents'),
+    ];
+  }
+  return [];
+}

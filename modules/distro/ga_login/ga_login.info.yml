@@ -2,8 +2,7 @@ name: "Google Authenticator login"
 type: module
 package: Security
 description: "TFA plugins for HMAC-based and Time-based One Time Passwords with recovery codes as fallback."
-core: 8.x
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^9.1 || ^10
 dependencies:
  - tfa:tfa (>=8.x-1.0-alpha7)
 

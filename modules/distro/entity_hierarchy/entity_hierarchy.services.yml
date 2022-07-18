@@ -1,0 +1,23 @@
+services:
+  entity_hierarchy.nested_set_storage_factory:
+    class: Drupal\entity_hierarchy\Storage\NestedSetStorageFactory
+    arguments: ['@dbal_connection', '@database', '@entity_hierarchy.logger']
+  entity_hierarchy.logger:
+    parent: logger.channel_base
+    arguments: ['entity_hierarchy']
+  entity_hierarchy.nested_set_node_factory:
+    class: Drupal\entity_hierarchy\Storage\NestedSetNodeKeyFactory
+  entity_hierarchy.information.parent_candidate:
+    class: Drupal\entity_hierarchy\Information\ParentCandidate
+    arguments: ['@entity_field.manager', '@entity_type.bundle.info']
+  access_check.entity_hierarchy.has_fields:
+    class: Drupal\entity_hierarchy\Routing\ReorderChildrenAccess
+    arguments: ['@entity_hierarchy.information.parent_candidate', '@current_route_match', '@entity_type.manager']
+    tags:
+      - { name: access_check }
+  entity_hierarchy.entity_tree_node_mapper:
+    class: Drupal\entity_hierarchy\Storage\EntityTreeNodeMapper
+    arguments: ['@entity_type.manager']
+  entity_hierarchy.tree_rebuilder:
+    class: Drupal\entity_hierarchy\Storage\TreeRebuilder
+    arguments: ['@entity_type.manager', '@entity_field.manager']

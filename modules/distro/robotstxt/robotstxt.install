@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the robotstxt module.
+ */
+
+use Drupal\Core\Routing\RequestHelper;
+
+/**
+ * Implements hook_install().
+ */
+function robotstxt_install() {
+  $content = '';
+
+  // List of candidates for import.
+  $files = [
+    DRUPAL_ROOT . '/robots.txt',
+    DRUPAL_ROOT . '/sites/default/default.robots.txt',
+    \Drupal::service('extension.list.module')->getPath('robotstxt') . '/robots.txt',
+  ];
+
+  foreach ($files as $file) {
+    if (file_exists($file) && is_readable($file)) {
+      $content = file_get_contents($file);
+      break;
+    }
+  }
+
+  \Drupal::configFactory()->getEditable('robotstxt.settings')->set('content', $content)->save();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function robotstxt_requirements($phase) {
+  $requirements = [];
+
+  switch ($phase) {
+    case 'runtime':
+      // Module cannot work without Clean URLs.
+      $request = \Drupal::request();
+      if (!RequestHelper::isCleanUrl($request)) {
+        $requirements['robotstxt_cleanurl'] = [
+          'title' => t('RobotsTxt'),
+          'severity' => REQUIREMENT_ERROR,
+          'value' => t('Clean URLs are mandatory for this module.'),
+        ];
+      }
+
+      // Webservers prefer the robots.txt file on disk and does not allow menu
+      // path overwrite.
+      if (file_exists(DRUPAL_ROOT . '/robots.txt')) {
+        $requirements['robotstxt_file'] = [
+          'title' => t('RobotsTxt'),
+          'severity' => REQUIREMENT_WARNING,
+          'value' => t('RobotsTxt module works only if you remove the existing robots.txt file in your website root.'),
+        ];
+      }
+  }
+  return $requirements;
+}
+
+/**
+ * Rename menu path '/filter/tips/' to 'filter/tips'.
+ */
+function robotstxt_update_8101() {
+  $config = \Drupal::configFactory()->getEditable('robotstxt.settings');
+  $robotstxt = $config->get('content');
+  $robotstxt = str_replace('Disallow: /filter/tips/', 'Disallow: /filter/tips', $robotstxt);
+  $robotstxt = str_replace('Disallow: /index.php/filter/tips/', 'Disallow: /index.php/filter/tips', $robotstxt);
+  $config->set('content', $robotstxt)->save();
+
+  return t("Renamed path '/filter/tips/' to 'filter/tips'.");
+}

@@ -1,0 +1,15 @@
+'workbench_access.scheme_settings.entity_hierarchy:*':
+  type: workbench_access_scheme_settings
+  mapping:
+    boolean_fields:
+      type: sequence
+      label: 'Boolean fields'
+      sequence:
+        type: string
+        label: 'Field'
+    bundles:
+      type: sequence
+      label: 'Bundles'
+      sequence:
+        type: string
+        label: 'Bundle'

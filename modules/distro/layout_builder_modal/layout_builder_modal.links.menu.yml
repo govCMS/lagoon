@@ -1,0 +1,5 @@
+layout_builder_modal.config:
+  title: Layout Builder Modal
+  route_name: layout_builder_modal.config
+  parent: system.admin_config_ui
+  description: 'Administer Layout Builder Modal.'

@@ -1,22 +1,21 @@
-		      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-		       SECURITY.TXT MODULE README
+                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                       SECURITY.TXT MODULE README
 
-
-			    Daniel J. R. May
-		      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                            Daniel J. R. May
+                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 Table of Contents
 ─────────────────
 
-1 Introduction
-2 Installation
-3 Configuration
-.. 3.1 Permissions
-.. 3.2 Security.txt configuration
-.. 3.3 Security.txt signing
-4 Use
-5 Further reading
+1. Introduction
+2. Installation
+3. Configuration
+.. 1. Permissions
+.. 2. Security.txt configuration
+.. 3. Security.txt signing
+4. Use
+5. Further reading
 
 
 
@@ -36,11 +35,11 @@ Table of Contents
 ══════════════
 
   This module should be installed in the usual way. Read about
-  [installing Drupal 8 modules].
+  [installing modules].
 
 
-  [installing Drupal 8 modules]
-  https://www.drupal.org/docs/8/extending-drupal-8/installing-drupal-8-modules
+[installing modules]
+<https://www.drupal.org/docs/extending-drupal/installing-modules>
 
 
 3 Configuration
@@ -97,6 +96,6 @@ Table of Contents
   • Read the [draft RFC]
 
 
-  [security.txt standard] https://securitytxt.org/
+[security.txt standard] <https://securitytxt.org/>
 
-  [draft RFC] https://tools.ietf.org/html/draft-foudil-securitytxt-02
+[draft RFC] <https://tools.ietf.org/html/draft-foudil-securitytxt-02>

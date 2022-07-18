@@ -1,0 +1,4 @@
+administer entity hierarchy microsites:
+  title: 'Administer entity hierarchy microsites'
+  description: 'Allow to create and manage microsites.'
+  restrict access: true

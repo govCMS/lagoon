@@ -1,0 +1,5 @@
+linked_field.config:
+  title: 'Linked Field'
+  parent: system.admin_config_content
+  description: 'Configure available attributes.'
+  route_name: linked_field.config

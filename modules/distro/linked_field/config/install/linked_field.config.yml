@@ -1,0 +1,13 @@
+attributes:
+  title:
+    label: ''
+    description: ''
+  target:
+    label: ''
+    description: ''
+  class:
+    label: ''
+    description: ''
+  rel:
+    label: Relationship
+    description: ''

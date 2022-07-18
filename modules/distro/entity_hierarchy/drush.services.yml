@@ -1,0 +1,6 @@
+services:
+  entity_hierarchy.commands:
+    class: \Drupal\entity_hierarchy\Commands\EntityHierarchyCommands
+    arguments: ['@entity_hierarchy.tree_rebuilder']
+    tags:
+      - { name: drush.command }

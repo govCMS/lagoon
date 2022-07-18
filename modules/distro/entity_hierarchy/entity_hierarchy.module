@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * @file
+ * A module to make entities hierarchical.
+ */
+
+use Drupal\Core\Entity\ContentEntityDeleteForm;
+use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\ContentEntityType;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\entity_hierarchy\Form\HierarchyChildrenForm;
+use Drupal\entity_hierarchy\Handler\EntityHierarchyHandler;
+use Drupal\entity_hierarchy\Handler\NodeEntityHierarchyHandler;
+use Drupal\entity_hierarchy\Information\ChildEntityWarningBuilder;
+use Drupal\entity_hierarchy\Routing\EntityHierarchyRouteProvider;
+use Drupal\entity_hierarchy\Storage\ParentEntityDeleteUpdater;
+use Drupal\entity_hierarchy\Storage\ParentEntityRevisionUpdater;
+
+/**
+ * Implements @see hook_help().
+ */
+function entity_hierarchy_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.entity_hierarchy':
+      return t('A module to create hierarchical entities. To get started, add a field of type <em>Entity Reference Hierarchy</em> to your entity to keep track of parents.');
+  }
+}
+
+/**
+ * Implements @see hook_entity_type_build().
+ *
+ * @see \Drupal\entity_hierarchy\Form\HierarchyChildrenForm
+ */
+function entity_hierarchy_entity_type_build(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  // Adds the entity_hierarchy_reorder link template.
+  foreach ($entity_types as $entity_type_id => $entity_type) {
+
+    if (!$entity_type instanceof ContentEntityType || !$entity_type->hasLinkTemplate('canonical')) {
+      continue;
+    }
+    $providers = $entity_type->getRouteProviderClasses() ?: [];
+    if (empty($providers['entity_hierarchy'])) {
+      $providers['entity_hierarchy'] = EntityHierarchyRouteProvider::class;
+      $entity_types[$entity_type_id]->setHandlerClass('route_provider', $providers);
+    }
+
+    // We have to add this for every content entity-type, regardless of if it
+    // has hierarchy fields or not, because you cannot use the field manager
+    // during a hook_entity_type_build, as it will cause recursion.
+    $entity_types[$entity_type_id]
+      ->setFormClass('entity_hierarchy_reorder', HierarchyChildrenForm::class)
+      ->setHandlerClass('entity_hierarchy', EntityHierarchyHandler::class)
+      ->setLinkTemplate('entity_hierarchy_reorder', $entity_type->getLinkTemplate('canonical') . '/children');
+  }
+  if (isset($entity_types['node'])) {
+    $entity_types['node']->setHandlerClass('entity_hierarchy', NodeEntityHierarchyHandler::class);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function entity_hierarchy_entity_update(EntityInterface $entity) {
+  if (!$entity instanceof ContentEntityInterface) {
+    return;
+  }
+  if (isset($entity->original)) {
+    \Drupal::service('class_resolver')->getInstanceFromDefinition(ParentEntityRevisionUpdater::class)
+      ->moveChildren($entity->original, $entity);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function entity_hierarchy_entity_delete(EntityInterface $entity) {
+  if (!$entity instanceof ContentEntityInterface) {
+    return;
+  }
+  \Drupal::service('class_resolver')->getInstanceFromDefinition(ParentEntityDeleteUpdater::class)
+    ->moveChildren($entity);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function entity_hierarchy_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $formObject = $form_state->getFormObject();
+  if ($formObject instanceof ContentEntityDeleteForm) {
+    if ($children = \Drupal::service('class_resolver')->getInstanceFromDefinition(ChildEntityWarningBuilder::class)->buildChildEntityWarnings($formObject->getEntity())) {
+      foreach ($children as $ix => $child) {
+        $form['children'][$ix] = [
+          'title' => ['#markup' => $child->getWarning()],
+          'items' => $child->getList(),
+        ];
+      }
+      return;
+    }
+  }
+  if ($formObject instanceof ContentEntityForm) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $formObject->getEntity();
+    $parentFields = \Drupal::service('entity_field.manager')->getFieldMapByFieldType('entity_reference_hierarchy');
+    if (isset($parentFields[$entity->getEntityTypeId()])) {
+      // We have a parent field.
+      foreach ($parentFields[$entity->getEntityTypeId()] as $field_name => $detail) {
+        if ($entity->hasField($field_name) && \Drupal::request()->query->has($field_name) &&
+        isset($form[$field_name]['widget'][0]['target_id']['target_id']) &&
+          ($target_entity = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->load(\Drupal::request()->query->get($field_name))) &&
+        $target_entity->access('view')) {
+          $form[$field_name]['widget'][0]['target_id']['target_id']['#default_value'] = $target_entity;
+        }
+      }
+    }
+  }
+}

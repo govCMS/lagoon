@@ -1,0 +1,20 @@
+# Schema for the menu_trail_by_path configuration.
+menu_trail_by_path.settings:
+  type: config_object
+  label: 'Menu Trail By Path Settings'
+  mapping:
+    max_path_parts:
+      type: integer
+      label: 'Maximum Path Parts'
+    trail_source:
+      type: string
+      label: 'Trail Source'
+
+# Schema for the third party settings.
+system.menu.*.third_party.menu_trail_by_path:
+  type: mapping
+  label: Menu trail by path third party settings
+  mapping:
+    trail_source:
+      type: string
+      label: Trail Source

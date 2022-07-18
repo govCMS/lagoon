@@ -84,7 +84,7 @@ class GALoginHotpSetupPluginTest extends TfaTestBase {
     $edit = [
       'current_pass' => $this->userAccount->passRaw,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Confirm');
+    $this->submitForm($edit, 'Confirm');
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Application verification code');
 
@@ -102,7 +102,7 @@ class GALoginHotpSetupPluginTest extends TfaTestBase {
     $edit = [
       'code' => substr(str_shuffle('1234567890'), 0, 6),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Verify and save');
+    $this->submitForm($edit, 'Verify and save');
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Invalid application code. Please try again.');
 
@@ -110,7 +110,7 @@ class GALoginHotpSetupPluginTest extends TfaTestBase {
     $edit = [
       'code' => $this->setupPlugin->auth->otp->hotp(Encoding::base32DecodeUpper($seed), 1),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Verify and save');
+    $this->submitForm($edit, 'Verify and save');
     $assert->statusCodeEquals(200);
 
     $assert->linkExists('Disable TFA');

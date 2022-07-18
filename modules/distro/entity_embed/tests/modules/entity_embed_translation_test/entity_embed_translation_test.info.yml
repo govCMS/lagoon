@@ -1,0 +1,20 @@
+name: 'Entity Embed Translation test'
+type: module
+description: 'Aids in testing translation within entity embed'
+package: Testing
+dependencies:
+ - drupal:content_translation
+ - drupal:file
+ - drupal:image
+ - drupal:node
+ - drupal:text
+ - drupal:media
+ - drupal:ckeditor
+ - drupal:editor
+ - embed:embed
+ - entity_embed:entity_embed
+
+# Information added by Drupal.org packaging script on 2022-06-23
+version: '8.x-1.2+11-dev'
+project: 'entity_embed'
+datestamp: 1656006611

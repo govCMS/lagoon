@@ -1,0 +1,5 @@
+services:
+  layout_builder_modal.ajax_response_subscriber:
+    class: Drupal\layout_builder_modal\EventSubscriber\AjaxResponseSubscriber
+    tags:
+      - { name: event_subscriber }

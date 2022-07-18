@@ -1,0 +1,6 @@
+services:
+  media_file_delete_entity_usage.file_usage:
+    class: Drupal\media_file_delete_entity_usage\EntityUsageResolver
+    arguments: ['@entity_usage.usage']
+    tags:
+      - { name: media_file_delete_file_usage_resolver }

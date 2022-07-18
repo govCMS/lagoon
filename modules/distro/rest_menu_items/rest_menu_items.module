@@ -1,0 +1,19 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function rest_menu_items_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the finalist_rest_extra module.
+    case 'help.page.rest_menu_items':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Rest menu item endpoint') . '</p>';
+      return $output;
+
+    default:
+  }
+}

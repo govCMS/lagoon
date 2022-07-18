@@ -1,0 +1,20 @@
+{
+  "name": "drupal/fakeobjects",
+  "type": "drupal-module",
+  "description": "Adds the FakeObjects plugin to CKEditor. This plugin is a utility plugin that is required by certain user-facing CKEditor plugins.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "http://drupal.org/project/fakeobjects",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Kevin Quillen (kevinquillen)",
+      "homepage": "https://www.drupal.org/u/kevinquillen",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "http://drupal.org/project/issues/fakeobjects",
+    "source": "http://cgit.drupalcode.org/fakeobjects"
+  }
+}

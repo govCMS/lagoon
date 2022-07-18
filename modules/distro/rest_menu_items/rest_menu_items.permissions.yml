@@ -1,0 +1,3 @@
+administer rest menu items:
+  title: 'Administer Rest menu items'
+  description: 'Gives permissions to administer the rest menu items module.'

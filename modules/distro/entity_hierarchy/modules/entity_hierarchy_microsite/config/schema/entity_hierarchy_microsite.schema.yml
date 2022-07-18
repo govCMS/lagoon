@@ -1,0 +1,31 @@
+block.settings.entity_hierarchy_microsite_branding:
+  type: block_settings
+  label: 'Branding block'
+  mapping:
+    field:
+      type: string
+      label: 'Field'
+
+condition.plugin.entity_hierarchy_microsite_child:
+  type: condition.plugin
+  mapping:
+    field:
+      type: string
+      label: 'Field'
+
+block.settings.entity_hierarchy_microsite_menu:
+  type: block_settings
+  label: 'Menu block'
+  mapping:
+    field:
+      type: string
+      label: 'Field'
+    level:
+      type: integer
+      label: 'Starting level'
+    depth:
+      type: integer
+      label: 'Maximum number of levels'
+    expand_all_items:
+      type: boolean
+      label: 'Expand all items'

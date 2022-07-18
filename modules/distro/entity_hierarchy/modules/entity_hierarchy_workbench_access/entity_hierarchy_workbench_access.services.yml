@@ -1,0 +1,7 @@
+services:
+  cache.entity_hierarchy_workbench_access:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [entity_hierarchy_wba]

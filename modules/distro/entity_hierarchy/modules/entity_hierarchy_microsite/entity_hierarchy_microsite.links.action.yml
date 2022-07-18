@@ -1,0 +1,5 @@
+entity.entity_hierarchy_microsite.add_form:
+  route_name: entity.entity_hierarchy_microsite.add_form
+  title: 'Add Microsite'
+  appears_on:
+    - entity.entity_hierarchy_microsite.collection

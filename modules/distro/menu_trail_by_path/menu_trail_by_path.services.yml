@@ -1,0 +1,13 @@
+services:
+  menu_trail_by_path.menu_tree_storage:
+    class: Drupal\menu_trail_by_path\Menu\MenuTreeStorage
+    arguments: ['@database', '@cache.menu', '@cache_tags.invalidator', 'menu_tree']
+    public: false  # Private to plugin.manager.menu.link and menu.link_tree
+    tags:
+      - { name: backend_overridable }
+  menu_trail_by_path.path_helper:
+    class: Drupal\menu_trail_by_path\Path\CurrentPathHelper
+    arguments: ['@current_route_match', '@router.request_context', '@config.factory']
+  menu_trail_by_path.menu_helper:
+    class: Drupal\menu_trail_by_path\Menu\MenuTreeStorageMenuHelper
+    arguments: ['@plugin.manager.menu.link', '@menu_trail_by_path.menu_tree_storage']

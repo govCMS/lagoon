@@ -1,0 +1,4 @@
+modal_width: '768'
+modal_height: 'auto'
+modal_autoresize: true
+theme_display: 'default_theme'

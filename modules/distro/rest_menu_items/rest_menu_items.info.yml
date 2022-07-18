@@ -1,0 +1,13 @@
+name: REST Menu Items
+type: module
+description: This module provides a REST endpoint to retrieve menu items based on the menu name.
+core_version_requirement: ^8.8.4 || ^9 || ^10
+package: Web services
+configure: rest_menu_items.config_form
+dependencies:
+  - drupal:rest
+
+# Information added by Drupal.org packaging script on 2020-06-15
+version: '3.0.2+0-dev'
+project: 'rest_menu_items'
+datestamp: 1592220459

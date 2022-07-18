@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Wrapped content from core/themes/seven/css/base/elements.css.
+ * Maintainers: the import statement presumes a relative location of core css.
+ * The location may need to be adjusted depending on your setup.
+ */
+body #layout-builder-modal {
+  color: #333;
+  background: #fff;
+  font: normal 81.3%/1.538em "Lucida Grande", "Lucida Sans Unicode", "DejaVu Sans", "Lucida Sans", sans-serif;
+}
+
+#layout-builder-modal {
+  @import "../../core/themes/seven/css/base/elements";
+}

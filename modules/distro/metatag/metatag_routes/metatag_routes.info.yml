@@ -1,0 +1,11 @@
+name: 'Metatag Custom Routes (Paths)'
+type: module
+description: Allows assigning meta tags to be used on custom routes, equivalent to customn paths.
+core_version_requirement: ^9
+dependencies:
+  - metatag:metatag
+
+# Information added by Drupal.org packaging script on 2022-07-16
+version: '8.x-1.20+6-dev'
+project: 'metatag'
+datestamp: 1657971487

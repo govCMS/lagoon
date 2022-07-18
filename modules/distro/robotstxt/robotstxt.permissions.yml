@@ -1,0 +1,3 @@
+administer robots.txt:
+  title: 'Administer robots.txt'
+  description: 'Perform maintenance tasks for robots.txt.'

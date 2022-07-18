@@ -1,0 +1,164 @@
+<?php
+
+/**
+ * @file
+ * Entity Class Formatter module.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function entity_class_formatter_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+
+  // Skip entities which are not holding fields.
+  if (!($entity instanceof FieldableEntityInterface)) {
+    return;
+  }
+  $fields = [];
+
+  // Get fields configured by Layout Builder.
+  if ($display instanceof LayoutEntityDisplayInterface && $display->isLayoutBuilderEnabled()) {
+    // Get entity-specific sections when the layout is customized.
+    if ($display->isOverridable()
+      && $entity->hasField('layout_builder__layout')
+    ) {
+      $sections = $entity->get('layout_builder__layout')->getSections();
+    }
+    // Get default sections otherwise.
+    if (empty($sections)) {
+      $sections = $display->getSections();
+    }
+
+    foreach ($sections as $section) {
+      foreach ($section->getComponents() as $component) {
+        $config = $component->get('configuration');
+
+        // Only if Entity Class formatter is used.
+        if (isset($config['id']) && isset($config['formatter']['type'])) {
+          $formatter = $config['formatter'];
+          if ($formatter['type'] === 'entity_class_formatter') {
+
+            // Extract field name from the component ID.
+            [, , , $name] = explode(':', $config['id']);
+            if (!empty($name)) {
+              $fields[$name][] = !empty($formatter['settings']) ? $formatter['settings'] : [];
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Get fields from standard manage display form.
+  else {
+    foreach ($display->getComponents() as $name => $component) {
+
+      // Only if Entity Class formatter is used.
+      if (isset($component['type']) && $component['type'] === 'entity_class_formatter') {
+        $fields[$name][] = !empty($component['settings']) ? $component['settings'] : [];
+      }
+    }
+  }
+
+  // Process all discovered fields.
+  foreach ($fields as $name => $settings_set) {
+    if (!$entity->hasField($name)) {
+      continue;
+    }
+    $field = $entity->get($name);
+
+    // Apply settings of every field instance.
+    foreach ($settings_set as $settings) {
+      _entity_class_formatter_apply($build, $field, $settings);
+    }
+  }
+}
+
+/**
+ * Applies all field values using defined settings.
+ */
+function _entity_class_formatter_apply(array &$build, FieldItemListInterface $field, array $settings) {
+  $values = [];
+
+  // Get prefix to be attached before.
+  $prefix = !empty($settings['prefix']) ? $settings['prefix'] : '';
+  // Get suffix to be attached after.
+  $suffix = !empty($settings['suffix']) ? $settings['suffix'] : '';
+  // Get attribute name (class by default).
+  $attr = !empty($settings['attr']) ? $settings['attr'] : 'class';
+  // Get referenced entity field name (label callback by default).
+  $inner_field = !empty($settings['field']) ? $settings['field'] : NULL;
+
+  // Extract all field values.
+  _entity_class_formatter_extract($values, $field, $attr, $inner_field);
+
+  // Process all discovered values.
+  $method = $attr === 'class' ? 'getClass' : 'escape';
+  foreach ($values as $value) {
+    $build['#attributes'][$attr][] = Html::$method($prefix . $value . $suffix);
+  }
+}
+
+/**
+ * Extracts all field values.
+ */
+function _entity_class_formatter_extract(array &$values, FieldItemListInterface $field, $attr, $inner_field = NULL) {
+  $field_definition = $field->getFieldDefinition();
+
+  // Only for entity reference field type.
+  if ($field instanceof EntityReferenceFieldItemListInterface) {
+    foreach ($field->referencedEntities() as $referenced_entity) {
+
+      // Fill specified referenced entity field values.
+      if (!empty($inner_field) && $referenced_entity->hasField($inner_field)) {
+        $field = $referenced_entity->get($inner_field);
+        _entity_class_formatter_extract($values, $field, $attr);
+      }
+      // Fill title if not empty.
+      elseif (!empty($title = $referenced_entity->label())) {
+        $values[] = $title;
+      }
+    }
+  }
+
+  // Only for boolean field type.
+  elseif ($field_definition->getType() === 'boolean') {
+
+    // Fill configured label based on value.
+    if (filter_var($field->value, FILTER_VALIDATE_BOOLEAN)) {
+      $values[] = $field_definition->getSetting('on_label');
+    }
+    else {
+      $values[] = $field_definition->getSetting('off_label');
+    }
+  }
+
+  // For other simple fields.
+  else {
+    foreach ($field->getValue() as $item) {
+
+      // Fill value if not empty.
+      if (!empty($item['value'])) {
+
+        // Split value into multiple classes when spaces are used.
+        if ($attr === 'class') {
+          foreach (explode(' ', $item['value']) as $class) {
+            $values[] = $class;
+          }
+        }
+        else {
+          // Provide other attribute value as it is.
+          $values[] = $item['value'];
+        }
+      }
+    }
+  }
+}

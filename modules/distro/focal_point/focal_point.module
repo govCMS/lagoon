@@ -1,0 +1,163 @@
+<?php
+
+/**
+ * @file
+ * Allow users to specify a focal point on content images.
+ *
+ * @todo add support for default focal point value calculation method.
+ * @todo add test drive functionality?
+ */
+
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\file\FileInterface;
+
+/**
+ * Implements hook_help().
+ */
+function focal_point_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.focal_point':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t("Focal Point allows you to specify the portion of an image that is most important.</br>This information can be used when the image is cropped or cropped and scaled so that you don't, for example, end up with an image that cuts off the subject's head.") . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function focal_point_theme($existing, $type, $theme, $path) {
+  return [
+    'focal_point_preview_page' => [
+      'variables' => [
+        'original_image' => NULL,
+        'derivative_images' => [],
+        'focal_point' => '',
+        'preview_image_note' => '',
+        'derivative_image_note' => '',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * @see focal_point_entity_update
+ */
+function focal_point_entity_insert(EntityInterface $entity) {
+  focal_point_entity_update($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ *
+ * Saves the focal point value for the image file entity about to be saved.
+ */
+function focal_point_entity_update(EntityInterface $entity) {
+  // Only worry about entities that are fieldable.
+  if ($entity instanceof FieldableEntityInterface) {
+    // Loop all the fields and save focal point values for images.
+    foreach ($entity->getFieldDefinitions() as $key => $field) {
+      if ($field->getType() == 'image' && $entity->hasField($field->getName())) {
+        $crop_type = \Drupal::config('focal_point.settings')->get('crop_type');
+        // Loop through all values for this field. Its cardinality might be > 1.
+        foreach ($entity->{$field->getName()} as $item) {
+          /** @var \Drupal\focal_point\FocalPointManagerInterface $focal_point_manager */
+          $focal_point_manager = \Drupal::service('focal_point.manager');
+          if (!$item->entity instanceof FileInterface) {
+            continue;
+          }
+          $crop = $focal_point_manager->getCropEntity($item->entity, $crop_type);
+
+          $focal_point = NULL;
+          // Use the default focal point on new crop entities.
+          if ($crop->isNew()) {
+            $focal_point = \Drupal::config('focal_point.settings')->get('default_value');
+          }
+          // Use the focal point set over the UI.
+          if (!empty($item->focal_point)) {
+            $focal_point = $item->focal_point;
+
+            // Keep the original focal_point value to be able to use it during hooks.
+            if (!$crop->get('x')->isEmpty() && !$crop->get('y')->isEmpty()) {
+              $x = $crop->get('x')->value;
+              $y = $crop->get('y')->value;
+              $focal_point_original = $focal_point_manager->absoluteToRelative($x, $y, $item->width, $item->height);
+              $entity->{$field->getName()}->focal_point_original = join(',', $focal_point_original);
+            }
+          }
+          if ($focal_point) {
+            list($x, $y) = explode(',', $focal_point);
+            $focal_point_manager->saveCropEntity($x, $y, $item->width, $item->height, $crop);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Add the focal point widget to the allowed widgets list in IMCE.
+ *
+ * @param array $widgets
+ *   The existing list of widgets to add to.
+ */
+function focal_point_imce_supported_widgets_alter(array &$widgets) {
+  $widgets[] = 'image_focal_point';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function focal_point_form_media_library_add_form_upload_alter(array &$form, FormStateInterface $form_state) {
+  // Get any media items that are in the process of being added.
+  // @see \Drupal\media_library\Form\AddFormBase::getAddedMediaItems().
+  $media = $form_state->get('media') ?: [];
+  /** @var \Drupal\media\MediaInterface $item */
+  foreach ($media as $delta => $item) {
+    $element = &$form['media'][$delta]['fields'];
+    // As a kindness to alter hooks like this one, Media Library includes the
+    // name of the source field in the form structure.
+    // @see \Drupal\media_library\Form\AddFormBase::buildEntityFormElement()
+    $source_field = $element['#source_field_name'];
+    // If the source field is configured to use Focal Point, add a #process
+    // callback which replaces the static preview thumbnail with the Focal Point
+    // widget.
+    $component = \Drupal::service('entity_display.repository')
+      ->getFormDisplay('media', $item->bundle(), 'media_library')
+      ->getComponent($source_field);
+    if ($component && $component['type'] === 'image_focal_point' && isset($element[$source_field])) {
+      $element[$source_field]['widget'][0]['#process'][] = '_focal_point_replace_media_library_preview';
+    }
+  }
+}
+
+/**
+ * Process callback for the preview image of a new item in the media library.
+ */
+function _focal_point_replace_media_library_preview(array $element, FormStateInterface $form_state, array &$form) {
+  // We expect $element to be an image field widget with Focal Point enabled.
+  if (!empty($element['preview'])) {
+    // Temporarily override the preview access, which is normally set to FALSE
+    // by the media library, in favor of its own static preview thumbnail. In
+    // this case, though, Focal Point is using the preview to provide its
+    // widget, so we want to be sure that's visible.
+    $preview_access = $element['preview']['#access'];
+    $element['preview']['#access'] = TRUE;
+    // We expect the array parents to be something like
+    // ['media', $delta, 'fields', $source_field, 'widget', 0]. Here, we
+    // transform that to target the static preview thumbnail, which we expect to
+    // be at ['media', $delta, 'preview', 'thumbnail'].
+    $target = $element['#array_parents'];
+    array_splice($target, -4, count($target), ['preview', 'thumbnail']);
+    NestedArray::setValue($form, $target, $element['preview']);
+    // We've done what we needed to do, so restore the original preview access.
+    $element['preview']['#access'] = $preview_access;
+  }
+  return $element;
+}

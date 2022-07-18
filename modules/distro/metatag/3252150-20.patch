@@ -1,0 +1,650 @@
+diff --git a/metatag.info.yml b/metatag.info.yml
+index 1e7eac4..482c9c9 100644
+--- a/metatag.info.yml
++++ b/metatag.info.yml
+@@ -1,7 +1,7 @@
+ name: Metatag
+ type: module
+ description: Manage meta tags for all entities.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ configure: entity.metatag_defaults.collection
+ dependencies:
+diff --git a/metatag.module b/metatag.module
+index 621d250..03d4ded 100644
+--- a/metatag.module
++++ b/metatag.module
+@@ -359,7 +359,7 @@ function metatag_get_route_entity() {
+   if (!empty($route_name_matches[2])) {
+     $entity_type = $route_name_matches[2];
+     $definition = Drupal::entityTypeManager()->getDefinition($entity_type, FALSE);
+-    if (!empty($definition)) {
++    if (!empty($definition) && $definition->get('bundle_entity_type')) {
+       $type = $route_match->getRawParameter($definition->get('bundle_entity_type'));
+       if (!empty($type)) {
+         return \Drupal::entityTypeManager()
+diff --git a/metatag_app_links/metatag_app_links.info.yml b/metatag_app_links/metatag_app_links.info.yml
+index 097bb86..a8a881c 100644
+--- a/metatag_app_links/metatag_app_links.info.yml
++++ b/metatag_app_links/metatag_app_links.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: App Links'
+ type: module
+ description: Provides support for applinks.org meta tags.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_dc/metatag_dc.info.yml b/metatag_dc/metatag_dc.info.yml
+index 1a1de85..b003a76 100644
+--- a/metatag_dc/metatag_dc.info.yml
++++ b/metatag_dc/metatag_dc.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Dublin Core'
+ type: module
+ description: Provides the fifteen <a href="https://dublincore.org/documents/dces/">Dublin Core Metadata Element Set 1.1</a> meta tags from the <a href="https://dublincore.org/">Dublin Core Metadata Institute</a>.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_dc_advanced/metatag_dc_advanced.info.yml b/metatag_dc_advanced/metatag_dc_advanced.info.yml
+index 1a40a88..ab086fa 100644
+--- a/metatag_dc_advanced/metatag_dc_advanced.info.yml
++++ b/metatag_dc_advanced/metatag_dc_advanced.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Dublin Core Advanced'
+ type: module
+ description: 'Provides forty additional meta tags from the <a href="https://dublincore.org/">Dublin Core Metadata Institute</a>.'
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_extended_perms/metatag_extended_perms.info.yml b/metatag_extended_perms/metatag_extended_perms.info.yml
+index c0681bd..63a555f 100644
+--- a/metatag_extended_perms/metatag_extended_perms.info.yml
++++ b/metatag_extended_perms/metatag_extended_perms.info.yml
+@@ -1,7 +1,7 @@
+ name: Metatag Extended Permissions
+ type: module
+ description: "Adds individual permissions for each meta tag, allowing for fine-grained access to the meta tags. Note: this may lead to performance issues on the permissions admin page, please see the included README.txt file for details."
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag
+diff --git a/metatag_extended_perms/metatag_extended_perms.module b/metatag_extended_perms/metatag_extended_perms.module
+index 9061ab9..17adc04 100644
+--- a/metatag_extended_perms/metatag_extended_perms.module
++++ b/metatag_extended_perms/metatag_extended_perms.module
+@@ -10,9 +10,9 @@ use Drupal\Core\Render\Element;
+ use Drupal\metatag\Plugin\Field\FieldWidget\MetatagFirehose;
+ 
+ /**
+- * Implements hook_field_widget_form_alter().
++ * Implements hook_field_widget_single_element_form_alter().
+  */
+-function metatag_extended_perms_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
++function metatag_extended_perms_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
+   if ($context['widget'] instanceof MetatagFirehose) {
+     $group_manager = \Drupal::getContainer()->get('plugin.manager.metatag.group');
+ 
+diff --git a/metatag_extended_perms/tests/src/Functional/PermissionsTest.php b/metatag_extended_perms/tests/src/Functional/PermissionsTest.php
+index 1380fc7..df6a2b9 100644
+--- a/metatag_extended_perms/tests/src/Functional/PermissionsTest.php
++++ b/metatag_extended_perms/tests/src/Functional/PermissionsTest.php
+@@ -22,7 +22,7 @@ class PermissionsTest extends BrowserTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = [
++  protected static $modules = [
+     // Modules for core functionality.
+     'node',
+ 
+diff --git a/metatag_facebook/metatag_facebook.info.yml b/metatag_facebook/metatag_facebook.info.yml
+index ebaddb3..f7b078c 100644
+--- a/metatag_facebook/metatag_facebook.info.yml
++++ b/metatag_facebook/metatag_facebook.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Facebook'
+ type: module
+ description: A set of meta tags specially for controlling advanced functionality with Facebook.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_favicons/metatag_favicons.info.yml b/metatag_favicons/metatag_favicons.info.yml
+index d480516..b6e6be7 100644
+--- a/metatag_favicons/metatag_favicons.info.yml
++++ b/metatag_favicons/metatag_favicons.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Favicons'
+ type: module
+ description: Provides support for many different favicons.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_google_cse/metatag_google_cse.info.yml b/metatag_google_cse/metatag_google_cse.info.yml
+index 8e5ab8b..c412119 100644
+--- a/metatag_google_cse/metatag_google_cse.info.yml
++++ b/metatag_google_cse/metatag_google_cse.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Google Custom Search Engine (CSE)'
+ type: module
+ description: Provides support for meta tags used for Google Custom Search Engine.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_google_plus/metatag_google_plus.info.yml b/metatag_google_plus/metatag_google_plus.info.yml
+index 6243cf7..c7f3025 100644
+--- a/metatag_google_plus/metatag_google_plus.info.yml
++++ b/metatag_google_plus/metatag_google_plus.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Google Plus'
+ type: module
+ description: Provides support for Google's Plus meta tags.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_hreflang/metatag_hreflang.info.yml b/metatag_hreflang/metatag_hreflang.info.yml
+index 696a4eb..33d44c3 100644
+--- a/metatag_hreflang/metatag_hreflang.info.yml
++++ b/metatag_hreflang/metatag_hreflang.info.yml
+@@ -1,7 +1,7 @@
+ name: "Metatag: Hreflang"
+ type: module
+ description: Provides support for the hreflang meta tag with some extra logic to simplify it.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_mobile/metatag_mobile.info.yml b/metatag_mobile/metatag_mobile.info.yml
+index ce7d58e..eed1df9 100644
+--- a/metatag_mobile/metatag_mobile.info.yml
++++ b/metatag_mobile/metatag_mobile.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Mobile & UI Adjustments'
+ type: module
+ description: Provides support for meta tags used to control the mobile browser experience.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_open_graph/metatag_open_graph.info.yml b/metatag_open_graph/metatag_open_graph.info.yml
+index ab7adf4..2182a53 100644
+--- a/metatag_open_graph/metatag_open_graph.info.yml
++++ b/metatag_open_graph/metatag_open_graph.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Open Graph'
+ type: module
+ description: Provides support for Open Graph Protocol meta tags.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_open_graph_products/metatag_open_graph_products.info.yml b/metatag_open_graph_products/metatag_open_graph_products.info.yml
+index 61d5f1c..ca54484 100644
+--- a/metatag_open_graph_products/metatag_open_graph_products.info.yml
++++ b/metatag_open_graph_products/metatag_open_graph_products.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Open Graph Products'
+ type: module
+ description: Provides additional Open Graph Protocol meta tags for describing products.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_page_manager/metatag_page_manager.info.yml b/metatag_page_manager/metatag_page_manager.info.yml
+index 83ab2c7..c0724bd 100644
+--- a/metatag_page_manager/metatag_page_manager.info.yml
++++ b/metatag_page_manager/metatag_page_manager.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Page Manager'
+ type: module
+ description: Provides metatag support for Page Manager variants.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - page_manager:page_manager
+diff --git a/metatag_pinterest/metatag_pinterest.info.yml b/metatag_pinterest/metatag_pinterest.info.yml
+index 8862382..274359b 100644
+--- a/metatag_pinterest/metatag_pinterest.info.yml
++++ b/metatag_pinterest/metatag_pinterest.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Pinterest'
+ type: module
+ description: Provides support for Pinterest's custom meta tags.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_twitter_cards/metatag_twitter_cards.info.yml b/metatag_twitter_cards/metatag_twitter_cards.info.yml
+index 5d79bb7..604bff0 100644
+--- a/metatag_twitter_cards/metatag_twitter_cards.info.yml
++++ b/metatag_twitter_cards/metatag_twitter_cards.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Twitter Cards'
+ type: module
+ description: Provides support for Twitter's Card meta tags.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_verification/metatag_verification.info.yml b/metatag_verification/metatag_verification.info.yml
+index 337a3ef..4fcd240 100644
+--- a/metatag_verification/metatag_verification.info.yml
++++ b/metatag_verification/metatag_verification.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Verification'
+ type: module
+ description: Verifies ownership of a site for search engines and other services.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/metatag_views/metatag_views.info.yml b/metatag_views/metatag_views.info.yml
+index ed06204..347cf5a 100644
+--- a/metatag_views/metatag_views.info.yml
++++ b/metatag_views/metatag_views.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Metatag: Views'
+ type: module
+ description: Provides views integration for metatags.
+-core_version_requirement: '^9'
++core_version_requirement: '^9.3 || ^10'
+ package: SEO
+ dependencies:
+   - metatag:metatag
+diff --git a/src/Entity/MetatagDefaults.php b/src/Entity/MetatagDefaults.php
+index d6fba8a..30517b1 100644
+--- a/src/Entity/MetatagDefaults.php
++++ b/src/Entity/MetatagDefaults.php
+@@ -99,7 +99,7 @@ class MetatagDefaults extends ConfigEntityBase implements MetatagDefaultsInterfa
+    * Reverts an entity to its default values.
+    */
+   public function revert() {
+-    $default_install_path = drupal_get_path('module', 'metatag') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
++    $default_install_path = \Drupal::service('extension.list.module')->getPath('metatag') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+     $storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
+     $default_config_data = $storage->read('metatag.metatag_defaults.' . $this->id());
+     if ($default_config_data) {
+diff --git a/src/Normalizer/MetatagNormalizer.php b/src/Normalizer/MetatagNormalizer.php
+index 32837dc..dbed42f 100644
+--- a/src/Normalizer/MetatagNormalizer.php
++++ b/src/Normalizer/MetatagNormalizer.php
+@@ -46,7 +46,7 @@ class MetatagNormalizer extends NormalizerBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public function supportsDenormalization($data, $type, $format = NULL) {
++  public function supportsDenormalization($data, $type, $format = NULL, $context = []): bool {
+     return FALSE;
+   }
+ 
+diff --git a/tests/modules/metatag_test_custom_route/metatag_test_custom_route.info.yml b/tests/modules/metatag_test_custom_route/metatag_test_custom_route.info.yml
+index 3e675df..4228269 100644
+--- a/tests/modules/metatag_test_custom_route/metatag_test_custom_route.info.yml
++++ b/tests/modules/metatag_test_custom_route/metatag_test_custom_route.info.yml
+@@ -1,7 +1,6 @@
+ name: "Metatag: Test Custom Route"
+ type: module
+ description: Support module for testing handling of a custom route that only inherits the global configuration.
+-core_version_requirement: '^9'
+ package: Testing
+ dependencies:
+   - metatag:metatag
+diff --git a/tests/modules/metatag_test_tag/metatag_test_tag.info.yml b/tests/modules/metatag_test_tag/metatag_test_tag.info.yml
+index 9c9e8bc..857a624 100644
+--- a/tests/modules/metatag_test_tag/metatag_test_tag.info.yml
++++ b/tests/modules/metatag_test_tag/metatag_test_tag.info.yml
+@@ -1,7 +1,6 @@
+ name: 'Metatag Tests: Tag'
+ type: module
+ description: 'Support module for testing handling of a custom meta tag.'
+-core_version_requirement: '^9'
+ package: Testing
+ dependencies:
+   - metatag:metatag
+diff --git a/tests/src/Functional/EnsureDevelWorks.php b/tests/src/Functional/EnsureDevelWorks.php
+index ff381cc..9a49290 100644
+--- a/tests/src/Functional/EnsureDevelWorks.php
++++ b/tests/src/Functional/EnsureDevelWorks.php
+@@ -22,7 +22,7 @@ class EnsureDevelWorks extends BrowserTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = [
++  protected static $modules = [
+     // Modules for core functionality.
+     'node',
+     'field',
+diff --git a/tests/src/Functional/MetatagAdminTest.php b/tests/src/Functional/MetatagAdminTest.php
+index 7cdef7d..4613441 100644
+--- a/tests/src/Functional/MetatagAdminTest.php
++++ b/tests/src/Functional/MetatagAdminTest.php
+@@ -111,8 +111,8 @@ class MetatagAdminTest extends BrowserTestBase {
+     $session->pageTextContains('Saved the Global Metatag defaults.');
+     $this->drupalGet('hit-a-404');
+     $session->statusCodeEquals(404);
+-    foreach ($values as $metatag => $value) {
+-      $session->responseContains($value, $this->t('Updated metatag @tag was found in the HEAD section of the page.', ['@tag' => $metatag]));
++    foreach ($values as $value) {
++      $session->responseContains($value);
+     }
+ 
+     // Check that tokens are processed.
+@@ -129,7 +129,7 @@ class MetatagAdminTest extends BrowserTestBase {
+     $session->statusCodeEquals(404);
+     foreach ($values as $metatag => $value) {
+       $processed_value = \Drupal::token()->replace($value);
+-      $session->responseContains($processed_value, $this->t('Processed token for metatag @tag was found in the HEAD section of the page.', ['@tag' => $metatag]));
++      $session->responseContains($processed_value);
+     }
+ 
+     // Test the Robots plugin.
+@@ -148,7 +148,7 @@ class MetatagAdminTest extends BrowserTestBase {
+     $this->drupalGet('hit-a-404');
+     $session->statusCodeEquals(404);
+     $robots_value = implode(', ', $robots_values);
+-    $session->responseContains($robots_value, $this->t('Robots metatag has the expected values.'));
++    $session->responseContains($robots_value);
+ 
+     // Test reverting global configuration to its defaults.
+     $this->drupalGet('admin/config/search/metatag/global/revert');
+@@ -218,7 +218,7 @@ class MetatagAdminTest extends BrowserTestBase {
+     $session->pageTextContains('Saved the Front page Metatag defaults.');
+     $this->drupalGet('<front>');
+     $session->statusCodeEquals(200);
+-    $session->responseContains($values['description'], $this->t('Front page defaults are used at the front page.'));
++    $session->responseContains($values['description']);
+ 
+     // Adjust the 403 page and test it.
+     $this->drupalGet('admin/config/search/metatag/403');
+@@ -231,7 +231,7 @@ class MetatagAdminTest extends BrowserTestBase {
+     $this->drupalLogout();
+     $this->drupalGet('admin/config/search/metatag');
+     $session->statusCodeEquals(403);
+-    $session->responseContains($values['description'], $this->t('403 page defaults are used at 403 pages.'));
++    $session->responseContains($values['description']);
+ 
+     // Adjust the 404 page and test it.
+     $this->drupalLogin($account);
+@@ -244,7 +244,7 @@ class MetatagAdminTest extends BrowserTestBase {
+     $session->pageTextContains('Saved the 404 page not found Metatag defaults.');
+     $this->drupalGet('foo');
+     $session->statusCodeEquals(404);
+-    $session->responseContains($values['description'], $this->t('404 page defaults are used at 404 pages.'));
++    $session->responseContains($values['description']);
+     $this->drupalLogout();
+   }
+ 
+@@ -285,8 +285,8 @@ class MetatagAdminTest extends BrowserTestBase {
+     // Check that the new values are found in the response.
+     $this->drupalGet('node/' . $node->id());
+     $session->statusCodeEquals(200);
+-    foreach ($values as $metatag => $value) {
+-      $session->responseContains($value, $this->t('Node metatag @tag overrides Global defaults.', ['@tag' => $metatag]));
++    foreach ($values as $value) {
++      $session->responseContains($value);
+     }
+ 
+     // Check that when the node defaults don't define a metatag, the Global one
+@@ -323,8 +323,8 @@ class MetatagAdminTest extends BrowserTestBase {
+     ]);
+     $this->drupalGet('node/' . $node->id());
+     $session->statusCodeEquals(200);
+-    foreach ($values as $metatag => $value) {
+-      $session->responseContains($value, $this->t('Found global @tag tag as Node does not set it.', ['@tag' => $metatag]));
++    foreach ($values as $value) {
++      $session->responseContains($value);
+     }
+ 
+     // Now create article overrides and then test them.
+@@ -346,8 +346,8 @@ class MetatagAdminTest extends BrowserTestBase {
+     $this->drupalGet('node/' . $node->id());
+     $session->statusCodeEquals(200);
+     unset($values['id']);
+-    foreach ($values as $metatag => $value) {
+-      $session->responseContains($value, $this->t('Found bundle override for tag @tag.', ['@tag' => $metatag]));
++    foreach ($values as $value) {
++      $session->responseContains($value);
+     }
+ 
+     // Test deleting the article defaults.
+diff --git a/tests/src/Functional/MetatagHelperTrait.php b/tests/src/Functional/MetatagHelperTrait.php
+index 4090f27..5156408 100644
+--- a/tests/src/Functional/MetatagHelperTrait.php
++++ b/tests/src/Functional/MetatagHelperTrait.php
+@@ -47,7 +47,7 @@ trait MetatagHelperTrait {
+       $title = '<h2>' . Html::escape($title) . "</h2>\n";
+     }
+ 
+-    parent::verbose($title . $message);
++    dump($title . $message);
+   }
+ 
+   /**
+diff --git a/tests/src/Functional/MetatagPanelizerTest.php b/tests/src/Functional/MetatagPanelizerTest.php
+index 49fb6b8..c208c75 100644
+--- a/tests/src/Functional/MetatagPanelizerTest.php
++++ b/tests/src/Functional/MetatagPanelizerTest.php
+@@ -17,7 +17,7 @@ class MetatagPanelizerTest extends BrowserTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = [
++  protected static $modules = [
+     // Modules for core functionality.
+     'node',
+     'field',
+diff --git a/tests/src/Functional/MetatagStringTest.php b/tests/src/Functional/MetatagStringTest.php
+index d1471a2..a58c8b7 100644
+--- a/tests/src/Functional/MetatagStringTest.php
++++ b/tests/src/Functional/MetatagStringTest.php
+@@ -181,9 +181,9 @@ class MetatagStringTest extends BrowserTestBase {
+     // The page title should be HTML encoded; have to do this check manually
+     // because assertRaw() checks the raw HTML, not the parsed strings like
+     // xpath does.
+-    $session->responseContains('<title>' . $title_encoded . '</title>', 'Confirmed the node title tag is available in its encoded format.');
+-    $session->responseNotContains('<title>' . $title_original . '</title>', 'Confirmed the node title tag is not available in its original format.');
+-    $session->responseNotContains('<title>' . $title_encodeded . '</title>', 'Confirmed the node title tag is not double-double-encoded?');
++    $session->responseContains('<title>' . $title_encoded . '</title>');
++    $session->responseNotContains('<title>' . $title_original . '</title>');
++    $session->responseNotContains('<title>' . $title_encodeded . '</title>');
+ 
+     // Again, with xpath the HTML entities will be parsed automagically.
+     $xpath = $this->xpath("//meta[@name='description']");
+@@ -245,7 +245,7 @@ class MetatagStringTest extends BrowserTestBase {
+     // The page title should be HTML encoded; have to do this check manually
+     // because assertRaw() checks the raw HTML, not the parsed strings like
+     // xpath does.
+-    $session->responseContains('<title>' . $title_encoded . '</title>', 'Confirmed the node title tag is encoded.');
++    $session->responseContains('<title>' . $title_encoded . '</title>');
+     // Again, with xpath the HTML entities will be parsed automagically.
+     $xpath = $this->xpath("//meta[@name='description']");
+     $value = $xpath[0]->getAttribute('content');
+@@ -254,12 +254,12 @@ class MetatagStringTest extends BrowserTestBase {
+     $this->assertNotEquals($value, $desc_encodeded);
+ 
+     // Normal meta tags should be encoded properly.
+-    $session->responseContains('"' . $desc_encoded . '"', 'Confirmed the node "description" meta tag string was encoded properly.');
++    $session->responseContains('"' . $desc_encoded . '"');
+     // Normal meta tags with HTML entities should be displayed in their original
+     // format.
+-    $session->responseNotContains('"' . $desc_original . '"', 'Confirmed the node "description" meta tag string does not show in its original form.');
++    $session->responseNotContains('"' . $desc_original . '"');
+     // Normal meta tags should not be double-encoded.
+-    $session->responseNotContains('"' . $desc_encodeded . '"', 'Confirmed the node "description" meta tag string was not double-encoded.');
++    $session->responseNotContains('"' . $desc_encodeded . '"');
+   }
+ 
+   /**
+@@ -312,14 +312,14 @@ class MetatagStringTest extends BrowserTestBase {
+     $this->assertNotEquals($value, $desc_encodeded);
+ 
+     // Normal meta tags should be encoded properly.
+-    $session->responseContains('"' . $desc_encoded . '"', 'Confirmed the node "description" meta tag string was encoded properly.');
++    $session->responseContains('"' . $desc_encoded . '"');
+ 
+     // Normal meta tags with HTML entities should be displayed in their original
+     // format.
+-    $session->responseNotContains('"' . $desc_original . '"', 'Confirmed the node "description" meta tag string does not show in its original form.');
++    $session->responseNotContains('"' . $desc_original . '"');
+ 
+     // Normal meta tags should not be double-encoded.
+-    $session->responseNotContains('"' . $desc_encodeded . '"', 'Confirmed the node "description" meta tag string was not double-encoded.');
++    $session->responseNotContains('"' . $desc_encodeded . '"');
+   }
+ 
+ }
+diff --git a/tests/src/Functional/MetatagTagTypesTest.php b/tests/src/Functional/MetatagTagTypesTest.php
+index 1e9bb8b..191861e 100644
+--- a/tests/src/Functional/MetatagTagTypesTest.php
++++ b/tests/src/Functional/MetatagTagTypesTest.php
+@@ -118,9 +118,9 @@ class MetatagTagTypesTest extends BrowserTestBase {
+     $this->drupalGet('hit-a-404');
+     $session->statusCodeEquals(404);
+ 
+-    $session->responseContains('<meta name="abstract" content="No HTML here" />', $this->t('Test with no HTML content'));
+-    $session->responseContains('<meta name="description" content="Surrounded by raw HTML" />', $this->t('Test with raw HTML content'));
+-    $session->responseContains('<meta name="keywords" content="Surrounded by escaped HTML" />', $this->t('Test with escaped HTML content'));
++    $session->responseContains('<meta name="abstract" content="No HTML here" />');
++    $session->responseContains('<meta name="description" content="Surrounded by raw HTML" />');
++    $session->responseContains('<meta name="keywords" content="Surrounded by escaped HTML" />');
+   }
+ 
+   /**
+@@ -145,8 +145,8 @@ class MetatagTagTypesTest extends BrowserTestBase {
+     $this->drupalGet('');
+     $session->statusCodeEquals(200);
+ 
+-    $session->responseContains('<meta property="og:image" content="https://blahblahblah.com/insecure.jpg" />', $this->t('Test og:image with regular https:// link'));
+-    $session->responseContains('<meta property="og:image:secure_url" content="https://blahblahblah.com/secure.jpg" />', $this->t('Test og:image:secure_url updated regular https:// link to https://'));
++    $session->responseContains('<meta property="og:image" content="https://blahblahblah.com/insecure.jpg" />');
++    $session->responseContains('<meta property="og:image:secure_url" content="https://blahblahblah.com/secure.jpg" />');
+   }
+ 
+   /**
+diff --git a/tests/src/Functional/MetatagTokenStatus.php b/tests/src/Functional/MetatagTokenStatus.php
+index 0b2ea8a..4d6a13b 100644
+--- a/tests/src/Functional/MetatagTokenStatus.php
++++ b/tests/src/Functional/MetatagTokenStatus.php
+@@ -15,7 +15,7 @@ class MetatagTokenStatus extends BrowserTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = ['metatag'];
++  protected static $modules = ['metatag'];
+ 
+   /**
+    * {@inheritdoc}
+diff --git a/tests/src/FunctionalJavascript/MetatagAvailableTokensTest.php b/tests/src/FunctionalJavascript/MetatagAvailableTokensTest.php
+index 2f2da01..a2c7dca 100644
+--- a/tests/src/FunctionalJavascript/MetatagAvailableTokensTest.php
++++ b/tests/src/FunctionalJavascript/MetatagAvailableTokensTest.php
+@@ -15,7 +15,7 @@ class MetatagAvailableTokensTest extends WebDriverTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = ['metatag', 'node'];
++  protected static $modules = ['metatag', 'node'];
+ 
+   /**
+    * {@inheritdoc}
+diff --git a/tests/src/Kernel/MetatagSerializationTest.php b/tests/src/Kernel/MetatagSerializationTest.php
+index 177bd2b..7d6f095 100644
+--- a/tests/src/Kernel/MetatagSerializationTest.php
++++ b/tests/src/Kernel/MetatagSerializationTest.php
+@@ -17,7 +17,7 @@ class MetatagSerializationTest extends FieldKernelTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = [
++  protected static $modules = [
+     // Core modules.
+     'serialization',
+ 
+diff --git a/tests/src/Kernel/Migrate/d6/NodewordsEntitiesTest.php b/tests/src/Kernel/Migrate/d6/NodewordsEntitiesTest.php
+index 1f5646c..e28dcec 100644
+--- a/tests/src/Kernel/Migrate/d6/NodewordsEntitiesTest.php
++++ b/tests/src/Kernel/Migrate/d6/NodewordsEntitiesTest.php
+@@ -22,7 +22,7 @@ class NodewordsEntitiesTest extends MigrateDrupal6TestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = [
++  protected static $modules = [
+     // Core modules.
+     // @see testAvailableConfigEntities
+     'comment',
+diff --git a/tests/src/Kernel/Migrate/d6/NodewordsFieldTest.php b/tests/src/Kernel/Migrate/d6/NodewordsFieldTest.php
+index 0b0eb92..b800fcc 100644
+--- a/tests/src/Kernel/Migrate/d6/NodewordsFieldTest.php
++++ b/tests/src/Kernel/Migrate/d6/NodewordsFieldTest.php
+@@ -21,7 +21,7 @@ class NodewordsFieldTest extends MigrateSqlSourceTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = [
++  protected static $modules = [
+     'metatag',
+     'migrate_drupal',
+     'token',
+diff --git a/tests/src/Kernel/Migrate/d7/MetatagFieldTest.php b/tests/src/Kernel/Migrate/d7/MetatagFieldTest.php
+index c335fcd..80559df 100644
+--- a/tests/src/Kernel/Migrate/d7/MetatagFieldTest.php
++++ b/tests/src/Kernel/Migrate/d7/MetatagFieldTest.php
+@@ -15,7 +15,7 @@ class MetatagFieldTest extends MigrateSqlSourceTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = [
++  protected static $modules = [
+     'token',
+     'metatag',
+     'migrate_drupal',
+diff --git a/tests/src/Kernel/Plugin/migrate/source/d6/NodewordsFieldInstanceTest.php b/tests/src/Kernel/Plugin/migrate/source/d6/NodewordsFieldInstanceTest.php
+index db89401..af23792 100644
+--- a/tests/src/Kernel/Plugin/migrate/source/d6/NodewordsFieldInstanceTest.php
++++ b/tests/src/Kernel/Plugin/migrate/source/d6/NodewordsFieldInstanceTest.php
+@@ -22,7 +22,7 @@ class NodewordsFieldInstanceTest extends MigrateSqlSourceTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = [
++  protected static $modules = [
+     // Core modules.
+     'field',
+     'migrate_drupal',
+diff --git a/tests/src/Kernel/Plugin/migrate/source/d7/MetatagFieldInstanceTest.php b/tests/src/Kernel/Plugin/migrate/source/d7/MetatagFieldInstanceTest.php
+index ce69344..b7d6b17 100644
+--- a/tests/src/Kernel/Plugin/migrate/source/d7/MetatagFieldInstanceTest.php
++++ b/tests/src/Kernel/Plugin/migrate/source/d7/MetatagFieldInstanceTest.php
+@@ -19,7 +19,7 @@ class MetatagFieldInstanceTest extends MigrateSqlSourceTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public static $modules = [
++  protected static $modules = [
+     // Core modules.
+     'field',
+     'migrate_drupal',

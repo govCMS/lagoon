@@ -1,0 +1,18 @@
+{
+  "name": "layout_builder_modal",
+  "version": "1.0.0",
+  "description": "Open blocks in a modal in the Layout Builder UI.",
+  "main": "index.js",
+  "scripts": {
+    "scss": "node-sass -r theme/seven/scss -o theme/seven/css --output-style compressed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.drupal.org:project/layout_builder_modal.git"
+  },
+  "author": "John Svensson",
+  "license": "GPL2",
+  "dependencies": {
+    "node-sass": "^4.12.0"
+  }
+}

@@ -1,0 +1,11 @@
+name: "Metatag: Test Integration"
+type: module
+description: Support module for integration with metatag module.
+package: Testing
+dependencies:
+  - metatag:metatag
+
+# Information added by Drupal.org packaging script on 2022-07-16
+version: '8.x-1.20+6-dev'
+project: 'metatag'
+datestamp: 1657971487

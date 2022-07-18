@@ -1,0 +1,11 @@
+entity.entity_hierarchy_microsite.collection:
+  title: 'Microsites'
+  route_name: entity.entity_hierarchy_microsite.collection
+  description: 'Microsites created using Entity Hierarchies'
+  parent: system.admin_structure
+  weight: 120
+
+entity_hierarchy_microsite:
+  class: \Drupal\entity_hierarchy_microsite\Plugin\Menu\MicrositeMenuItem
+  form_class: \Drupal\entity_hierarchy_microsite\Form\MenuLinkContentForm
+  deriver: \Drupal\entity_hierarchy_microsite\Plugin\Deriver\MicrositeMenuItemDeriver

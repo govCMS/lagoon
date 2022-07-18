@@ -1,0 +1,323 @@
+diff --git a/tests/src/Functional/EntityEmbedDisplayManagerTest.php b/tests/src/Functional/EntityEmbedDisplayManagerTest.php
+index c18ab25..8d6b509 100644
+--- a/tests/src/Functional/EntityEmbedDisplayManagerTest.php
++++ b/tests/src/Functional/EntityEmbedDisplayManagerTest.php
+@@ -58,7 +58,7 @@ class EntityEmbedDisplayManagerTest extends BrowserTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->imageButton = $this->container->get('entity_type.manager')
+diff --git a/tests/src/Functional/EntityEmbedHooksTest.php b/tests/src/Functional/EntityEmbedHooksTest.php
+index 99d30f9..2737cae 100644
+--- a/tests/src/Functional/EntityEmbedHooksTest.php
++++ b/tests/src/Functional/EntityEmbedHooksTest.php
+@@ -19,7 +19,7 @@ class EntityEmbedHooksTest extends EntityEmbedTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+     $this->state = $this->container->get('state');
+   }
+diff --git a/tests/src/Functional/EntityEmbedTestBase.php b/tests/src/Functional/EntityEmbedTestBase.php
+index 5bebea6..6646c1a 100644
+--- a/tests/src/Functional/EntityEmbedTestBase.php
++++ b/tests/src/Functional/EntityEmbedTestBase.php
+@@ -50,7 +50,7 @@ abstract class EntityEmbedTestBase extends BrowserTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     // Create a page content type.
+diff --git a/tests/src/Functional/EntityEmbedTwigTest.php b/tests/src/Functional/EntityEmbedTwigTest.php
+index 6ec214a..6b5d356 100644
+--- a/tests/src/Functional/EntityEmbedTwigTest.php
++++ b/tests/src/Functional/EntityEmbedTwigTest.php
+@@ -14,7 +14,7 @@ class EntityEmbedTwigTest extends EntityEmbedTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+     \Drupal::service('theme_installer')->install(['test_theme']);
+   }
+@@ -34,19 +34,34 @@ class EntityEmbedTwigTest extends EntityEmbedTestBase {
+   public function testEntityEmbedTwigFunction() {
+     // Test embedding a node using entity ID.
+     $this->drupalGet('entity_embed_twig_test/id');
+-    $this->assertText($this->node->body->value, 'Embedded node exists in page');
++    // TODO: Drupal Rector Notice: Please delete the following comment after you've made any necessary changes.
++    // Verify the assertion: pageTextContains() for HTML responses, responseContains() for non-HTML responses.
++    // The passed text should be HTML decoded, exactly as a human sees it in the browser.
++    $this->assertSession()->pageTextContains($this->node->body->value);
+ 
+     // Test 'Label' Entity Embed Display plugin.
+     $this->drupalGet('entity_embed_twig_test/label_plugin');
+-    $this->assertText($this->node->title->value, 'Title of the embedded node exists in page.');
+-    $this->assertNoText($this->node->body->value, 'Body of embedded node does not exists in page when "Label" plugin is used.');
+-    $this->assertLinkByHref('node/' . $this->node->id(), 0, 'Link to the embedded node exists when "Label" plugin is used.');
++    // TODO: Drupal Rector Notice: Please delete the following comment after you've made any necessary changes.
++    // Verify the assertion: pageTextContains() for HTML responses, responseContains() for non-HTML responses.
++    // The passed text should be HTML decoded, exactly as a human sees it in the browser.
++    $this->assertSession()->pageTextContains($this->node->title->value);
++    // TODO: Drupal Rector Notice: Please delete the following comment after you've made any necessary changes.
++    // Verify the assertion: pageTextNotContains() for HTML responses, responseNotContains() for non-HTML responses.
++    // The passed text should be HTML decoded, exactly as a human sees it in the browser.
++    $this->assertSession()->pageTextNotContains($this->node->body->value);
++    $this->assertSession()->linkByHrefExists('node/' . $this->node->id(), 0, 'Link to the embedded node exists when "Label" plugin is used.');
+ 
+     // Test 'Label' Entity Embed Display plugin without linking to the node.
+     $this->drupalGet('entity_embed_twig_test/label_plugin_no_link');
+-    $this->assertText($this->node->title->value, 'Title of the embedded node exists in page.');
+-    $this->assertNoText($this->node->body->value, 'Body of embedded node does not exists in page when "Label" plugin is used.');
+-    $this->assertNoLinkByHref('node/' . $this->node->id(), 0, 'Link to the embedded node does not exists.');
++    // TODO: Drupal Rector Notice: Please delete the following comment after you've made any necessary changes.
++    // Verify the assertion: pageTextContains() for HTML responses, responseContains() for non-HTML responses.
++    // The passed text should be HTML decoded, exactly as a human sees it in the browser.
++    $this->assertSession()->pageTextContains($this->node->title->value);
++    // TODO: Drupal Rector Notice: Please delete the following comment after you've made any necessary changes.
++    // Verify the assertion: pageTextNotContains() for HTML responses, responseNotContains() for non-HTML responses.
++    // The passed text should be HTML decoded, exactly as a human sees it in the browser.
++    $this->assertSession()->pageTextNotContains($this->node->body->value);
++    $this->assertSession()->linkByHrefNotExists('node/' . $this->node->id(), 0, 'Link to the embedded node does not exists.');
+   }
+ 
+ }
+diff --git a/tests/src/Functional/EntityEmbedUpdateHookTest.php b/tests/src/Functional/EntityEmbedUpdateHookTest.php
+index f967102..a47ba8e 100644
+--- a/tests/src/Functional/EntityEmbedUpdateHookTest.php
++++ b/tests/src/Functional/EntityEmbedUpdateHookTest.php
+@@ -24,7 +24,7 @@ class EntityEmbedUpdateHookTest extends UpdatePathTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+     $button = $this->container
+       ->get('entity_type.manager')
+diff --git a/tests/src/Functional/EntityReferenceFieldFormatterTest.php b/tests/src/Functional/EntityReferenceFieldFormatterTest.php
+index b78b51d..2e7ec8b 100644
+--- a/tests/src/Functional/EntityReferenceFieldFormatterTest.php
++++ b/tests/src/Functional/EntityReferenceFieldFormatterTest.php
+@@ -21,7 +21,7 @@ class EntityReferenceFieldFormatterTest extends EntityEmbedTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     // Add a new menu entity which does not has a view controller.
+diff --git a/tests/src/Functional/FileFieldFormatterTest.php b/tests/src/Functional/FileFieldFormatterTest.php
+index 351ba1b..afe9f10 100644
+--- a/tests/src/Functional/FileFieldFormatterTest.php
++++ b/tests/src/Functional/FileFieldFormatterTest.php
+@@ -29,7 +29,7 @@ class FileFieldFormatterTest extends EntityEmbedTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+     $this->file = $this->getTestFile('text');
+   }
+diff --git a/tests/src/Functional/ImageFieldFormatterTest.php b/tests/src/Functional/ImageFieldFormatterTest.php
+index 95cbc30..1a831f6 100644
+--- a/tests/src/Functional/ImageFieldFormatterTest.php
++++ b/tests/src/Functional/ImageFieldFormatterTest.php
+@@ -36,7 +36,7 @@ class ImageFieldFormatterTest extends EntityEmbedTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+     $this->image = $this->getTestFile('image');
+     $this->file = $this->getTestFile('text');
+diff --git a/tests/src/FunctionalJavascript/ButtonAdminTest.php b/tests/src/FunctionalJavascript/ButtonAdminTest.php
+index 272dda5..39dd369 100644
+--- a/tests/src/FunctionalJavascript/ButtonAdminTest.php
++++ b/tests/src/FunctionalJavascript/ButtonAdminTest.php
+@@ -39,7 +39,7 @@ class ButtonAdminTest extends WebDriverTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->container
+diff --git a/tests/src/FunctionalJavascript/CKEditorIntegrationTest.php b/tests/src/FunctionalJavascript/CKEditorIntegrationTest.php
+index b3d1804..6693b8d 100644
+--- a/tests/src/FunctionalJavascript/CKEditorIntegrationTest.php
++++ b/tests/src/FunctionalJavascript/CKEditorIntegrationTest.php
+@@ -56,7 +56,7 @@ class CKEditorIntegrationTest extends EntityEmbedTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->button = $this->container->get('entity_type.manager')
+diff --git a/tests/src/FunctionalJavascript/ConfigurationUiTest.php b/tests/src/FunctionalJavascript/ConfigurationUiTest.php
+index 7abdf03..5b6e5f9 100644
+--- a/tests/src/FunctionalJavascript/ConfigurationUiTest.php
++++ b/tests/src/FunctionalJavascript/ConfigurationUiTest.php
+@@ -32,7 +32,7 @@ class ConfigurationUiTest extends EntityEmbedTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $format = FilterFormat::create([
+diff --git a/tests/src/FunctionalJavascript/ContentTranslationTest.php b/tests/src/FunctionalJavascript/ContentTranslationTest.php
+index 86c579c..e1713e2 100644
+--- a/tests/src/FunctionalJavascript/ContentTranslationTest.php
++++ b/tests/src/FunctionalJavascript/ContentTranslationTest.php
+@@ -28,7 +28,7 @@ class ContentTranslationTest extends EntityEmbedTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->translator = $this->drupalCreateUser([
+diff --git a/tests/src/FunctionalJavascript/EntityEmbedDialogTest.php b/tests/src/FunctionalJavascript/EntityEmbedDialogTest.php
+index 8008cdc..a1403d5 100644
+--- a/tests/src/FunctionalJavascript/EntityEmbedDialogTest.php
++++ b/tests/src/FunctionalJavascript/EntityEmbedDialogTest.php
+@@ -37,7 +37,7 @@ class EntityEmbedDialogTest extends EntityEmbedTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     // Create a page content type.
+diff --git a/tests/src/FunctionalJavascript/ImageFieldFormatterTest.php b/tests/src/FunctionalJavascript/ImageFieldFormatterTest.php
+index cb864aa..5d16c94 100644
+--- a/tests/src/FunctionalJavascript/ImageFieldFormatterTest.php
++++ b/tests/src/FunctionalJavascript/ImageFieldFormatterTest.php
+@@ -63,7 +63,7 @@ class ImageFieldFormatterTest extends WebDriverTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->button = $this->container->get('entity_type.manager')
+diff --git a/tests/src/FunctionalJavascript/MediaImageTest.php b/tests/src/FunctionalJavascript/MediaImageTest.php
+index 9965905..759bfe9 100644
+--- a/tests/src/FunctionalJavascript/MediaImageTest.php
++++ b/tests/src/FunctionalJavascript/MediaImageTest.php
+@@ -55,7 +55,7 @@ class MediaImageTest extends EntityEmbedTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     // Note that media_install() grants 'view media' to all users by default.
+@@ -596,6 +596,7 @@ class MediaImageTest extends EntityEmbedTestBase {
+ 
+   /**
+    * Tests linkability of the CKEditor widget when `drupalimage` is disabled.
++   * @doesNotPerformAssertions
+    */
+   public function testCkeditorWidgetIsLinkableWhenDrupalImageIsAbsent() {
+     // Remove the `drupalimage` plugin's `DrupalImage` button.
+diff --git a/tests/src/Kernel/EntityEmbedFilterDisabledIntegrationsTest.php b/tests/src/Kernel/EntityEmbedFilterDisabledIntegrationsTest.php
+index f47ada0..9465c66 100644
+--- a/tests/src/Kernel/EntityEmbedFilterDisabledIntegrationsTest.php
++++ b/tests/src/Kernel/EntityEmbedFilterDisabledIntegrationsTest.php
+@@ -21,7 +21,7 @@ class EntityEmbedFilterDisabledIntegrationsTest extends EntityEmbedFilterTestBas
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->installConfig('system');
+diff --git a/tests/src/Kernel/EntityEmbedFilterLegacyTest.php b/tests/src/Kernel/EntityEmbedFilterLegacyTest.php
+index f060f90..ea9093e 100644
+--- a/tests/src/Kernel/EntityEmbedFilterLegacyTest.php
++++ b/tests/src/Kernel/EntityEmbedFilterLegacyTest.php
+@@ -12,7 +12,7 @@ class EntityEmbedFilterLegacyTest extends EntityEmbedFilterTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->installConfig('system');
+diff --git a/tests/src/Kernel/EntityEmbedFilterOverridesTest.php b/tests/src/Kernel/EntityEmbedFilterOverridesTest.php
+index 22a4de2..832e25e 100644
+--- a/tests/src/Kernel/EntityEmbedFilterOverridesTest.php
++++ b/tests/src/Kernel/EntityEmbedFilterOverridesTest.php
+@@ -38,7 +38,7 @@ class EntityEmbedFilterOverridesTest extends EntityEmbedFilterTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->installSchema('file', ['file_usage']);
+diff --git a/tests/src/Kernel/EntityEmbedFilterTest.php b/tests/src/Kernel/EntityEmbedFilterTest.php
+index 854e354..afa47be 100644
+--- a/tests/src/Kernel/EntityEmbedFilterTest.php
++++ b/tests/src/Kernel/EntityEmbedFilterTest.php
+@@ -24,7 +24,7 @@ class EntityEmbedFilterTest extends EntityEmbedFilterTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->installConfig('system');
+diff --git a/tests/src/Kernel/EntityEmbedFilterTestBase.php b/tests/src/Kernel/EntityEmbedFilterTestBase.php
+index 43e287f..da28fec 100644
+--- a/tests/src/Kernel/EntityEmbedFilterTestBase.php
++++ b/tests/src/Kernel/EntityEmbedFilterTestBase.php
+@@ -59,7 +59,7 @@ abstract class EntityEmbedFilterTestBase extends KernelTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->installSchema('node', 'node_access');
+diff --git a/tests/src/Kernel/EntityEmbedFilterTranslationTest.php b/tests/src/Kernel/EntityEmbedFilterTranslationTest.php
+index 7f907aa..383c89f 100644
+--- a/tests/src/Kernel/EntityEmbedFilterTranslationTest.php
++++ b/tests/src/Kernel/EntityEmbedFilterTranslationTest.php
+@@ -22,7 +22,7 @@ class EntityEmbedFilterTranslationTest extends EntityEmbedFilterTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     ConfigurableLanguage::createFromLangcode('pt-br')->save();

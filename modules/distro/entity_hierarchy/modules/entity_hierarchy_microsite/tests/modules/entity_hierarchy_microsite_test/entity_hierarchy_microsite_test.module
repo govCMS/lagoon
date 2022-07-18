@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the microsite menu tests.
+ */
+
+use Drupal\Core\Url;
+use Drupal\entity_hierarchy_microsite\Entity\MicrositeMenuItemOverrideInterface;
+use Drupal\entity_hierarchy_microsite\Plugin\Menu\MicrositeMenuItem;
+
+/**
+ * Implements hook_entity_hierarchy_microsite_links_alter().
+ */
+function entity_hierarchy_microsite_test_entity_hierarchy_microsite_links_alter(&$links) {
+  $message = \Drupal::state()->get(__FUNCTION__, 'success');
+  \Drupal::state()->set(__FUNCTION__, $message);
+}
+
+/**
+ * Implements hook_entity_hierarchy_microsite_menu_item_url_alter().
+ */
+function entity_hierarchy_microsite_test_entity_hierarchy_microsite_menu_item_url_alter(Url $url, MicrositeMenuItemOverrideInterface $override, MicrositeMenuItem $menu_link) {
+  $attributes = $url->getOption('attributes');
+  $attributes['data-some-data'] = 'some-data';
+  $url->setOption('attributes', $attributes);
+}

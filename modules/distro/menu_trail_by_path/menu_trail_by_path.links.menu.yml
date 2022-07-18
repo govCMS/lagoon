@@ -1,0 +1,5 @@
+menu_trail_by_path.settings:
+  title: Menu Trail By Path Settings
+  description: 'Configure menu trails.'
+  route_name: menu_trail_by_path.settings
+  parent: system.admin_config_system

@@ -1,0 +1,50 @@
+diff --git a/layout_builder_modal.info.yml b/layout_builder_modal.info.yml
+index c1b9f80..6cabdda 100644
+--- a/layout_builder_modal.info.yml
++++ b/layout_builder_modal.info.yml
+@@ -1,8 +1,7 @@
+ name: 'Layout Builder Modal'
+ type: module
+ description: 'Open blocks in a modal in the Layout Builder UI.'
+-core: 8.x
+-core_version_requirement: ^8 || ^9
++core_version_requirement: ^9.1 || ^10
+ configure: layout_builder_modal.config
+ package: 'Layout Builder'
+ dependencies:
+diff --git a/src/EventSubscriber/AjaxResponseSubscriber.php b/src/EventSubscriber/AjaxResponseSubscriber.php
+index bc3150a..f3aac63 100644
+--- a/src/EventSubscriber/AjaxResponseSubscriber.php
++++ b/src/EventSubscriber/AjaxResponseSubscriber.php
+@@ -16,10 +16,10 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
+   /**
+    * Close modal dialog if Layout Builder is re-rendered.
+    *
+-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
++   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
+    *   The event.
+    */
+-  public function onResponse(FilterResponseEvent $event) {
++  public function onResponse(\Symfony\Component\HttpKernel\Event\ResponseEvent $event) {
+     $response = $event->getResponse();
+ 
+     if ($response instanceof AjaxResponse) {
+diff --git a/tests/src/FunctionalJavascript/LayoutBuilderModalTest.php b/tests/src/FunctionalJavascript/LayoutBuilderModalTest.php
+index 72bbc91..fcd0726 100644
+--- a/tests/src/FunctionalJavascript/LayoutBuilderModalTest.php
++++ b/tests/src/FunctionalJavascript/LayoutBuilderModalTest.php
+@@ -65,12 +65,10 @@ class LayoutBuilderModalTest extends WebDriverTestBase {
+       'administer node display',
+       'create and edit custom blocks',
+     ], 'foobar'));
++    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+ 
+     // Enable layout builder.
+-    $this->drupalPostForm(
+-      'admin/structure/types/manage/bundle_with_section_field/display/default',
+-      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
+-      'Save');
++    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+   }
+ 
+   /**

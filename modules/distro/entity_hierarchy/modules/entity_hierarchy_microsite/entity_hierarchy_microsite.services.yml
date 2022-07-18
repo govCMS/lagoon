@@ -1,0 +1,26 @@
+services:
+  entity_hierarchy_microsite.menu_link_discovery:
+    class: Drupal\entity_hierarchy_microsite\MicrositeMenuLinkDiscovery
+    arguments:
+      - '@entity_hierarchy.nested_set_storage_factory'
+      - '@entity_hierarchy.entity_tree_node_mapper'
+      - '@entity_hierarchy.information.parent_candidate'
+      - '@entity_field.manager'
+      - '@entity_type.manager'
+      - '@entity_hierarchy.nested_set_node_factory'
+      - '@module_handler'
+  entity_hierarchy_microsite.microsite_lookup:
+    class: Drupal\entity_hierarchy_microsite\ChildOfMicrositeLookup
+    arguments:
+      - '@entity_field.manager'
+      - '@entity_type.manager'
+      - '@entity_hierarchy.nested_set_storage_factory'
+      - '@entity_hierarchy.nested_set_node_factory'
+  cache_context.entity_hierarchy_microsite:
+    class: Drupal\entity_hierarchy_microsite\Cache\MicrositeCacheContext
+    arguments:
+      - '@entity_hierarchy_microsite.microsite_lookup'
+      - '@current_route_match'
+      - '@entity_hierarchy.information.parent_candidate'
+    tags:
+      - { name: cache.context }

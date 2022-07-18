@@ -1,0 +1,10 @@
+services:
+  media_file_delete.file_usage_resolver.chained:
+    class: Drupal\media_file_delete\Usage\ChainedFileUsageResolver
+    tags:
+      - { name: service_collector, call: addFileUsageResolver, tag: media_file_delete_file_usage_resolver }
+  media_file_delete.file_usage_resolver.core:
+    class: Drupal\media_file_delete\Usage\CoreFileUsageResolver
+    arguments: ['@file.usage']
+    tags:
+      - { name: media_file_delete_file_usage_resolver, priority: -100}

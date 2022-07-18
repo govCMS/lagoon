@@ -1,0 +1,25 @@
+/**
+ * @file
+ * Wrapped content from core/themes/stable/css/system/components/autocomplete-loading.module.css.
+ * .js class attribute removed, as it is "above" #layout-builder-modal
+ * Maintainers: the import statement presumes a relative location of core css.
+ * The location may need to be adjusted depending on your setup.
+ */
+
+#layout-builder-modal {
+  input.form-autocomplete.ui-autocomplete-input {
+    background-image: url(icons/throbber-inactive.png);
+    background-repeat: no-repeat;
+    background-position: 100% center; /* LTR */
+  }
+  [dir="rtl"] input.form-autocomplete.ui-autocomplete-input {
+    background-position: 0% center;
+  }
+  input.form-autocomplete.ui-autocomplete-input.ui-autocomplete-loading {
+    background-image: url(icons/throbber-active.gif);
+    background-position: 100% center; /* LTR */
+  }
+  [dir="rtl"] input.form-autocomplete.ui-autocomplete-input.ui-autocomplete-loading {
+    background-position: 0% center;
+  }
+}

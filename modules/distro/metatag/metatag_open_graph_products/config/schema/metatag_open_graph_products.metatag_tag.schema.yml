@@ -1,0 +1,15 @@
+metatag.metatag_tag.product_availability:
+  type: label
+  label: 'Open Graph Product: Price availability'
+metatag.metatag_tag.product_condition:
+  type: label
+  label: 'Open Graph Product: Product condition'
+metatag.metatag_tag.product_price_amount:
+  type: label
+  label: 'Open Graph Product: Price amount'
+metatag.metatag_tag.product_price_currency:
+  type: label
+  label: 'Open Graph Product: Price currency'
+metatag.metatag_tag.product_retailer_item_id:
+  type: label
+  label: 'Open Graph Product: Retailer Item ID'

@@ -2,7 +2,7 @@
 #+AUTHOR: Daniel J. R. May
 #+BEGIN_COMMENT
 This is an emacs org-mode text file. You can convert it to a
-pretty-printed text file called INSTALLATION when in org-mode by
+pretty-printed text file called README.txt when in org-mode by
 issuing the command: C-c C-e t u
 #+END_COMMENT
 
@@ -15,7 +15,7 @@ vulnerabilities to you.
 
 * Installation
 This module should be installed in the usual way. Read about
-[[https://www.drupal.org/docs/8/extending-drupal-8/installing-drupal-8-modules][installing Drupal 8 modules]].
+[[https://www.drupal.org/docs/extending-drupal/installing-modules][installing modules]].
 
 * Configuration
 Once you have installed this module you will want to perform the

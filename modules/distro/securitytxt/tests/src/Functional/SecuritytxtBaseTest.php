@@ -50,7 +50,7 @@ abstract class SecuritytxtBaseTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->authenticatedUser = $this->drupalCreateUser([]);
@@ -91,7 +91,8 @@ abstract class SecuritytxtBaseTest extends BrowserTestBase {
     $path = 'admin/config/system/securitytxt';
     $submit = 'Save configuration';
     $options = [];
-    $this->drupalPostForm($path, $edit, $submit, $options);
+    $this->drupalGet($path, $options);
+    $this->submitForm($edit, $submit);
   }
 
   /**
@@ -105,7 +106,8 @@ abstract class SecuritytxtBaseTest extends BrowserTestBase {
     $path = 'admin/config/system/securitytxt/sign';
     $submit = 'Save configuration';
     $options = [];
-    $this->drupalPostForm($path, $edit, $submit, $options);
+    $this->drupalGet($path, $options);
+    $this->submitForm($edit, $submit);
   }
 
   /**

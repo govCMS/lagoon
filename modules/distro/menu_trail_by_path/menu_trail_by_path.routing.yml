@@ -1,0 +1,7 @@
+menu_trail_by_path.settings:
+  path: '/admin/config/system/menu_trail_by_path/settings'
+  defaults:
+    _form: '\Drupal\menu_trail_by_path\Form\MenuTrailByPathSettingsForm'
+    _title: 'Menu Trail By Path Settings'
+  requirements:
+    _permission: 'administer site configuration'

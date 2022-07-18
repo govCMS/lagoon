@@ -1,0 +1,21 @@
+{
+    "name": "drupal/rest_menu_items",
+    "description": "This module provides a REST endpoint to retrieve menu items based on the menu name.",
+    "type": "drupal-module",
+    "homepage": "https://drupal.org/project/rest_menu_items",
+    "authors": [
+        {
+            "name": "Fabian de Rijk (fabianderijk)",
+            "homepage": "https://www.drupal.org/u/fabianderijk",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://drupal.org/project/issues/rest_menu_items",
+        "irc": "irc://irc.freenode.org/drupal-contribute",
+        "source": "https://cgit.drupalcode.org/rest_menu_items"
+    },
+    "license": "GPL-2.0+",
+    "minimum-stability": "dev",
+    "require": {}
+}

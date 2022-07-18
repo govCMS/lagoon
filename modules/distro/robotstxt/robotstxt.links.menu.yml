@@ -1,0 +1,5 @@
+robotstxt.admin_settings_form:
+  title: 'RobotsTxt'
+  parent: system.admin_config_search
+  description: 'Manage your robots.txt file.'
+  route_name: robotstxt.admin_settings_form

@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Linked Field.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function linked_field_install() {
+  module_set_weight('linked_field', 100);
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function linked_field_update_last_removed() {
+  return 8001;
+}

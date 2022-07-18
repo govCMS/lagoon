@@ -1,0 +1,53 @@
+diff --git a/media_entity_file_replace.info.yml b/media_entity_file_replace.info.yml
+index a0f99c4..50a16ce 100644
+--- a/media_entity_file_replace.info.yml
++++ b/media_entity_file_replace.info.yml
+@@ -1,7 +1,7 @@
+ name: Media Entity File Replace
+ type: module
+ description: Allows content editors to easily replace source files associated with any file-based media entity, preserving the original filename.
+-core_version_requirement: ^8.7.7 || ^9
++core_version_requirement: ^8.7.7 || ^9 || ^10
+ package: Media
+ dependencies:
+   - drupal:media
+diff --git a/tests/src/Functional/MediaEntityFileReplaceTest.php b/tests/src/Functional/MediaEntityFileReplaceTest.php
+index 6668e65..50fce5a 100644
+--- a/tests/src/Functional/MediaEntityFileReplaceTest.php
++++ b/tests/src/Functional/MediaEntityFileReplaceTest.php
+@@ -132,11 +132,11 @@ class MediaEntityFileReplaceTest extends BrowserTestBase {
+     // the contents of the file have.
+     $updatedDocument = $this->loadMediaEntityByName('Foobar');
+     $updatedFile = $this->loadFileEntity($updatedDocument->getSource()->getSourceFieldValue($updatedDocument));
+-    $this->assertEqual($updatedFile->id(), $originalFile->id());
+-    $this->assertEqual($updatedFile->getFileUri(), $originalFile->getFileUri());
+-    $this->assertEqual($updatedFile->getFilename(), $originalFile->getFilename());
+-    $this->assertNotEqual($updatedFile->getSize(), $originalFile->getSize());
+-    $this->assertEqual(file_get_contents($updatedFile->getFileUri()), 'new');
++    $this->assertEquals($updatedFile->id(), $originalFile->id());
++    $this->assertEquals($updatedFile->getFileUri(), $originalFile->getFileUri());
++    $this->assertEquals($updatedFile->getFilename(), $originalFile->getFilename());
++    $this->assertNotEquals($updatedFile->getSize(), $originalFile->getSize());
++    $this->assertEquals(file_get_contents($updatedFile->getFileUri()), 'new');
+ 
+     // Now upload another replacement document, but this time don't overwrite
+     // the original.
+@@ -155,12 +155,12 @@ class MediaEntityFileReplaceTest extends BrowserTestBase {
+     // previous one.
+     $updatedDocument = $this->loadMediaEntityByName('Foobar');
+     $updatedFile = $this->loadFileEntity($updatedDocument->getSource()->getSourceFieldValue($updatedDocument));
+-    $this->assertNotEqual($updatedFile->id(), $originalFile->id());
+-    $this->assertNotEqual($updatedFile->getFileUri(), $originalFile->getFileUri());
+-    $this->assertNotEqual($updatedFile->getFilename(), $originalFile->getFilename());
+-    $this->assertNotEqual($updatedFile->getSize(), $originalFile->getSize());
+-    $this->assertNotEqual(file_get_contents($updatedFile->getFileUri()), file_get_contents($originalFile->getFileUri()));
+-    $this->assertEqual(file_get_contents($updatedFile->getFileUri()), 'foo-new');
++    $this->assertNotEquals($updatedFile->id(), $originalFile->id());
++    $this->assertNotEquals($updatedFile->getFileUri(), $originalFile->getFileUri());
++    $this->assertNotEquals($updatedFile->getFilename(), $originalFile->getFilename());
++    $this->assertNotEquals($updatedFile->getSize(), $originalFile->getSize());
++    $this->assertNotEquals(file_get_contents($updatedFile->getFileUri()), file_get_contents($originalFile->getFileUri()));
++    $this->assertEquals(file_get_contents($updatedFile->getFileUri()), 'foo-new');
+     $this->assertFalse($updatedFile->isTemporary());
+ 
+     // The old file entity should still exist, and should not be marked as

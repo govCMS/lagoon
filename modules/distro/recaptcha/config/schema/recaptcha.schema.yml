@@ -1,0 +1,37 @@
+# Schema for the configuration files of the recaptcha module.
+
+recaptcha.settings:
+  type: config_object
+  label: 'reCAPTCHA settings'
+  mapping:
+    site_key:
+      type: string
+      label: 'Site key'
+    secret_key:
+      type: string
+      label: 'Secret key'
+    verify_hostname:
+      type: boolean
+      label: 'Local domain name validation'
+    use_globally:
+      type: boolean
+      label: 'Use reCAPTCHA globally'
+    widget:
+      type: mapping
+      label: 'Widget settings'
+      mapping:
+        theme:
+          type: string
+          label: 'Theme'
+        type:
+          type: string
+          label: 'Type'
+        size:
+          type: string
+          label: 'Size'
+        tabindex:
+          type: integer
+          label: 'Tabindex'
+        noscript:
+          type: boolean
+          label: 'Enable fallback for browsers with JavaScript disabled'

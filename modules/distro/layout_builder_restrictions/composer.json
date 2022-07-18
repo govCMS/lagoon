@@ -1,0 +1,32 @@
+{
+  "name": "drupal/layout_builder_restrictions",
+  "description": "Manage which fields & layouts are available in Layout Builder",
+  "type": "drupal-module",
+  "keywords": ["Drupal", "Layout Builder Restrictions"],
+  "homepage": "https://www.drupal.org/project/layout_builder_restrictions",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "The University of Texas at Austin",
+      "homepage": "https://www.drupal.org/university-of-texas-at-austin",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Eirik Morland (eiriksm)",
+      "homepage": "https://www.drupal.org/u/eiriksm",
+      "role": "Maintainer"
+    }
+  ],
+  "require": {
+    "drupal/core": "^9.3 || ^10"
+  },
+  "require-dev": {
+    "drupal/dashboards": "^2",
+    "drupal/mini_layouts": "^1",
+    "drupal/layout_library": "^1"
+  },
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/layout_builder_restrictions",
+    "source": "https://git.drupalcode.org/project/layout_builder_restrictions"
+  }
+}

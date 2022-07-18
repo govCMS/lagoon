@@ -1,0 +1,15 @@
+id: d6_robotstxt_settings
+label: RobotsTxt 6 configuration
+migration_tags:
+  - Drupal 6
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - robotstxt
+  source_module: robotstxt
+process:
+  content: robotstxt
+destination:
+  plugin: config
+  config_name: robotstxt.settings

@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Main functions of the govcms_dlm module.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function govcms_dlm_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.govcms_dlm':
+      $readme_file = dirname(__FILE__) . '/README.txt';
+
+      if (!file_exists($readme_file)) {
+        return FALSE;
+      }
+
+      $readme = file_get_contents($readme_file);
+
+      $element = [
+        '#type' => 'html_tag',
+        '#tag' => 'pre',
+        '#value' => $readme,
+      ];
+
+      // Markdown is optionally supported if you already have it installed.
+      if (\Drupal::moduleHandler()->moduleExists('markdown')) {
+        $filters = \Drupal::moduleHandler()->invoke('markdown', 'filter_info');
+        $info = $filters['filter_markdown'];
+
+        if (function_exists($info['process callback'])) {
+          $function = $info['process callback'];
+          $element = ['#markup' => \Drupal\Component\Utility\Xss::filterAdmin($function($readme, NULL))];
+        }
+      }
+
+      return \Drupal::service('renderer')->render($element);
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Adds the config variable govcms_current_dlm to the end of emails sent using
+ * drupal_mail
+ */
+function govcms_dlm_mail_alter(&$message) {
+  $message['subject'] = t('@subject @dlm', [
+    '@subject' => $message['subject'],
+    '@dlm' => \Drupal::config('govcms_dlm.settings')->get('suffix'),
+  ]);
+}

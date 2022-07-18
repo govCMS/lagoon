@@ -1,0 +1,41 @@
+# Schema for the views plugins of the module.
+views.argument.entity_hierarchy_argument_is_child_of_entity:
+  type: views_argument
+  label: 'Child entities'
+  mapping:
+    depth:
+      type: integer
+      label: 'Depth'
+
+views.argument.entity_hierarchy_argument_is_parent_of_entity:
+  type: views_argument
+  label: 'Parent entities'
+  mapping:
+    depth:
+      type: integer
+      label: 'Depth'
+
+views.argument.entity_hierarchy_argument_is_sibling_of_entity:
+  type: views_argument
+  label: 'Sibling entities'
+  mapping:
+    show_self:
+      type: boolean
+      label: 'Show self'
+
+views.argument.entity_hierarchy_argument_is_parent_of_entity_revision:
+  type: views.argument.entity_hierarchy_argument_is_parent_of_entity
+
+views.argument.entity_hierarchy_argument_is_child_of_entity_revision:
+  type: views.argument.entity_hierarchy_argument_is_child_of_entity
+
+views.argument.entity_hierarchy_argument_is_sibling_of_entity_revision:
+  type: views.argument.entity_hierarchy_argument_is_sibling_of_entity
+
+views.field.entity_hierarchy_tree_summary:
+  type: views_field
+  label: 'Children summary type'
+  mapping:
+    summary_type:
+      type: string
+      label: 'How to display the summary'

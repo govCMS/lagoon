@@ -1,0 +1,47 @@
+services:
+  google_analytics.visibility:
+    class: Drupal\google_analytics\Helpers\VisiblityTracker
+    arguments: [ '@config.factory', '@path_alias.manager', '@path.matcher', '@user.data', '@path.current' ]
+  google_analytics.accounts:
+    class: Drupal\google_analytics\Helpers\GoogleAnalyticsAccounts
+    arguments: [ '@config.factory', '@private_key' ]
+  google_analytics.javascript_cache:
+    class: Drupal\google_analytics\JavascriptLocalCache
+    arguments: [ '@http_client', '@file_system', '@config.factory', '@logger.factory', '@state', '@file_url_generator' ]
+
+  # Google Analytics Event Subscribers
+  google_analytics.events.messages:
+    class: '\Drupal\google_analytics\EventSubscriber\GoogleAnalyticsEvents\DrupalMessage'
+    arguments: [ '@config.factory', '@google_analytics.accounts', '@messenger' ]
+    tags:
+      - { name: 'event_subscriber' }
+  google_analytics.pagepath.content_translation:
+    class: '\Drupal\google_analytics\EventSubscriber\PagePath\ContentTranslation'
+    arguments: [ '@config.factory', '@request_stack', '@module_handler', '@entity.repository' ]
+    tags:
+      - { name: 'event_subscriber' }
+  google_analytics.pagepath.http_status:
+    class: '\Drupal\google_analytics\EventSubscriber\PagePath\HttpStatus'
+    arguments: [ '@config.factory', '@request_stack' ]
+    tags:
+      - { name: 'event_subscriber' }
+  google_analytics.pagepath.invalid_user_login:
+    class: '\Drupal\google_analytics\EventSubscriber\PagePath\InvalidUserLogin'
+    arguments: [ '@request_stack', '@current_route_match' ]
+    tags:
+      - { name: 'event_subscriber' }
+  google_analytics.pagepath.search:
+    class: '\Drupal\google_analytics\EventSubscriber\PagePath\Search'
+    arguments: [ '@config.factory', '@request_stack', '@module_handler', '@current_route_match' ]
+    tags:
+      - { name: 'event_subscriber' }
+  google_analytics.config.default_config:
+    class: '\Drupal\google_analytics\EventSubscriber\GoogleAnalyticsConfig\DefaultConfig'
+    arguments: [ '@config.factory', '@google_analytics.accounts', '@current_user' ]
+    tags:
+      - { name: 'event_subscriber' }
+  google_analytics.config.custom_config:
+    class: '\Drupal\google_analytics\EventSubscriber\GoogleAnalyticsConfig\CustomConfig'
+    arguments: [ '@config.factory', '@current_user', '@request_stack', '@token' ]
+    tags:
+      - { name: 'event_subscriber' }

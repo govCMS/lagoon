@@ -1,0 +1,10 @@
+{#
+/**
+ * @file
+ * Override of the image field widget to display the preview image after other fields.
+ */
+#}
+<div{{ attributes }}>
+  {{ data|without('preview') }}
+  {{ data.preview }}
+</div>

@@ -81,7 +81,8 @@ class GALoginTotpValidationPluginTest extends TfaTestBase {
     $edit = [
       'current_pass' => $this->userAccount->passRaw,
     ];
-    $this->drupalPostForm('user/' . $this->userAccount->id() . '/security/tfa/' . $this->validationPluginId, $edit, 'Confirm');
+    $this->drupalGet('user/' . $this->userAccount->id() . '/security/tfa/' . $this->validationPluginId);
+    $this->submitForm($edit, 'Confirm');
 
     // Fetch seed.
     $result = $this->xpath('//input[@name="seed"]');
@@ -95,7 +96,7 @@ class GALoginTotpValidationPluginTest extends TfaTestBase {
     $edit = [
       'code' => $this->validationPlugin->auth->otp->totp(Encoding::base32DecodeUpper($this->seed)),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Verify and save');
+    $this->submitForm($edit, 'Verify and save');
 
     $this->assertSession()->linkExists('Disable TFA');
   }
@@ -109,13 +110,14 @@ class GALoginTotpValidationPluginTest extends TfaTestBase {
       'name' => $this->userAccount->getAccountName(),
       'pass' => $this->userAccount->passRaw,
     ];
-    $this->drupalPostForm('user/login', $edit, 'Log in');
+    $this->drupalGet('user/login');
+    $this->submitForm($edit, 'Log in');
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Verification code is application generated and 6 digits long.');
 
     // Try invalid code.
     $edit = ['code' => 112233];
-    $this->drupalPostForm(NULL, $edit, 'Verify');
+    $this->submitForm($edit, 'Verify');
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Invalid application code. Please try again.');
 
@@ -123,7 +125,7 @@ class GALoginTotpValidationPluginTest extends TfaTestBase {
     $this->validationPlugin->auth->otp->setTotpOffset(-1800);
     $old_code = $this->validationPlugin->auth->otp->totp(Encoding::base32DecodeUpper($this->seed));
     $edit = ['code' => $old_code];
-    $this->drupalPostForm(NULL, $edit, 'Verify');
+    $this->submitForm($edit, 'Verify');
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Invalid application code. Please try again.');
 
@@ -132,7 +134,7 @@ class GALoginTotpValidationPluginTest extends TfaTestBase {
     $this->validationPlugin->auth->otp->setTotpOffset($this->validationPlugin->getTimeSkew() * 30);
     $valid_code = $this->validationPlugin->auth->otp->totp(Encoding::base32DecodeUpper($this->seed));
     $edit = ['code' => $valid_code];
-    $this->drupalPostForm(NULL, $edit, 'Verify');
+    $this->submitForm($edit, 'Verify');
     $assert->statusCodeEquals(200);
     $assert->pageTextContains($this->userAccount->getDisplayName());
 
@@ -142,12 +144,13 @@ class GALoginTotpValidationPluginTest extends TfaTestBase {
       'name' => $this->userAccount->getAccountName(),
       'pass' => $this->userAccount->passRaw,
     ];
-    $this->drupalPostForm('user/login', $edit, 'Log in');
+    $this->drupalGet('user/login');
+    $this->submitForm($edit, 'Log in');
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Verification code is application generated and 6 digits long.');
 
     $edit = ['code' => $valid_code];
-    $this->drupalPostForm(NULL, $edit, 'Verify');
+    $this->submitForm($edit, 'Verify');
     $assert->statusCodeEquals(200);
     $assert->pageTextContains('Invalid code, it was recently used for a login. Please try a new code.');
   }

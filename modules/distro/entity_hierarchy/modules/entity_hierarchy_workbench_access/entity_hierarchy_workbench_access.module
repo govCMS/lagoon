@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Main module functions.
+ */
+
+use Drupal\Core\Config\Config;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\workbench_access\Entity\AccessSchemeInterface;
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function entity_hierarchy_workbench_access_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+  $schemes = array_filter(\Drupal::entityTypeManager()->getStorage('access_scheme')->loadMultiple(), function (AccessSchemeInterface $scheme) {
+    return strpos($scheme->getAccessScheme()->getPluginId(), 'entity_hierarchy') === 0;
+  });
+  /** @var \Drupal\workbench_access\Entity\AccessSchemeInterface $scheme */
+  foreach ($schemes as $scheme) {
+    $accessPlugin = $scheme->getAccessScheme();
+    $definition = $accessPlugin->getPluginDefinition();
+    if ($entity_type->id() !== $definition['entity']) {
+      continue;
+    }
+    $configuration = $accessPlugin->getConfiguration();
+    if (!in_array($bundle, $configuration['bundles'], TRUE)) {
+      continue;
+    }
+    if (!isset($fields[$definition['field_name']])) {
+      continue;
+    }
+    $fields[$definition['field_name']]->addConstraint('ValidHierarchySection');
+  }
+}
+
+/**
+ * Implements hook_workbench_access_scheme_update_alter().
+ */
+function entity_hierarchy_workbench_access_workbench_access_scheme_update_alter(array &$settings, Config $config) {
+  if (strpos($config->get('scheme'), 'entity_hierarchy') !== 0) {
+    return;
+  }
+  $settings['boolean_fields'] = $config->get('parents');
+  $settings['bundles'] = array_keys($config->get('fields')['node']);
+}

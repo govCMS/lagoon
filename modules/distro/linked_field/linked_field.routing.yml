@@ -1,0 +1,7 @@
+linked_field.config:
+  path: '/admin/config/linked_field/config'
+  defaults:
+    _form: '\Drupal\linked_field\Form\ConfigForm'
+    _title: 'Linked Field'
+  requirements:
+    _permission: 'administer linked_field'

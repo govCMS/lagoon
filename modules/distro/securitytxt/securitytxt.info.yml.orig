@@ -1,0 +1,12 @@
+name: Security.txt
+type: module
+description: 'Provides a security.txt file for your site.'
+package: Security
+core: '8.x'
+core_version_requirement: ^8 || ^9
+configure: securitytxt.configure
+
+# Information added by Drupal.org packaging script on 2022-07-07
+version: '8.x-1.2+2-dev'
+project: 'securitytxt'
+datestamp: 1657206558

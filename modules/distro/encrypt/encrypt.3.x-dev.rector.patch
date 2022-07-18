@@ -1,0 +1,431 @@
+diff --git a/encrypt.info.yml b/encrypt.info.yml
+index 8574434..37e2a4b 100644
+--- a/encrypt.info.yml
++++ b/encrypt.info.yml
+@@ -1,6 +1,6 @@
+ name: Encrypt
+ description: 'Provides an API for two-way encryption.'
+-core_version_requirement: ^8 || ^9
++core_version_requirement: ^9.1 || ^10
+ package: Encryption
+ dependencies:
+   - key:key
+diff --git a/tests/src/Functional/EncryptTest.php b/tests/src/Functional/EncryptTest.php
+index 7aeaa20..652c1ed 100644
+--- a/tests/src/Functional/EncryptTest.php
++++ b/tests/src/Functional/EncryptTest.php
+@@ -18,14 +18,14 @@ class EncryptTest extends EncryptTestBase {
+ 
+     // Check if the plugin exists.
+     // Encryption method option is present.
+-    $this->assertOption('edit-encryption-method', 'test_encryption_method');
++    $this->assertSession()->optionExists('edit-encryption-method', 'test_encryption_method');
+     // Encryption method text is present.
+-    $this->assertText('Test Encryption method');
++    $this->assertSession()->pageTextContains('Test Encryption method');
+ 
+     $edit = [
+       'encryption_method' => 'test_encryption_method',
+     ];
+-    $this->drupalPostForm(NULL, $edit, 'Save');
++    $this->submitForm($edit, 'Save');
+ 
+     $edit = [
+       'id' => 'test_encryption_profile',
+@@ -33,7 +33,7 @@ class EncryptTest extends EncryptTestBase {
+       'encryption_method' => 'test_encryption_method',
+       'encryption_key' => $this->testKeys['testing_key_128']->id(),
+     ];
+-    $this->drupalPostForm(NULL, $edit, 'Save');
++    $this->submitForm($edit, 'Save');
+ 
+     $encryption_profile = \Drupal::service('entity_type.manager')->getStorage('encryption_profile')->load('test_encryption_profile');
+     $this->assertNotEmpty($encryption_profile, 'Encryption profile was successfully saved.');
+@@ -57,14 +57,14 @@ class EncryptTest extends EncryptTestBase {
+ 
+     // Check if the plugin exists.
+     // Encryption method option is present.
+-    $this->assertOption('edit-encryption-method', 'test_encryption_method');
++    $this->assertSession()->optionExists('edit-encryption-method', 'test_encryption_method');
+     // Encryption method text is present.
+-    $this->assertText('Test Encryption method');
++    $this->assertSession()->pageTextContains('Test Encryption method');
+ 
+     $edit = [
+       'encryption_method' => 'test_encryption_method',
+     ];
+-    $this->drupalPostForm(NULL, $edit, 'Save');
++    $this->submitForm($edit, 'Save');
+ 
+     // Create an encryption profile.
+     $edit = [
+@@ -73,52 +73,52 @@ class EncryptTest extends EncryptTestBase {
+       'encryption_method' => 'test_encryption_method',
+       'encryption_key' => $this->testKeys['testing_key_128']->id(),
+     ];
+-    $this->drupalPostForm(NULL, $edit, 'Save');
++    $this->submitForm($edit, 'Save');
+ 
+     // Test the encryption profile edit form.
+     $this->drupalGet('admin/config/system/encryption/profiles/manage/test_encryption_profile');
+     // The warning about editing an encryption profile is visible.
+-    $this->assertText('Be extremely careful when editing an encryption profile! It may result in making data encrypted with this profile unreadable. Are you sure you want to edit this profile?');
++    $this->assertSession()->pageTextContains('Be extremely careful when editing an encryption profile! It may result in making data encrypted with this profile unreadable. Are you sure you want to edit this profile?');
+     // The encryption method field is not visible.
+-    $this->assertNoFieldByName('encryption_method', NULL);
++    $this->assertSession()->fieldNotExists('encryption_method');
+     // The encryption key field is not visible.
+-    $this->assertNoFieldByName('encryption_key', NULL);
++    $this->assertSession()->fieldNotExists('encryption_key');
+ 
+-    $this->drupalPostForm(NULL, [], 'Edit');
++    $this->submitForm([], 'Edit');
+ 
+     // The warning about editing an encryption profile is no longer visible.
+-    $this->assertNoText('Be extremely careful when editing an encryption profile! It may result in making data encrypted with this profile unreadable. Are you sure you want to edit this profile?');
++    $this->assertSession()->pageTextNotContains('Be extremely careful when editing an encryption profile! It may result in making data encrypted with this profile unreadable. Are you sure you want to edit this profile?');
+     // The encryption method field is now visible.
+-    $this->assertFieldByName('encryption_method', NULL);
++    $this->assertSession()->fieldExists('encryption_method');
+     // The encryption key field is now visible.
+-    $this->assertFieldByName('encryption_key', NULL);
++    $this->assertSession()->fieldExists('encryption_key');
+ 
+     // Check that the 128 bit key exists so display changes don't give false
+     // positives on the key deletion assertions below.
+     $this->drupalGet('admin/config/system/encryption/profiles');
+-    $this->assertText('Key 128 bit');
++    $this->assertSession()->pageTextContains('Key 128 bit');
+ 
+     // Now delete the testkey.
+     $this->drupalGet('admin/config/system/keys');
+     $this->clickLink('Delete');
+     // Warning is shown that linked dependency will also be deleted when
+     // deleting the key.
+-    $this->assertText('Encryption Profile');
++    $this->assertSession()->pageTextContains('Encryption Profile');
+     // The encryption profile linked dependency is listed as the linked
+     // dependency.
+-    $this->assertText('Test encryption profile');
+-    $this->drupalPostForm(NULL, [], 'Delete');
++    $this->assertSession()->pageTextContains('Test encryption profile');
++    $this->submitForm([], 'Delete');
+ 
+     // Check that the 128 bit key no longer exists.
+     $this->drupalGet('admin/config/system/encryption/profiles');
+-    $this->assertNoText('Key 128 bit');
++    $this->assertSession()->pageTextNotContains('Key 128 bit');
+ 
+     // Test "check_profile_status" setting.
+     $this->config('encrypt.settings')
+       ->set('check_profile_status', FALSE)
+       ->save();
+     $this->drupalGet('admin/config/system/encryption/profiles');
+-    $this->assertNoText('The key linked to this encryption profile does not exist.');
++    $this->assertSession()->pageTextNotContains('The key linked to this encryption profile does not exist.');
+   }
+ 
+   /**
+@@ -130,9 +130,9 @@ class EncryptTest extends EncryptTestBase {
+ 
+     // Check if the plugin exists.
+     // Config encryption method option is present.
+-    $this->assertOption('edit-encryption-method', 'config_test_encryption_method');
++    $this->assertSession()->optionExists('edit-encryption-method', 'config_test_encryption_method');
+     // Config encryption method text is present.
+-    $this->assertText('Config Test Encryption method');
++    $this->assertSession()->pageTextContains('Config Test Encryption method');
+ 
+     // Check encryption method without config.
+     $edit = [
+@@ -141,13 +141,13 @@ class EncryptTest extends EncryptTestBase {
+       'encryption_key' => $this->testKeys['testing_key_128']->id(),
+       'encryption_method' => 'test_encryption_method',
+     ];
+-    $this->drupalPostForm(NULL, $edit, 'Save');
+-    $this->assertText('Saved the Test encryption profile.');
++    $this->submitForm($edit, 'Save');
++    $this->assertSession()->pageTextContains('Saved the Test encryption profile.');
+     $this->drupalGet('admin/config/system/encryption/profiles/manage/test_encryption_profile');
+     // First, confirm we want to edit the encryption profile.
+-    $this->drupalPostForm(NULL, [], 'Edit');
++    $this->submitForm([], 'Edit');
+     // Test encryption method has no config form.
+-    $this->assertNoFieldByName('encryption_method_configuration[mode]', NULL);
++    $this->assertSession()->fieldNotExists('encryption_method_configuration[mode]');
+ 
+     // Check encryption method with config.
+     $this->drupalGet('admin/config/system/encryption/profiles/add');
+@@ -157,15 +157,15 @@ class EncryptTest extends EncryptTestBase {
+       'encryption_key' => $this->testKeys['testing_key_128']->id(),
+       'encryption_method' => 'config_test_encryption_method',
+     ];
+-    $this->drupalPostForm(NULL, $edit, 'Save');
+-    $this->assertText('Saved the Test 2 encryption profile.');
++    $this->submitForm($edit, 'Save');
++    $this->assertSession()->pageTextContains('Saved the Test 2 encryption profile.');
+     $this->drupalGet('admin/config/system/encryption/profiles/manage/test_encryption_profile_2');
+     // First, confirm we want to edit the encryption profile.
+-    $this->drupalPostForm(NULL, [], 'Edit');
++    $this->submitForm([], 'Edit');
+     // Config test encryption method has config form.
+-    $this->assertFieldByName('encryption_method_configuration[mode]', NULL);
++    $this->assertSession()->fieldExists('encryption_method_configuration[mode]');
+     // Config form shows element.
+-    $this->assertOptionByText('encryption_method_configuration[mode]', 'CBC');
++    $this->assertSession()->optionExists('encryption_method_configuration[mode]', 'CBC');
+ 
+     // Save encryption profile with configured encryption method.
+     $this->drupalGet('admin/config/system/encryption/profiles/add');
+@@ -175,16 +175,16 @@ class EncryptTest extends EncryptTestBase {
+       'encryption_method' => 'config_test_encryption_method',
+       'encryption_key' => $this->testKeys['testing_key_128']->id(),
+     ];
+-    $this->drupalPostForm(NULL, $edit, 'Save');
++    $this->submitForm($edit, 'Save');
+ 
+     // Check if encryption method configuration was succesfully saved.
+     $this->drupalGet('admin/config/system/encryption/profiles/manage/test_config_encryption_profile');
+     // First, confirm we want to edit the encryption profile.
+-    $this->drupalPostForm(NULL, [], 'Edit');
++    $this->submitForm([], 'Edit');
+     $edit = [
+       'encryption_method_configuration[mode]' => 'CBC',
+     ];
+-    $this->drupalPostForm(NULL, $edit, 'Save');
++    $this->submitForm($edit, 'Save');
+     /** @var \Drupal\encrypt\EncryptionProfileInterface $encryption_profile */
+     $encryption_profile = \Drupal::service('entity_type.manager')->getStorage('encryption_profile')->load('test_config_encryption_profile');
+     $this->assertNotEmpty($encryption_profile, 'Encryption profile was successfully saved');
+@@ -196,19 +196,19 @@ class EncryptTest extends EncryptTestBase {
+     $this->drupalGet('admin/config/system/encryption/profiles/manage/test_config_encryption_profile');
+ 
+     // First, confirm we want to edit the encryption profile.
+-    $this->drupalPostForm(NULL, [], 'Edit');
++    $this->submitForm([], 'Edit');
+ 
+     // Select encryption method without config.
+     $edit = [
+       'encryption_method' => 'test_encryption_method',
+       'encryption_key' => $this->testKeys['testing_key_128']->id(),
+     ];
+-    $this->drupalPostForm(NULL, $edit, 'Save');
++    $this->submitForm($edit, 'Save');
+     $this->drupalGet('admin/config/system/encryption/profiles/manage/test_config_encryption_profile');
+     // First, confirm we want to edit the encryption profile.
+-    $this->drupalPostForm(NULL, [], 'Edit');
++    $this->submitForm([], 'Edit');
+     // Test encryption method has no config form.
+-    $this->assertNoFieldByName('encryption_method_configuration[mode]', NULL);
++    $this->assertSession()->fieldNotExists('encryption_method_configuration[mode]');
+   }
+ 
+ }
+diff --git a/tests/src/Functional/EncryptTestBase.php b/tests/src/Functional/EncryptTestBase.php
+index eb13305..39434b1 100644
+--- a/tests/src/Functional/EncryptTestBase.php
++++ b/tests/src/Functional/EncryptTestBase.php
+@@ -47,7 +47,7 @@ abstract class EncryptTestBase extends BrowserTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->adminUser = $this->drupalCreateUser([
+diff --git a/tests/src/Kernel/AsymmetricalEncryptionMethod.php b/tests/src/Kernel/AsymmetricalEncryptionMethod.php
+index afe6d7e..2074055 100644
+--- a/tests/src/Kernel/AsymmetricalEncryptionMethod.php
++++ b/tests/src/Kernel/AsymmetricalEncryptionMethod.php
+@@ -33,7 +33,7 @@ class AsymmetricalEncryptionMethod extends KernelTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     // Create a 128bit testkey.
+diff --git a/tests/src/Unit/EncryptServiceTest.php b/tests/src/Unit/EncryptServiceTest.php
+index 04082e9..aae0204 100644
+--- a/tests/src/Unit/EncryptServiceTest.php
++++ b/tests/src/Unit/EncryptServiceTest.php
+@@ -2,6 +2,7 @@
+ 
+ namespace Drupal\Tests\encrypt\Unit;
+ 
++use Prophecy\PhpUnit\ProphecyTrait;
+ use Drupal\encrypt\EncryptionMethodInterface;
+ use Drupal\encrypt\EncryptionMethodManager;
+ use Drupal\encrypt\EncryptionProfileInterface;
+@@ -22,6 +23,7 @@ use Drupal\encrypt\EncryptService;
+  */
+ class EncryptServiceTest extends UnitTestCase {
+ 
++  use ProphecyTrait;
+   /**
+    * Default configuration.
+    *
+@@ -72,7 +74,7 @@ class EncryptServiceTest extends UnitTestCase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     // Set up a mock EncryptionProfile entity.
+diff --git a/tests/src/Unit/Entity/EncryptionProfileTest.php b/tests/src/Unit/Entity/EncryptionProfileTest.php
+index bfcc40b..f3c3d05 100644
+--- a/tests/src/Unit/Entity/EncryptionProfileTest.php
++++ b/tests/src/Unit/Entity/EncryptionProfileTest.php
+@@ -22,35 +22,35 @@ class EncryptionProfileTest extends UnitTestCase {
+   /**
+    * A mocked Key entity.
+    *
+-   * @var \Drupal\key\Entity\Key|\PHPUnit_Framework_MockObject_MockObject
++   * @var \Drupal\key\Entity\Key|\PHPUnit\Framework\MockObject\MockObject
+    */
+   protected $key;
+ 
+   /**
+    * A mocked EncryptionMethod.
+    *
+-   * @var \Drupal\encrypt\EncryptionMethodInterface|\PHPUnit_Framework_MockObject_MockObject
++   * @var \Drupal\encrypt\EncryptionMethodInterface|\PHPUnit\Framework\MockObject\MockObject
+    */
+   protected $encryptionMethod;
+ 
+   /**
+    * A mocked KeyRepository.
+    *
+-   * @var \Drupal\key\KeyRepository|\PHPUnit_Framework_MockObject_MockObject
++   * @var \Drupal\key\KeyRepository|\PHPUnit\Framework\MockObject\MockObject
+    */
+   protected $keyRepository;
+ 
+   /**
+    * A mocked plugin collection.
+    *
+-   * @var \Drupal\Core\Plugin\DefaultLazyPluginCollection|\PHPUnit_Framework_MockObject_MockObject
++   * @var \Drupal\Core\Plugin\DefaultLazyPluginCollection|\PHPUnit\Framework\MockObject\MockObject
+    */
+   protected $pluginCollection;
+ 
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     $container = new ContainerBuilder();
+@@ -58,14 +58,10 @@ class EncryptionProfileTest extends UnitTestCase {
+     \Drupal::setContainer($container);
+ 
+     // Mock a Key entity.
+-    $this->key = $this->getMockBuilder('\Drupal\key\Entity\Key')
+-      ->disableOriginalConstructor()
+-      ->getMock();
++    $this->key = $this->createMock('\Drupal\key\Entity\Key');
+ 
+     // Set up expectations for key.
+-    $key_type = $this->getMockBuilder('\Drupal\key\Plugin\KeyType\EncryptionKeyType')
+-      ->disableOriginalConstructor()
+-      ->getMock();
++    $key_type = $this->createMock('\Drupal\key\Plugin\KeyType\EncryptionKeyType');
+     $key_type->expects($this->any())
+       ->method('getPluginId')
+       ->will($this->returnValue('encryption'));
+@@ -77,9 +73,7 @@ class EncryptionProfileTest extends UnitTestCase {
+       ->will($this->returnValue("key_value"));
+ 
+     // Mock an EncryptionMethod.
+-    $this->encryptionMethod = $this->getMockBuilder('\Drupal\encrypt\EncryptionMethodInterface')
+-      ->disableOriginalConstructor()
+-      ->getMock();
++    $this->encryptionMethod = $this->createMock('\Drupal\encrypt\EncryptionMethodInterface');
+ 
+     // Set up expectations for encryption method.
+     $this->encryptionMethod->expects($this->any())
+@@ -87,15 +81,10 @@ class EncryptionProfileTest extends UnitTestCase {
+       ->will($this->returnValue([]));
+ 
+     // Mock a KeyRepository.
+-    $this->keyRepository = $this->getMockBuilder('\Drupal\key\KeyRepository')
+-      ->disableOriginalConstructor()
+-      ->getMock();
++    $this->keyRepository = $this->createMock('\Drupal\key\KeyRepository');
+ 
+     // Mock a plugin collection.
+-    $this->pluginCollection = $this->getMockBuilder('\Drupal\Core\Plugin\DefaultLazyPluginCollection')
+-      ->disableOriginalConstructor()
+-      ->setMethods(['get', 'set', 'addInstanceID'])
+-      ->getMock();
++    $this->pluginCollection = $this->createMock('\Drupal\Core\Plugin\DefaultLazyPluginCollection');
+   }
+ 
+   /**
+@@ -108,16 +97,7 @@ class EncryptionProfileTest extends UnitTestCase {
+    */
+   public function testValidate($enc_method_id, $enc_key, $enc_method_def, $expected_errors) {
+     // Set up a mock for the EncryptionProfile class to mock some methods.
+-    $encryption_profile = $this->getMockBuilder('\Drupal\encrypt\Entity\EncryptionProfile')
+-      ->setMethods([
+-        'getEncryptionMethod',
+-        'getEncryptionMethodId',
+-        'getEncryptionKey',
+-        'getEncryptionKeyId',
+-      ]
+-      )
+-      ->disableOriginalConstructor()
+-      ->getMock();
++    $encryption_profile = $this->createMock('\Drupal\encrypt\Entity\EncryptionProfile');
+ 
+     // Set expectations for the EncryptionMethod.
+     $this->encryptionMethod->expects($this->any())
+@@ -210,14 +190,7 @@ class EncryptionProfileTest extends UnitTestCase {
+    */
+   public function testGetEncryptionMethod() {
+     // Set up a mock for the EncryptionProfile class to mock some methods.
+-    $encryption_profile = $this->getMockBuilder('\Drupal\encrypt\Entity\EncryptionProfile')
+-      ->setMethods([
+-        'getPluginCollection',
+-        'getEncryptionMethodId',
+-      ]
+-      )
+-      ->disableOriginalConstructor()
+-      ->getMock();
++    $encryption_profile = $this->createMock('\Drupal\encrypt\Entity\EncryptionProfile');
+ 
+     // Set up expectations for plugin collection.
+     $this->pluginCollection->expects($this->atLeastOnce())
+@@ -244,10 +217,7 @@ class EncryptionProfileTest extends UnitTestCase {
+    */
+   public function testSetEncryptionMethod() {
+     // Set up a mock for the EncryptionProfile class to mock some methods.
+-    $encryption_profile = $this->getMockBuilder('\Drupal\encrypt\Entity\EncryptionProfile')
+-      ->setMethods(['getPluginCollection'])
+-      ->disableOriginalConstructor()
+-      ->getMock();
++    $encryption_profile = $this->createMock('\Drupal\encrypt\Entity\EncryptionProfile');
+ 
+     $this->pluginCollection->expects($this->once())
+       ->method('addInstanceID');
+@@ -272,14 +242,7 @@ class EncryptionProfileTest extends UnitTestCase {
+    */
+   public function testGetEncryptionKey() {
+     // Set up a mock for the EncryptionProfile class to mock some methods.
+-    $encryption_profile = $this->getMockBuilder('\Drupal\encrypt\Entity\EncryptionProfile')
+-      ->setMethods([
+-        'getKeyRepository',
+-        'getEncryptionKeyId',
+-      ]
+-      )
+-      ->disableOriginalConstructor()
+-      ->getMock();
++    $encryption_profile = $this->createMock('\Drupal\encrypt\Entity\EncryptionProfile');
+ 
+     $this->keyRepository->expects($this->any())
+       ->method('getKey')

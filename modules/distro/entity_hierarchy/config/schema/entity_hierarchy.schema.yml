@@ -1,0 +1,41 @@
+field.storage_settings.entity_reference_hierarchy:
+  type: field.storage_settings.entity_reference
+  label: 'Entity reference hierarchy field storage settings'
+
+field.field_settings.entity_reference_hierarchy:
+  type: field.field_settings.entity_reference
+  label: 'Entity reference hierarchy field settings'
+  mapping:
+    weight_min:
+      type: integer
+      label: 'Min weight'
+    weight_max:
+      type: integer
+      label: 'Max weight'
+    weight_label:
+      type: label
+      label: 'Weight label'
+
+field.widget.settings.entity_reference_hierarchy_autocomplete:
+  type: field.widget.settings.entity_reference_autocomplete
+  label: 'Entity reference hierarchy autocomplete widget settings'
+  mapping:
+    hide_weight:
+      type: boolean
+      label: 'Hide weight field'
+
+field.widget.settings.entity_reference_hierarchy_select:
+  type: field.widget.settings.options_select
+  label: 'Entity reference hierarchy select widget settings'
+  mapping:
+    hide_weight:
+      type: boolean
+      label: 'Hide weight field'
+
+field.formatter.settings.entity_reference_hierarchy_label:
+  type: field.formatter.settings.entity_reference_label
+  label: 'Entity reference hierarchy field formatter settings'
+  mapping:
+    weight_output:
+      type: string
+      label: 'Weight output'

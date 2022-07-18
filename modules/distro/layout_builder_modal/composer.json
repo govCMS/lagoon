@@ -1,0 +1,32 @@
+{
+    "name": "drupal/layout_builder_modal",
+    "type": "drupal-module",
+    "description": "Open blocks in a modal in the Layout Builder UI.",
+    "authors": [
+        {
+            "name": "John Svensson",
+            "email": "john@kodamera.se",
+            "homepage": "https://www.drupal.org/u/johndevman",
+            "role": "Maintainer"
+        },
+        {
+            "name": "Emil Johnsson",
+            "email": "emil@kodamera.se",
+            "homepage": "https://www.drupal.org/u/johnzzon",
+            "role": "Maintainer"
+        },
+        {
+            "name": "Henrik Larsson",
+            "email": "henrik@kodamera.se",
+            "homepage": "https://www.drupal.org/u/henriklarsson",
+            "role": "Maintainer"
+        }
+    ],
+    "homepage": "https://www.drupal.org/project/layout_builder_modal",
+    "license": "GPL-2.0-or-later",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/layout_builder_modal",
+        "source": "http://cgit.drupalcode.org/layout_builder_modal"
+    },
+    "require": {}
+}
