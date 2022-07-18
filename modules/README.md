@@ -67,21 +67,21 @@ Modules that haven no viable D10 release (e.g no patches yet exist) will have st
  * `embed`: Included version not 100% compatible yet.
  * `password_policy`: No viable D10 patch available, stub created.
  * `tfa`: No viable D10 patch available, stub created.
- * `devel`: No viable D10 patch available, commentary [here](https://gitlab.com/drupalspoons/devel/-/issues/392)
- * `ds`: No viable D10 patch available.
- * `features`: No viable D10 patch available.
+ * `devel`: No viable D10 patch available, stub created, commentary [here](https://gitlab.com/drupalspoons/devel/-/issues/392)
+ * `ds`: No viable D10 patch available, stub created.
+ * `features`: No viable D10 patch available, stub created.
  * `key`: No viable D10 patch available. Included version is patched but not 100% compatible.
- * `linkit`: No viable D10 patch available.
- * `login_security`: No viable D10 patch available.
- * `migrate_file`: No viable D10 patch available.
- * `minisite`: No viable D10 patch available.
- * `module_permissions`: No viable D10 patch available.
- * `panelizer`: No viable D10 patch available.
- * `panels`: No viable D10 patch available.
- * `password_policy`: No viable D10 patch available.
- * `shield`: No viable D10 patch available (blocked by `key`).
- * `simple_oauth`: No viable D10 patch available.
- * `swiftmailer`: Replaced by Symfony Mailer.
- * `twig_tweak`: No viable D10 patch available.
- * `video_embed_field`: No viable D10 patch available.
- * `webform`: No viable D10 patch available.
+ * `linkit`: No viable D10 patch available, stub created.
+ * `login_security`: No viable D10 patch available, stub created.
+ * `migrate_file`: No viable D10 patch available, stub created.
+ * `minisite`: No viable D10 patch available, stub created.
+ * `module_permissions`: No viable D10 patch available, stub created.
+ * `panelizer`: No viable D10 patch available, stub created.
+ * `panels`: No viable D10 patch available, stub created.
+ * `password_policy`: No viable D10 patch available, stub created.
+ * `shield`: No viable D10 patch available (blocked by `key`), stub created.
+ * `simple_oauth`: No viable D10 patch available, stub created.
+ * `swiftmailer`: Replaced by Symfony Mailer, stub created.
+ * `twig_tweak`: No viable D10 patch available, stub created.
+ * `video_embed_field`: No viable D10 patch available, stub created.
+ * `webform`: No viable D10 patch available, stub created.
