@@ -4,6 +4,7 @@ package: Lagoon
 
 type: module
 core: 8.x
+core_version_requirement: ^8 || ^9
 
 dependencies:
   - redis:redis
@@ -12,3 +13,4 @@ dependencies:
   - robotstxt:robotstxt
   - lagoon_logs:lagoon_logs
   - environment_indicator:environment_indicator
+  - govcms_security:govcms_security
