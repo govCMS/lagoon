@@ -3,4 +3,4 @@ command:
   solr status | grep version:
     exit-status: 0
     stdout:
-      - '"version":"8.11.2 17dee71932c683e345508113523e764c3e4c80fa - mdrob - 2022-06-13 11:27:54",'
+      - 8.11.2
