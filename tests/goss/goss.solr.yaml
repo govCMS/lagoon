@@ -1,16 +1,6 @@
 ---
-file:
-  /opt/solr/server/solr/mycores/drupal/conf:
-    exists: true
-    filetype: directory
-  /opt/solr/server/solr/mycores/drupal/conf/schema.xml:
-    exists: true
-    filetype: file
-    contains:
-    - "drupal-4.2.8-solr-7.x-1"
-  /opt/solr/server/solr/mycores/drupal/conf/solrconfig.xml:
-    exists: true
-    filetype: file
-    contains:
-    - "<dataDir>/var/solr/${solr.core.name}</dataDir>"
-    - "<lockType>${solr.lock.type:none}</lockType>"
+command:
+  solr status | grep version:
+    exit-status: 0
+    stdout:
+      - '"version":"8.11.2 17dee71932c683e345508113523e764c3e4c80fa - mdrob - 2022-06-13 11:27:54",'
