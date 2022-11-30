@@ -104,7 +104,7 @@ deploy:multiarch:
     - 2.x-develop
     - 1.x-master
     - 2.x-master
-    - feature/2.x/php8
+    - /^release\/2.x\//
     - tags
   needs:
   - test:ahoy
