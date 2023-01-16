@@ -58,5 +58,8 @@ RUN mkdir -p /usr/share/ca-certificates/letsencrypt \
   && echo -e "\nletsencrypt/lets-encrypt-r3.crt" >> /etc/ca-certificates.conf \
   && update-ca-certificates
 
+# Add rector.php config.
+COPY rector.php /app/rector.php
+
 # Define where the Drupal Root is located
 ENV WEBROOT=web
