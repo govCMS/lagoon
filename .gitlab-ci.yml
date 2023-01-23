@@ -1,5 +1,5 @@
 ---
-image: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci/govcms-ci:latest
+image: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci:latest
 
 services:
   - name: gitlab-registry-production.govcms.amazee.io/govcms/govcms-ci/dind:latest
