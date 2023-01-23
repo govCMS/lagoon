@@ -73,7 +73,6 @@ workflow:
     - cp .env.default .env
     - sed -i -e "s/^GOVCMS_RELEASE_TAG.*/GOVCMS_RELEASE_TAG=$DEPLOY_TAG/" .env
     - cat .env
-    - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
     - export $(grep -v '^#' .env | xargs)
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -91,7 +90,6 @@ deploy:multiarch:
     - cp .env.default .env
     - sed -i -e "s/^GOVCMS_RELEASE_TAG.*/GOVCMS_RELEASE_TAG=$DEPLOY_TAG/" .env
     - cat .env
-    - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
     - docker buildx create --name govcms-amd-arm --platform linux/amd64,linux/arm64 tcp://localhost:2375
     - docker buildx ls
     - export $(grep -v '^#' .env | xargs)
