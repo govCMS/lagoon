@@ -52,11 +52,5 @@ RUN mkdir -p /app/web/sites/default/files/private \
 
 COPY modules/ /app/web/sites/all/modules/
 
-# Install the R3 intermediary for LE.
-RUN mkdir -p /usr/share/ca-certificates/letsencrypt \
-  && curl -o /usr/share/ca-certificates/letsencrypt/lets-encrypt-r3.crt https://letsencrypt.org/certs/lets-encrypt-r3.pem \
-  && echo -e "\nletsencrypt/lets-encrypt-r3.crt" >> /etc/ca-certificates.conf \
-  && update-ca-certificates
-
 # Define where the Drupal Root is located
 ENV WEBROOT=web
