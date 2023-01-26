@@ -1,4 +1,4 @@
 name: govcms_admin_theme
 type: theme
-core_version_requirement: ^8.8 || ^9
+core_version_requirement: ^9 || ^10
 base theme: false
