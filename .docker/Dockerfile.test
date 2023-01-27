@@ -37,11 +37,6 @@ RUN git clone --single-branch --branch=$SITE_AUDIT_VERSION https://github.com/go
     && rm -Rf /app/web/sites/all/drutiny/.git \
     && chmod +x /usr/bin/drutiny
 
-RUN mkdir -p /usr/share/ca-certificates/letsencrypt \
-    && curl -o /usr/share/ca-certificates/letsencrypt/lets-encrypt-r3.crt https://letsencrypt.org/certs/lets-encrypt-r3.pem \
-    && echo -e "\nletsencrypt/lets-encrypt-r3.crt" >> /etc/ca-certificates.conf \
-    && update-ca-certificates
-
 # Ensure that drush and drush.launcher both work
 ENV WEBROOT=web
 
