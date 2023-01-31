@@ -1,10 +1,9 @@
 name: GovCMS Lagoon
 description: Provide dependent modules and platform configuration for GovCMS on Lagoon.
 package: Lagoon
-
 type: module
-core: 8.x
-core_version_requirement: ^8 || ^9
+
+core_version_requirement: ^9 || ^10
 
 dependencies:
   - redis:redis
