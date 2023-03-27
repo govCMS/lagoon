@@ -29,10 +29,5 @@ COPY .docker/images/test/phpunit/bootstrap.php /app/tests/phpunit/
 # Ensure MySQL client can accept server max_allowed_packet
 COPY .docker/images/govcms/mariadb-client.cnf /etc/my.cnf.d
 
-RUN mkdir -p /usr/share/ca-certificates/letsencrypt \
-    && curl -o /usr/share/ca-certificates/letsencrypt/lets-encrypt-r3.crt https://letsencrypt.org/certs/lets-encrypt-r3.pem \
-    && echo -e "\nletsencrypt/lets-encrypt-r3.crt" >> /etc/ca-certificates.conf \
-    && update-ca-certificates
-
 # Ensure that drush and drush.launcher both work
 ENV WEBROOT=web
