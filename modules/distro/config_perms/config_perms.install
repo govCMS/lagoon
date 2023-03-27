@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * Updates the paths to its entities.
+ */
+function config_perms_update_8201() {
+  $config_factory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Path\PathValidator $path_validator */
+  $path_validator = \Drupal::service('path.validator');
+
+  foreach ($config_factory->listAll('config_perms.custom_perms_entity.') as $custom_perm) {
+    /** @var \Drupal\Core\Config\Config $custom_perm */
+    $custom_perm = $config_factory->getEditable($custom_perm);
+    $paths = config_perms_parse_path($custom_perm->get('path'));
+    $perm_routes = [];
+    foreach ($paths as $path) {
+      if ($path && $route = $path_validator->getUrlIfValidWithoutAccessCheck($path)) {
+        $perm_routes[] = $route->getRouteName();
+      }
+    }
+    $perm_routes = config_perms_parse_path($perm_routes);
+
+    if (empty($perm_routes)) {
+      continue;
+    }
+
+    $custom_perm->set('route', $perm_routes);
+    $custom_perm->clear('path');
+    $custom_perm->save();
+  }
+}
+
+/**
+ * Adds the "administer config permissions" permission.
+ */
+function config_perms_update_8202() {
+  $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
+  /** @var \Drupal\user\Entity\Role $role */
+  foreach ($roles as $role) {
+    // There is now a dedicated permission to configure the module, to keep the
+    // things working let's provide this new permission to the users that were
+    // already able to configure the module before.
+    if ($role->hasPermission('administer site configuration')) {
+      $role->grantPermission('administer config permissions');
+      $role->save();
+    }
+  }
+}

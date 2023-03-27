@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Alternative to core menu management.
+ *
+ * Needed when menus get too big to load on one page.
+ */
+
+use Drupal\bigmenu\BigMenuForm;
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function bigmenu_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  $entity_types['menu']->setFormClass('edit', BigMenuForm::class);
+}

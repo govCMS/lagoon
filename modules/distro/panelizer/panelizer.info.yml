@@ -1,0 +1,16 @@
+type: module
+name: Panelizer
+description: 'Allow any entity view mode to be rendered using a Panels display.'
+package: Layout
+core_version_requirement: '^9 || ^10'
+dependencies:
+  - drupal:layout_discovery
+  - drupal:field_ui
+  - ctools:ctools_block
+  - panels:panels
+  - panels:panels_ipe
+
+# Information added by Drupal.org packaging script on 2022-08-23
+version: '8.x-4.4+2-dev'
+project: 'panelizer'
+datestamp: 1661286213

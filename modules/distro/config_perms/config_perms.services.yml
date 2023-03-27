@@ -1,0 +1,10 @@
+services:
+  config_perms.route_subscriber:
+    class: Drupal\config_perms\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  config_perms.access_checker:
+    class: Drupal\config_perms\Access\ConfigPermsAccessCheck
+    arguments: ['@current_user', '@entity_type.manager']
+    tags:
+      - { name: access_check, applies_to: _config_perms_access_check }

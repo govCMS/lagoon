@@ -1,0 +1,6 @@
+langcode: en
+status: true
+dependencies: {  }
+id: administer_date_time
+label: 'Administer date-time'
+route: entity.date_format.collection
