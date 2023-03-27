@@ -1,3 +1,0 @@
-name: migrate_file
-type: module
-core_version_requirement: ^8 || ^9 || ^10

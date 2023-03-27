@@ -1,4 +1,0 @@
-delete any file:
-  title: 'Delete any file'
-  description: 'Delete any file, even if not the owner'
-  restrict access: true

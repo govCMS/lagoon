@@ -23,19 +23,11 @@ RUN cp -r /app/web/profiles/contrib/govcms/tests /app/ \
     && chmod +x /usr/bin/behat \
     && chmod +x /usr/bin/phpunit
 
-COPY .docker/images/test/drutiny /usr/bin/drutiny
-
 COPY .docker/images/test/phpunit/phpunit.xml /app/tests/phpunit/
 COPY .docker/images/test/phpunit/bootstrap.php /app/tests/phpunit/
 
 # Ensure MySQL client can accept server max_allowed_packet
 COPY .docker/images/govcms/mariadb-client.cnf /etc/my.cnf.d
-
-ARG SITE_AUDIT_VERSION
-RUN git clone --single-branch --branch=$SITE_AUDIT_VERSION https://github.com/govcms/audit-site.git /app/web/sites/all/drutiny \
-    && php -d memory_limit=-1 /usr/local/bin/composer --working-dir=/app/web/sites/all/drutiny/ install --ignore-platform-reqs \
-    && rm -Rf /app/web/sites/all/drutiny/.git \
-    && chmod +x /usr/bin/drutiny
 
 RUN mkdir -p /usr/share/ca-certificates/letsencrypt \
     && curl -o /usr/share/ca-certificates/letsencrypt/lets-encrypt-r3.crt https://letsencrypt.org/certs/lets-encrypt-r3.pem \
@@ -44,6 +36,3 @@ RUN mkdir -p /usr/share/ca-certificates/letsencrypt \
 
 # Ensure that drush and drush.launcher both work
 ENV WEBROOT=web
-
-# Add custom drutiny profiles from test folder for local development
-COPY .docker/images/test/*.yml /app/web/sites/all/drutiny/Profiles

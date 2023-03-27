@@ -1,8 +1,0 @@
-administer keys:
-  title: 'Administer keys'
-  description: 'Create, edit, and delete site-wide keys.'
-  restrict access: true
-
-administer key configuration overrides:
-  title: 'Administer key configuration overrides'
-  restrict access: true

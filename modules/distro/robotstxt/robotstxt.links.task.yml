@@ -1,4 +1,0 @@
-robotstxt.admin_settings_form_tab:
-  route_name: robotstxt.admin_settings_form
-  title: Settings
-  base_route: robotstxt.admin_settings_form

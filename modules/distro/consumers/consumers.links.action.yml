@@ -1,5 +1,0 @@
-entity.consumer.add_form:
-  route_name: 'entity.consumer.add_form'
-  title: 'Add Consumer'
-  appears_on:
-    - entity.consumer.collection

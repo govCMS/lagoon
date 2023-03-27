@@ -1,9 +1,0 @@
-inline_entity_form_test.form:
-  path: '/ief-test/{form_mode}/{node}'
-  defaults:
-    _form: '\Drupal\inline_entity_form_test\IefTest'
-    _title: 'IEF test'
-    form_mode: 'default'
-    node: NULL
-  requirements:
-    _access: 'TRUE'

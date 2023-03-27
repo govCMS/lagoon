@@ -28,7 +28,6 @@ services:
       args:
         CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms}/${GOVCMS_CLI_IMAGE_NAME:-govcms}:${GOVCMS_RELEASE_TAG:-latest}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
-        SITE_AUDIT_VERSION: ${SITE_AUDIT_VERSION:-7.x-3.x}
         COMPOSER_AUTH: ${COMPOSER_AUTH:-}
     image: ${DOCKERHUB_NAMESPACE:-govcms}/test:${GOVCMS_RELEASE_TAG:-latest}
     depends_on:

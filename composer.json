@@ -33,10 +33,6 @@
             }
         },
         {
-            "type": "vcs",
-            "url": "git@github.com:stooit/govcms.git"
-        },
-        {
             "type": "path",
             "url": "custom/composer"
         }
@@ -44,7 +40,7 @@
     "require": {
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
-        "govcms/govcms": "feature/10.x-dev",
+        "govcms/govcms": "3.x-develop-dev",
         "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "10.x-develop-dev",
         "webmozart/path-util": "^2.3"

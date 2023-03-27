@@ -1,7 +1,0 @@
-adminimal_admin_toolbar.settings:
-  path: '/admin/config/user-interface/adminimal_admin_toolbar'
-  defaults:
-    _form: '\Drupal\adminimal_admin_toolbar\Form\SettingsForm'
-    _title: 'Adminimal Admin Toolbar Settings'
-  requirements:
-    _permission: 'administer site configuration'

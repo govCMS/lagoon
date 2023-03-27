@@ -1,9 +1,0 @@
-# Schema for the configuration files of the robotstxt module.
-
-robotstxt.settings:
-  type: config_object
-  label: 'RobotsTxt settings'
-  mapping:
-    content:
-      type: string
-      label: 'Contents of robots.txt'

@@ -1,8 +1,0 @@
-name: Config Ignore
-type: module
-description: Ignore certain configuration during import
-core_version_requirement: ^8 || ^9 || ^10
-package: Config
-configure: config_ignore.settings
-dependencies:
-  - config_filter:config_filter

@@ -1,4 +1,0 @@
-administer seckit:
-  title: 'Administer Security Kit'
-  description: 'Configure security features of your Drupal installation.'
-  restrict access: true

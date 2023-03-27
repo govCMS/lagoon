@@ -1,5 +1,0 @@
-services:
-  metatag_views.plugin.manager.views.cache:
-    decorates: plugin.manager.views.cache
-    class: Drupal\metatag_views\MetatagViewsCachePluginManager
-    arguments: ['@metatag_views.plugin.manager.views.cache.inner']

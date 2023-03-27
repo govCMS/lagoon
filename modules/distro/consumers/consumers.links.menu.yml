@@ -1,5 +1,0 @@
-consumers.admin.config.services:
-  title: Consumers
-  description: 'Register and configure the decoupled consumers to your API.'
-  route_name: entity.consumer.collection
-  parent: system.admin_config_services
