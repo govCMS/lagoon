@@ -15,8 +15,10 @@ Modules that haven no viable D10 release (e.g no patches yet exist) will have st
 * `config_perms`: Has 2.x-dev branch in place.
 * `bigmenu`: Has 2.x-dev branch in place.
 * `panelizer`: Has 4.x-dev branch in place.
-* `securitytxt`: Has [patch applied](https://www.drupal.org/project/securitytxt/issues/3298024).
 * `adminimal_theme`: Has a blank stub module created.
 * `adminimal_admin_toolbar`: Has a blank stub module created.
 * `block_place`: Has a blank stub module created.
 * `features`: Has a blank stub module created.
+* `features_ui`: Has a blank stub module created.
+* `color`: Has a blank stub module created.
+* `ckeditor: Has a blank stub module created.
