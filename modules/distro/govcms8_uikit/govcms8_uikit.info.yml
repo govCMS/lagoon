@@ -1,0 +1,7 @@
+name: 'GovCMS 8 UI-Kit'
+description: 'Contains clean UI Kit twig components. Hidden by default.'
+
+core_version_requirement: ^9 || ^10
+type: theme
+base theme: false
+hidden: true
