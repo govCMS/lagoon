@@ -21,4 +21,5 @@ Modules that haven no viable D10 release (e.g no patches yet exist) will have st
 * `features`: Has a blank stub module created.
 * `features_ui`: Has a blank stub module created.
 * `color`: Has a blank stub module created.
-* `ckeditor: Has a blank stub module created.
+* `ckeditor`: Has a blank stub module created.
+* `govcms8_layouts`: Provides display mode templates still depended on for many sites.
