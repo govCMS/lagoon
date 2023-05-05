@@ -13,7 +13,6 @@ Modules that haven no viable D10 release (e.g no patches yet exist) will have st
 ### Distribution modules
 * `entity_embed`: Has 1.x-dev branch in place.
 * `config_perms`: Has 2.x-dev branch in place.
-* `bigmenu`: Has 2.x-dev branch in place.
 * `panelizer`: Has 4.x-dev branch in place.
 * `adminimal_theme`: Has a blank stub module created.
 * `adminimal_admin_toolbar`: Has a blank stub module created.
