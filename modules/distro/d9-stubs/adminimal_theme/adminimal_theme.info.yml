@@ -1,4 +1,0 @@
-name: adminimal_theme
-type: theme
-core_version_requirement: ^9 || ^10
-base theme: false
