@@ -11,6 +11,5 @@ Modules that haven no viable D10 release (e.g no patches yet exist) will have st
 * All other modules only required an updated `core_version_requirement` value.
 
 ### Distribution modules
-* `entity_embed`: Has 1.x-dev branch in place.
 * `panelizer`: Has 4.x-dev branch in place.
 * `govcms8_layouts`: Provides display mode templates still depended on for many sites.
