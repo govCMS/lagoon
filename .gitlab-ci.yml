@@ -20,6 +20,12 @@ workflow:
     - if: $CI_COMMIT_REF_NAME == "3.x-develop"
       variables:
         DEPLOY_TAG: "10.x-edge"
+    - if: $CI_COMMIT_REF_NAME == "3.x-master"
+      variables:
+        DEPLOY_TAG: "10.x-latest"
+    - if: $CI_COMMIT_REF_NAME =~ /^release\/3.x\//
+      variables:
+        DEPLOY_TAG: "10.x-beta"
 
     ## D9
     - if: $CI_COMMIT_REF_NAME == "2.x-develop"
@@ -104,7 +110,9 @@ deploy:multiarch:
     - 3.x-develop
     - 1.x-master
     - 2.x-master
+    - 3.x-master
     - /^release\/2.x\//
+    - /^release\/3.x\//
     - tags
   needs:
   - test:ahoy
