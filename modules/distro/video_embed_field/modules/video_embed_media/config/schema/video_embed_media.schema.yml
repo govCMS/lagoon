@@ -1,0 +1,3 @@
+media.source.video_embed_field:
+  type: media.source.field_aware
+  label: '"Video Embed Field" media source configuration'

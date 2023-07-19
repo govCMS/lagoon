@@ -1,0 +1,4 @@
+services:
+  vem_migrate_oembed.migrate:
+    class: Drupal\vem_migrate_oembed\VemMigrate
+    arguments: ['@config.factory', '@entity.last_installed_schema.repository', '@database', '@keyvalue', '@entity_field.manager']

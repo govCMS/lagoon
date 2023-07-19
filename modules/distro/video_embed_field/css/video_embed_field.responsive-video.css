@@ -1,0 +1,46 @@
+.video-embed-field-responsive-video {
+  position: relative;
+}
+
+.video-embed-field-responsive-video:after {
+  content: '';
+  display: block;
+  padding-bottom: 56.25%;
+}
+
+.video-embed-field-responsive-video iframe {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.video-embed-field-responsive-modal {
+  max-width: 100%;
+}
+
+.video-embed-field-lazy {
+  cursor: pointer;
+  position: relative;
+}
+
+.video-embed-field-lazy img {
+  width: 100%;
+}
+
+.video-embed-field-lazy-play {
+  height: 72px;
+  width: 72px;
+  left: 50%;
+  top: 50%;
+  margin-left: -36px;
+  margin-top: -36px;
+  position: absolute;
+  background: url("icons/play.svg") no-repeat;
+  cursor: pointer;
+  background-size: 72px 72px;
+}

@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Install file for video_embed_media.
+ */
+
+use Drupal\Core\File\FileSystemInterface;
+
+/**
+ * Implements hook_install().
+ */
+function video_embed_media_install() {
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+  // Copy the video icons into the right place.
+  $icon_folder = \Drupal::service('extension.list.module')->getPath('video_embed_media') . '/images/icons';
+  $destination = \Drupal::config('media.settings')->get('icon_base_uri');
+  $file_system->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+
+  $files = $file_system->scanDirectory($icon_folder, '/.*\.(svg|png|jpg|jpeg|gif)$/');
+  foreach ($files as $file) {
+    // We don't want to copy the icons when they already exist. The icons could
+    // be placed manually, so we don't want to replace the existing files.
+    // Removing the files when we uninstall could also be a problem if the files
+    // are referenced somewhere else. Since showing an error that it was not
+    // possible to copy the files is also confusing, we silently do nothing.
+    if (!file_exists($destination . DIRECTORY_SEPARATOR . $file->filename)) {
+      $file_system->copy($file->uri, $destination, FileSystemInterface::EXISTS_ERROR);
+    }
+  }
+}

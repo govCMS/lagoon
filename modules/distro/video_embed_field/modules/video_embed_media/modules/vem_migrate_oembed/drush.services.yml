@@ -1,0 +1,6 @@
+services:
+  vem_migrate_oembed.commands:
+    class: \Drupal\vem_migrate_oembed\Commands\VemCommands
+    arguments: ['@vem_migrate_oembed.migrate']
+    tags:
+      - { name: drush.command }

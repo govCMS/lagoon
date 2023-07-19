@@ -1,5 +1,0 @@
-services:
-  govcms_akamai_purge.config_override:
-    class: Drupal\govcms_akamai_purge\Config\ConfigOverrides
-    tags:
-      - { name: config.factory.override, priority: 5 }

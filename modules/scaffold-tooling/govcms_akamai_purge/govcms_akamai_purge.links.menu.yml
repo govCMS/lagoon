@@ -1,5 +1,0 @@
-govcms_akamai_purge.paths:
-  title: 'GovCMS Akamai Purge paths'
-  parent: system.admin_config_services
-  description: 'Interact with the Akamai purge service to clear cache for known paths.'
-  route_name: govcms_akamai_purge.path

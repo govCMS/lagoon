@@ -1,3 +1,0 @@
-administer govcms_akamai_purge paths:
-  title: 'GovCMS Akamai Purge administer paths'
-  description: 'Provides access to the path purge interface for GovCMS Akamai'
