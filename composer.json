@@ -41,6 +41,7 @@
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
         "drupal/bartik": "^1.0",
+        "egulias/email-validator": "4.0.1 as 3.2.6",
         "govcms/govcms": "3.x-develop-dev",
         "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "10.x-develop-dev",
