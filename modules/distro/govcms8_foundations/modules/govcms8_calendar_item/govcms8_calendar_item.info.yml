@@ -1,0 +1,5 @@
+name: GovCMS8 Calendar Item [DEPRECATED - DO NOT USE]
+type: module
+description: Provides custom calendar item formatter and DS field for UI-Kit. [deprecated]
+package: GovCMS8 [deprecated]
+core_version_requirement: ^9.4 || ^10

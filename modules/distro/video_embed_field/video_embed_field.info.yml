@@ -1,4 +1,4 @@
-name: Video Embed Field
+name: Video Embed Field [DEPRECATED - DO NOT USE]
 type: module
 description: 'Provides a field type for displaying videos from 3rd party providers such as YouTube and Vimeo.'
 package: Video Embed Field
