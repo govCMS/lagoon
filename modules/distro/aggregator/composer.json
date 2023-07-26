@@ -1,0 +1,13 @@
+{
+    "name": "drupal/aggregator-aggregator",
+    "description": "Ingest RSS feeds into your Drupal site",
+    "type": "drupal-module",
+    "require": {
+        "laminas/laminas-feed": "^2.17",
+	"drupal/core": "^9.4 || ^10"
+    },
+    "require-dev": {
+        "drupal/classy": "^1"
+    },
+    "license": "GPL-2.0-or-later"
+}
