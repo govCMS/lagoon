@@ -21,7 +21,7 @@ RUN case $(uname -m) in x86_64)  ARCH="amd64" ;; aarch64) ARCH="arm64" ;; *) ARC
 # Install jq for YAML/JSON parsing.
 RUN apk add jq
 
-RUN sed -i -e "/govcms\/govcms/ s!2.x-dev!${GOVCMS_PROJECT_VERSION}!" /app/composer.json
+RUN sed -i -e "/govcms\/govcms/ s!3.x-develop-dev!${GOVCMS_PROJECT_VERSION}!" /app/composer.json
 
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
