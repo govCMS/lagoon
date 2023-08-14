@@ -1,3 +1,4 @@
 name: login_security
 type: module
+lifecycle: obsolete
 core_version_requirement: ^9 || ^10

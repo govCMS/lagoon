@@ -2,6 +2,7 @@ name: GovCMS8 Layouts [DEPRECATED - DO NOT USE]
 type: module
 description: Provides layouts for the GovCMS8 distribution. [deprecated]
 package: GovCMS8 [deprecated]
+lifecycle: obsolete
 core_version_requirement: ^9.4 || ^10
 dependencies:
   - layout_discovery

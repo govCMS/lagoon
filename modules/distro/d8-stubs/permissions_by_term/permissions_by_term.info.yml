@@ -1,3 +1,4 @@
 name: permissions_by_term
 type: module
+lifecycle: obsolete
 core_version_requirement: ^9 || ^10
