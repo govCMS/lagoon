@@ -3,6 +3,7 @@ type: module
 description: Provides modifiers for the GovCMS8 distribution. [deprecated]
 package: GovCMS8 [deprecated]
 lifecycle: obsolete
+lifecycle_link: 'https://github.com/GovCMS/GovCMS'
 core_version_requirement: ^9.4 || ^10
 dependencies:
   - paragraphs

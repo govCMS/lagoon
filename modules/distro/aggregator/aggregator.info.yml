@@ -3,6 +3,7 @@ type: module
 description: 'Gathers and displays syndicated content (RSS, RDF, and Atom feeds) from external sources.'
 package: Core
 lifecycle: obsolete
+lifecycle_link: 'https://github.com/GovCMS/GovCMS'
 core_version_requirement: '>=10.0'
 configure: aggregator.admin_settings
 dependencies:

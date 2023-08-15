@@ -1,4 +1,5 @@
 name: login_security
 type: module
 lifecycle: obsolete
+lifecycle_link: 'https://github.com/GovCMS/GovCMS'
 core_version_requirement: ^9 || ^10

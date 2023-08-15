@@ -1,4 +1,5 @@
 name: purge_purger_http
 type: module
 lifecycle: obsolete
+lifecycle_link: 'https://github.com/GovCMS/GovCMS'
 core_version_requirement: ^8 || ^9 || ^10

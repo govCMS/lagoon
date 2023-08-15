@@ -1,5 +1,6 @@
 name: govcms_ui
 type: theme
 lifecycle: obsolete
+lifecycle_link: 'https://github.com/GovCMS/GovCMS'
 core_version_requirement: ^9 || ^10
 base theme: false

@@ -3,6 +3,7 @@ name: Panelizer [DEPRECATED - DO NOT USE]
 description: 'Allow any entity view mode to be rendered using a Panels display.'
 package: Layout
 lifecycle: obsolete
+lifecycle_link: 'https://github.com/GovCMS/GovCMS'
 core_version_requirement: '^9 || ^10'
 dependencies:
   - drupal:layout_discovery
