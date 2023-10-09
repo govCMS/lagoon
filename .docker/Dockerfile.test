@@ -16,8 +16,7 @@ COPY .docker/scripts/ /usr/bin/
 # Don't restrict the memory limit for the test image.
 RUN echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/99-memory-limit.ini
 
-RUN cp -r /app/web/profiles/contrib/govcms/tests /app/ \
-    && composer install -d /app/tests -n --ansi --prefer-dist --no-suggest \
+RUN composer create-project govcms/tests:3.1.0 /app/tests --prefer-dist \
     && chmod +x /usr/bin/lint-govcms \
     && chmod +x /usr/bin/lint-theme \
     && chmod +x /usr/bin/behat \
