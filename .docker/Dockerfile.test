@@ -1,32 +1,41 @@
+# Define build-time arguments
 ARG CLI_IMAGE
 ARG LAGOON_IMAGE_VERSION
-ARG COMPOSER_AUTH
+
+# First stage: Create a CLI image
 FROM ${CLI_IMAGE} as cli
 
+# Second stage: Build on top of the CLI image
 FROM uselagoon/php-8.1-cli-drupal:${LAGOON_IMAGE_VERSION}
 
+# Set an environment variable for Dockerize version
 ENV DOCKERIZE_VERSION v0.6.1
+
+# Download Dockerize, extract, and install it
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-COPY --from=cli /app /app
+# Copy executable scripts to /usr/bin/ and make them executable
 COPY .docker/scripts/ /usr/bin/
-
-# Don't restrict the memory limit for the test image.
-RUN echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/99-memory-limit.ini
-
-RUN composer create-project govcms/tests:3.1.0 /app/tests --prefer-dist \
-    && chmod +x /usr/bin/lint-govcms \
+RUN chmod +x /usr/bin/lint-govcms \
     && chmod +x /usr/bin/lint-theme \
     && chmod +x /usr/bin/behat \
     && chmod +x /usr/bin/phpunit
 
-COPY .docker/images/test/phpunit/phpunit.xml /app/tests/phpunit/
-COPY .docker/images/test/phpunit/bootstrap.php /app/tests/phpunit/
+# Don't restrict the memory limit for the test image.
+RUN echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/99-memory-limit.ini
 
-# Ensure MySQL client can accept server max_allowed_packet
+# Ensure MySQL client can accept a higher server max_allowed_packet value
 COPY .docker/images/govcms/mariadb-client.cnf /etc/my.cnf.d
 
-# Ensure that drush and drush.launcher both work
+# Copy application files from the 'cli' stage to the current stage
+COPY --from=cli /app /app
+
+# Copy PHPUnit configuration and test files
+COPY .docker/images/test/phpunit/phpunit.xml /app/tests/phpunit/
+COPY .docker/images/test/phpunit/bootstrap.php /app/tests/phpunit/
+COPY --from=govcmstesting/tests:3.1.0 /tests /app/tests
+
+# Set an environment variable for the webroot path
 ENV WEBROOT=web
