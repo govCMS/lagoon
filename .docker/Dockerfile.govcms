@@ -1,47 +1,57 @@
+# Set the base image using an ARG
 ARG LAGOON_IMAGE_VERSION
+FROM uselagoon/php-8.1-cli-drupal:${LAGOON_IMAGE_VERSION} as base
 
-FROM uselagoon/php-8.1-cli-drupal:${LAGOON_IMAGE_VERSION} as builder
-
-COPY --from=ghcr.io/salsadigitalauorg/shipshape:0.2.2 /usr/local/bin/shipshape /usr/local/bin/shipshape
-
+# Set additional build arguments
 ARG GOVCMS_PROJECT_VERSION
 ARG COMPOSER_AUTH
 ARG GITHUB_TOKEN
 
+# Copy relevant files and directories
 COPY composer.* /app/
-
-# Copy base file for extensible saas.
 COPY custom /app/custom
+COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
+COPY .docker/images/govcms/govcms.site.yml /app/drush/sites/
 
-# Install yq for YAML parsing.
+# Modify the composer.json file
+RUN sed -i -e "/govcms\/govcms/ s!3.x-develop-dev!${GOVCMS_PROJECT_VERSION}!" /app/composer.json
+
+# Configure Composer settings
+ENV COMPOSER_MEMORY_LIMIT=-1
+
+# Set the Github OAuth token if provided
+RUN [[ ! -z "${GITHUB_TOKEN}" ]]  && composer config -g github-oauth.github.com ${GITHUB_TOKEN} || echo "Personal Github OAuth token is not set."
+
+# Validate Composer, update, and clear cache
+RUN --mount=type=cache,mode=0777,target=/root/.composer/cache composer update
+
+# Copy relevant files and directories
+COPY modules/ /app/web/sites/all/modules/
+
+# Create a builder stage
+FROM uselagoon/php-8.1-cli-drupal:${LAGOON_IMAGE_VERSION} as builder
+
+# Copy shipshape binary
+COPY --from=ghcr.io/salsadigitalauorg/shipshape:0.2.2 /usr/local/bin/shipshape /usr/local/bin/shipshape
+
+# Install jq for YAML/JSON parsing
+RUN apk add jq
+
+# Install yq for YAML parsing
 RUN case $(uname -m) in x86_64)  ARCH="amd64" ;; aarch64) ARCH="arm64" ;; *) ARCH="amd64" ;; esac \
   && wget -O /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_${ARCH}" \
   && chmod +x /usr/local/bin/yq
 
-# Install jq for YAML/JSON parsing.
-RUN apk add jq
-
-RUN sed -i -e "/govcms\/govcms/ s!3.x-develop-dev!${GOVCMS_PROJECT_VERSION}!" /app/composer.json
-
-COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
-
-ENV COMPOSER_MEMORY_LIMIT=-1
-# Set the Github OAuth token only when the variable is set.
-RUN [[ ! -z "${GITHUB_TOKEN}" ]]  && composer config -g github-oauth.github.com ${GITHUB_TOKEN} || echo "Personal Github OAuth token is not set."
-RUN composer validate \
-   && composer self-update --2 \
-   && composer update -d /app \
-   && composer clearcache
-
-COPY .docker/sanitize.sh /app/sanitize.sh
-
-COPY .docker/images/govcms/scripts /usr/bin/
-RUN chmod 755 /usr/bin/govcms-deploy
-COPY .docker/images/govcms/govcms.site.yml /app/drush/sites/
-
 # Ensure MySQL client can accept server max_allowed_packet
 COPY .docker/images/govcms/mariadb-client.cnf /etc/my.cnf.d
+COPY .docker/sanitize.sh /app/sanitize.sh
+COPY .docker/images/govcms/scripts /usr/bin/
+RUN chmod 755 /usr/bin/govcms-deploy
 
+# Copy application files and directories
+COPY --from=base /app /app
+
+# Create necessary directories, set permissions, and run sanitize script
 RUN mkdir -p /app/web/sites/default/files/private \
     && fix-permissions /home/.drush \
     && fix-permissions /app/drush/sites \
@@ -50,7 +60,5 @@ RUN mkdir -p /app/web/sites/default/files/private \
     && /app/sanitize.sh \
     && rm -f /app/sanitize.sh
 
-COPY modules/ /app/web/sites/all/modules/
-
-# Define where the Drupal Root is located
+# Define the Drupal root directory
 ENV WEBROOT=web
