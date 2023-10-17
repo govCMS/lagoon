@@ -19,9 +19,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 # Copy executable scripts to /usr/bin/ and make them executable
 COPY .docker/scripts/ /usr/bin/
 RUN chmod +x /usr/bin/lint-govcms \
-    && chmod +x /usr/bin/lint-theme \
-    && chmod +x /usr/bin/behat \
-    && chmod +x /usr/bin/phpunit
+    && chmod +x /usr/bin/lint-theme
 
 # Don't restrict the memory limit for the test image.
 RUN echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/99-memory-limit.ini
@@ -33,8 +31,6 @@ COPY .docker/images/govcms/mariadb-client.cnf /etc/my.cnf.d
 COPY --from=cli /app /app
 
 # Copy PHPUnit configuration and test files
-COPY .docker/images/test/phpunit/phpunit.xml /app/tests/phpunit/
-COPY .docker/images/test/phpunit/bootstrap.php /app/tests/phpunit/
 COPY --from=govcmstesting/tests:3.1.0 /tests /app/tests
 
 # Set an environment variable for the webroot path
