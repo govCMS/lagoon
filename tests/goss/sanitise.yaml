@@ -29,4 +29,4 @@ file:
   /app/web/favicon.ico:
     exists: false
   /app/web/core/tests:
-    exists: false
+    exists: true
