@@ -15,10 +15,5 @@ COPY --from=cli /app/web/modules/contrib/search_api_solr/jump-start/solr8/config
 # Switch to the 'solr' user
 USER solr
 
-# Check if the core "drupal" doesn't exist in /var/solr/data, then precreate it using the drupal configuration
-RUN [[ ! -d "/var/solr/data/drupal" ]] \
-    && precreate-core drupal /opt/solr/server/solr/configsets/drupal \
-    || cp -a /opt/solr/server/solr/configsets/drupal/conf/. /var/solr/data/drupal/conf
-
-# Set the default command to run when the container starts
-CMD ["solr-foreground"]
+# Recreate 'solr' core using the drupal configuration
+CMD solr-recreate drupal /opt/solr/server/solr/configsets/drupal && solr-foreground
