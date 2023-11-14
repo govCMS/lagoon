@@ -15,5 +15,7 @@ COPY --from=cli /app/web/modules/contrib/search_api_solr/jump-start/solr8/config
 # Switch to the 'solr' user
 USER solr
 
-# Recreate 'solr' core using the drupal configuration
-CMD solr-recreate drupal /opt/solr/server/solr/configsets/drupal && solr-foreground
+COPY .docker/images/solr/900-prepare-index.sh /lagoon/entrypoints/
+
+# Run solr in the foreground.
+CMD ["solr-foreground"]
