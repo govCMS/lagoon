@@ -14,9 +14,9 @@ CONFIGSET="${CONFIGSET:-/opt/solr/server/solr/configsets/drupal}"
 if [ -n "$GOVCMS_SOLR_RECREATE" ]; then
   # solr-recreate will remove the index data and configuration
   # and rebuild from the configset provided.
-  solr-recreate "$INDEX_NAME" "$CONFIGSET"
+  solr-recreate "$INDEX" "$CONFIGSET"
 else
   # solr-precreate will initialise the solr data/conf directories
   # if they exist on disk, this will skip.
-  solr-precreate "$INDEX_NAME" "$CONFIGSET"
+  solr-precreate "$INDEX" "$CONFIGSET"
 fi
