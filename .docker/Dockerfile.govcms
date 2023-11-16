@@ -33,6 +33,9 @@ RUN composer validate \
    && composer update -d /app \
    && composer clearcache
 
+# Override global Drush8 with Drush12.
+ENV PATH="/app/vendor/bin:${PATH}"
+
 COPY .docker/sanitize.sh /app/sanitize.sh
 
 COPY .docker/images/govcms/scripts /usr/bin/
