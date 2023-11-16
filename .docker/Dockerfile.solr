@@ -2,17 +2,20 @@
 # Solr 8
 ##
 
+# Use the specified CLI image for building
 ARG CLI_IMAGE
 FROM ${CLI_IMAGE} as cli
 
+# Use the uselagoon/solr-8 as the base image
 FROM uselagoon/solr-8
 
-# The Drupal module now provides valid jump start configuration sets for solr.
+# Copy the jump-start configuration sets for Solr from the CLI image to the Solr image
 COPY --from=cli /app/web/modules/contrib/search_api_solr/jump-start/solr8/config-set/ /opt/solr/server/solr/configsets/drupal/conf
 
+# Switch to the 'solr' user
 USER solr
 
-# Solr-precreate is provided by the base solr docker image and is
-# responsible for precreating the core and then starting solr in
-# the foreground.
-CMD solr-precreate drupal /opt/solr/server/solr/configsets/drupal
+COPY .docker/images/solr/900-prepare-index.sh /lagoon/entrypoints/
+
+# Run solr in the foreground.
+CMD ["solr-foreground"]
