@@ -15,6 +15,8 @@ prod:
   uri: nginx-${env.LAGOON_PROJECT}-master.govcms.amazee.io
   ssh:
     options: -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 30831 -F /dev/null
+  paths:
+    drush-script: /app/vendor/bin/drush
 
 ci.prod:
   root: /app
@@ -23,4 +25,5 @@ ci.prod:
   uri: nginx-${env.LAGOON_PROJECT}-master.govcms.amazee.io
   ssh:
     options: -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 30831 -F /dev/null
-
+  paths:
+    drush-script: /app/vendor/bin/drush
