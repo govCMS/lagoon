@@ -11,18 +11,6 @@
         {
             "type": "package",
             "package": {
-                "name": "harvesthq/chosen",
-                "version": "v1.8.7",
-                "type": "drupal-library",
-                "dist": {
-                    "type": "zip",
-                    "url": "https://github.com/harvesthq/chosen/releases/download/v1.8.7/chosen_v1.8.7.zip"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
                 "name": "dropzone/dropzone",
                 "version": "v5.7.2",
                 "type": "drupal-library",
@@ -44,7 +32,7 @@
         "egulias/email-validator": "4.0.1 as 3.2.6",
         "govcms/govcms": "3.x-develop-dev",
         "govcms/govcms-custom": "*",
-        "govcms/scaffold-tooling": "5.1.0",
+        "govcms/scaffold-tooling": "5.2.0",
         "webmozart/path-util": "^2.3"
     },
     "require-dev": {
