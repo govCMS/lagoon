@@ -22,21 +22,21 @@ if [ -f favicon.ico ]; then
   mv $APP_DIR/favicon.ico $APP_DIR/web/core/misc/favicon.ico;
 fi
 
-find $APP_DIR -type f -iname 'API.md' -exec rm -f {} +
-find $APP_DIR -type f -iname 'CHANGELOG.txt' -exec rm -f {} +
-find $APP_DIR -type f -iname 'CONTRIBUTING.md' -exec rm -f {} +
-find $APP_DIR -type f -iname 'COPYRIGHT.txt' -exec rm -f {} +
-find $APP_DIR -type f -iname 'INSTALL.txt' -exec rm -f {} +
-find $APP_DIR -type f -iname 'INSTALL.*.txt' -exec rm -f {} +
-find $APP_DIR -type f -iname 'LICENCE.txt' -exec rm -f {} +
-find $APP_DIR -type f -iname 'LICENSE' -exec rm -f {} +
-find $APP_DIR -type f -iname 'LICENSE-MIT' -exec rm -f {} +
-find $APP_DIR -type f -iname 'LICENSE.txt' -exec rm -f {} +
-find $APP_DIR -type f -iname 'LICENSE.md' -exec rm -f {} +
-find $APP_DIR -type f -iname 'MAINTAINERS.txt' -exec rm -f {} +
-find $APP_DIR -type f -name 'PATCHES.txt' -exec rm -f {} +
-find $APP_DIR -type f -iname 'UPDATE.txt' -exec rm -f {} +
-find $APP_DIR -type f -iname 'README.txt' -exec rm -f {} +
+find $APP_DIR -type f -iname 'API.md' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'CHANGELOG.txt' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'CONTRIBUTING.md' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'COPYRIGHT.txt' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'INSTALL.txt' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'INSTALL.*.txt' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'LICENCE.txt' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'LICENSE' -exec truncate -s 0 {} +
+find $APP_DIR -type f -iname 'LICENSE-MIT' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'LICENSE.txt' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'LICENSE.md' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'MAINTAINERS.txt' -exec truncate -s 0 {}
+find $APP_DIR -type f -name 'PATCHES.txt' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'UPDATE.txt' -exec truncate -s 0 {}
+find $APP_DIR -type f -iname 'README.txt' -exec truncate -s 0 {}
 
 # Remove test dirs as they can contain vulnerabilities.
 find $APP_DIR/web/libraries/ -type d -name test -exec rm -rf {} +
