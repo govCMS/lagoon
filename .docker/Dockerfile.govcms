@@ -33,8 +33,8 @@ RUN composer validate \
    && composer update -d /app \
    && composer clearcache
 
-# Override global Drush8 with Drush12.
-ENV PATH="/app/vendor/bin:${PATH}"
+# Add bash aliases to assist with full path executables.
+COPY .docker/images/govcms/entrypoints /lagoon/entrypoints/
 
 COPY .docker/sanitize.sh /app/sanitize.sh
 
