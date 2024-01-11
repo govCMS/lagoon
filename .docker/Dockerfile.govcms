@@ -28,13 +28,14 @@ COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 ENV COMPOSER_MEMORY_LIMIT=-1
 # Set the Github OAuth token only when the variable is set.
 RUN [[ ! -z "${GITHUB_TOKEN}" ]]  && composer config -g github-oauth.github.com ${GITHUB_TOKEN} || echo "Personal Github OAuth token is not set."
+
 RUN composer validate \
    && composer self-update --2 \
    && composer update -d /app \
    && composer clearcache
 
-# Override global Drush8 with Drush12.
-ENV PATH="/app/vendor/bin:${PATH}"
+# Add bash aliases to assist with full path executables.
+COPY .docker/images/govcms/entrypoints /lagoon/entrypoints/
 
 COPY .docker/sanitize.sh /app/sanitize.sh
 
