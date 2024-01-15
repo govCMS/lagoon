@@ -5,12 +5,12 @@ commands:
   up:
     usage: Build project.
     cmd: |
-      docker-compose up -d "$@" &&
-      docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m;
+      docker compose up -d "$@" &&
+      docker compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m;
 
   down:
     usage: Delete project.
-    cmd: docker-compose down
+    cmd: docker compose down
 
   build:
     usage: Build project locally (single-local architecture only).
@@ -19,15 +19,15 @@ commands:
       if [ "$1" == "y" ]; then
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache cli --load
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --load
-        docker-compose up -d
-        docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m
+        docker compose up -d
+        docker compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m
       else
         ahoy confirm "Are you sure environment variables are correct? Update .env if not." &&
         # Run this if confirm returns true
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache cli --load &&
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --load &&
-          docker-compose up -d "$@" &&
-          docker-compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m ||
+          docker compose up -d "$@" &&
+          docker compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m ||
         # Run this if confirm returns false
         echo "OK, nothing to do."
       fi
@@ -51,39 +51,39 @@ commands:
 
   cli:
     usage: Start a shell inside TEST container.
-    cmd: docker-compose exec cli bash
+    cmd: docker compose exec cli bash
 
   run:
     usage: Run command inside TEST container.
-    cmd: docker-compose exec -T cli bash -c "$@"
+    cmd: docker compose exec -T cli bash -c "$@"
 
   drush:
     usage: Run drush commands in TEST container.
-    cmd: docker-compose exec -T cli drush "$@"
+    cmd: docker compose exec -T cli drush "$@"
 
   logs:
     usage: Show Docker logs.
-    cmd: docker-compose logs "$@"
+    cmd: docker compose logs "$@"
 
   ps:
     usage: List running Docker containers.
-    cmd: docker-compose ps
+    cmd: docker compose ps
 
   restart:
     usage: Restart Docker containers.
-    cmd: docker-compose restart
+    cmd: docker compose restart
 
   stop:
     usage: Stop Docker containers.
-    cmd: docker-compose stop "$@"
+    cmd: docker compose stop "$@"
 
   install:
     usage: Install the profile.
-    cmd: docker-compose exec -T cli drush si -y govcms "$@"
+    cmd: docker compose exec -T cli drush si -y govcms "$@"
 
   login:
     usage: Login to a website.
-    cmd: docker-compose exec -T cli drush uli "$@"
+    cmd: docker compose exec -T cli drush uli "$@"
 
   pull:
     usage: Pull latest docker images.
@@ -91,11 +91,11 @@ commands:
 
   audit-site:
     usage: Run site audit
-    cmd: docker-compose exec -T cli drutiny profile:run d8-full @self "$@"
+    cmd: docker compose exec -T cli drutiny profile:run d8-full @self "$@"
 
   lint:
     usage: Lint code
-    cmd: docker-compose exec cli lint-govcms
+    cmd: docker compose exec cli lint-govcms
 
   test:
     usage: Run all tests.
@@ -105,18 +105,18 @@ commands:
 
   test-behat:
     usage: Run Behat tests.
-    cmd: docker-compose exec cli behat "$@"
+    cmd: docker compose exec cli behat "$@"
 
   test-phpunit:
     usage: Run PHPUnit tests.
-    cmd: docker-compose exec cli phpunit --testsuite govcms
+    cmd: docker compose exec cli phpunit --testsuite govcms
 
   test-redis:
     usage: Verify redis can accept connections.
     cmd: |
       ahoy -v install
-      docker-compose exec -T --env ENABLE_REDIS=true cli drush status
-      if [ $(docker-compose exec -T redis redis-cli KEYS '*' | wc -l) -le 1 ]; then
+      docker compose exec -T --env ENABLE_REDIS=true cli drush status
+      if [ $(docker compose exec -T redis redis-cli KEYS '*' | wc -l) -le 1 ]; then
         echo 'Redis fail: No valid cache keys.'
         exit 1
       else
@@ -133,8 +133,8 @@ commands:
   test-nginx:
     usage: Validate the nginx image.
     cmd: |
-      docker-compose exec -T test dockerize -wait tcp://nginx:8080 -timeout 1m
-      docker-compose exec -T nginx nginx -t
+      docker compose exec -T test dockerize -wait tcp://nginx:8080 -timeout 1m
+      docker compose exec -T nginx nginx -t
       composer validate --strict -d .docker/images/nginx/tests
       composer install -d .docker/images/nginx/tests
       .docker/images/nginx/tests/vendor/bin/phpunit -c .docker/images/nginx/tests/phpunit.xml

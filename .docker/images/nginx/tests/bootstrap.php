@@ -25,7 +25,7 @@ function get_curl_headers($path = '/', $opts = NULL) {
   $uri = $uri . '/' . ltrim($path, '/');
 
   $response = NULL;
-  exec("docker-compose exec -T test curl -s {$uri} -I {$opts} 2>&1", $response, $ret);
+  exec("docker compose exec -T test curl -s {$uri} -I {$opts} 2>&1", $response, $ret);
 
   if (is_debug()) {
     fwrite(STDERR, sprintf('CURL exit code : %s', $ret) . PHP_EOL);
@@ -75,7 +75,7 @@ function curl_get_content($path = '/', $opts = NULL) {
   $uri = $uri . '/' . ltrim($path, '/');
 
   $response = NULL;
-  exec("docker-compose exec -T test curl -s {$uri} {$opts} 2>&1", $response, $ret);
+  exec("docker compose exec -T test curl -s {$uri} {$opts} 2>&1", $response, $ret);
 
   if (is_debug()) {
     fwrite(STDERR, sprintf('CURL exit code : %s', $ret) . PHP_EOL);

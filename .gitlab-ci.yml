@@ -120,7 +120,7 @@ deploy:multiarch:
 validate:images:
   stage: validate
   script:
-    - docker-compose config -q
+    - docker compose config -q
 
 build:images:
   stage: build
@@ -138,7 +138,7 @@ info:modules:
   <<: *before_script_build
   script:
     - ahoy -v install -- install_configure_form.update_status_module='array(FALSE,FALSE)'
-    - docker-compose exec -T cli drush status
+    - docker compose exec -T cli drush status
     # @todo: 10.x support.
     #- /govcms/vendor/bin/govcms-module_verify
   only:

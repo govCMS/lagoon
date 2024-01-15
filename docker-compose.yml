@@ -71,7 +71,7 @@ services:
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
     image: ${DOCKERHUB_NAMESPACE:-govcms}/mariadb-drupal:${GOVCMS_RELEASE_TAG:-latest}
     ports:
-      - "3306" # Find port on host with `docker-compose port mariadb 3306`
+      - "3306" # Find port on host with `docker compose port mariadb 3306`
 
   redis:
     build:
@@ -91,7 +91,7 @@ services:
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
     image: ${DOCKERHUB_NAMESPACE:-govcms}/solr:${GOVCMS_RELEASE_TAG:-latest}
     ports:
-      - "8983" # Find port on host with `docker-compose port solr 8983`
+      - "8983" # Find port on host with `docker compose port solr 8983`
 
   varnish:
     build:

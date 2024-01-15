@@ -10,10 +10,10 @@ class FilesCacheTest extends TestCase {
    * {@inheritdoc}
    */
   public function setUp(): void {
-    `docker-compose exec nginx mkdir -p /app/sites/default/files`;
+    `docker compose exec nginx mkdir -p /app/sites/default/files`;
     foreach ($this->providerExpiredHeaderPath() as $parts) {
       list($file, $path) = $parts;
-      `docker cp $path/$file $(docker-compose ps -q nginx):/app/web/sites/default/files/`;
+      `docker cp $path/$file $(docker compose ps -q nginx):/app/web/sites/default/files/`;
     }
   }
 
