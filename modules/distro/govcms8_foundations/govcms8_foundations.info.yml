@@ -1,12 +1,7 @@
-name: GovCMS8 Foundations [DEPRECATED - DO NOT USE]
+name: 'GovCMS8 Foundations'
 type: module
-description: GovCMS8 Foundations Module. [deprecated]
-package: GovCMS8 [deprecated]
-core_version_requirement: ^9.4 || ^10
-dependencies:
-  - ds
-  - govcms8_calendar_item
-  - govcms8_layouts
-  - govcms8_modifiers
-  - entity_class_formatter
-  - entity_reference_display
+description: 'GovCMS8 Foundations Module. [obsolete]'
+package: GovCMS [obsolete]
+core_version_requirement: ^9 || ^10
+lifecycle: obsolete
+lifecycle_link: 'https://github.com/GovCMS/GovCMS'
