@@ -7,7 +7,6 @@ core_version_requirement: ^9 || ^10
 dependencies:
   - redis:redis
   - fast404:fast404
-  - clamav:clamav
   - robotstxt:robotstxt
   - lagoon_logs:lagoon_logs
   - environment_indicator:environment_indicator
