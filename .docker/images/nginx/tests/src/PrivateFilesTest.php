@@ -14,11 +14,11 @@ class PrivateFilesTest extends TestCase {
    */
   public function setUp(): void {
     // Make sure private files directory exists in the nginx container.
-    `docker-compose exec nginx mkdir -p /app/web/sites/default/files/private`;
+    `docker compose exec nginx mkdir -p /app/web/sites/default/files/private`;
     foreach ($this->providerFileAccess() as $parts) {
       list($file, $path) = $parts;
       // Move out test files.
-      `docker cp $path/$file $(docker-compose ps -q nginx):/app/web/sites/default/files/private/`;
+      `docker cp $path/$file $(docker compose ps -q nginx):/app/web/sites/default/files/private/`;
     }
   }
 
