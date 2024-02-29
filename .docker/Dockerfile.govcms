@@ -1,12 +1,9 @@
 ARG LAGOON_IMAGE_VERSION
-
-FROM uselagoon/php-8.1-cli-drupal:${LAGOON_IMAGE_VERSION} as builder
+FROM uselagoon/php-8.1-cli-drupal:${LAGOON_IMAGE_VERSION}
 
 COPY --from=ghcr.io/salsadigitalauorg/shipshape:0.2.2 /usr/local/bin/shipshape /usr/local/bin/shipshape
 
 ARG GOVCMS_PROJECT_VERSION
-ARG COMPOSER_AUTH
-ARG GITHUB_TOKEN
 
 COPY composer.* /app/
 
@@ -26,12 +23,10 @@ RUN sed -i -e "/govcms\/govcms/ s!3.x-develop-dev!${GOVCMS_PROJECT_VERSION}!" /a
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
 ENV COMPOSER_MEMORY_LIMIT=-1
-# Set the Github OAuth token only when the variable is set.
-RUN [[ ! -z "${GITHUB_TOKEN}" ]]  && composer config -g github-oauth.github.com ${GITHUB_TOKEN} || echo "Personal Github OAuth token is not set."
 
-RUN composer validate \
-   && composer update -d /app \
-   && composer clearcache
+RUN --mount=type=secret,id=composer-auth,dst=/app/auth.json /usr/local/bin/composer validate
+RUN --mount=type=secret,id=composer-auth,dst=/app/auth.json /usr/local/bin/composer update -d /app
+RUN --mount=type=secret,id=composer-auth,dst=/app/auth.json /usr/local/bin/composer clearcache
 
 # Add bash aliases to assist with full path executables.
 COPY .docker/images/govcms/entrypoints /lagoon/entrypoints/
