@@ -29,7 +29,6 @@
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
         "drupal/bartik": "^1.0",
-        "egulias/email-validator": "4.0.1 as 3.2.6",
         "govcms/govcms": "3.x-develop-dev",
         "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "5.2.1",
@@ -52,7 +51,8 @@
             "cweagans/composer-patches": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "drupal/core-composer-scaffold": true,
-            "oomphinc/composer-installers-extender": true
+            "oomphinc/composer-installers-extender": true,
+            "php-http/discovery": true
         }
     },
     "autoload": {
