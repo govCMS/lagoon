@@ -1,7 +1,7 @@
 name: CKEditor 4 (contrib)
 type: module
 description: "WYSIWYG editing for rich text fields using CKEditor."
-lifecycle: deprecated
+lifecycle: obsolete
 lifecycle_link: https://www.drupal.org/node/3223395#s-ckeditor
 core_version_requirement: "^9.4 || ^10"
 dependencies:
