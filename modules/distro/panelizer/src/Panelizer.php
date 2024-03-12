@@ -171,6 +171,7 @@ class Panelizer implements PanelizerInterface {
     $results = \Drupal::entityQuery('entity_view_display')
       ->condition('id', $candidate_ids)
       ->condition('status', TRUE)
+      ->accessCheck()
       ->execute();
 
     // Select the first valid candidate display, if any.

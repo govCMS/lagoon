@@ -4,7 +4,7 @@ panelizer_default_form:
     js/panelizer-default-form.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
 panels_ipe:
   version: VERSION
   js:

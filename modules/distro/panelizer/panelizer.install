@@ -10,7 +10,7 @@
  * default layouts.
  */
 function panelizer_update_8401(&$sandbox) {
-  module_load_install('panels');
+  \Drupal::moduleHandler()->loadInclude('panels', 'install');
   $config_factory = \Drupal::configFactory();
   foreach ($config_factory->listAll('core.entity_view_display.') as $entity_display_name) {
     $entity_display = $config_factory->getEditable($entity_display_name);

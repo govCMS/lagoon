@@ -16,7 +16,7 @@ class PanelizerDefaultsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'bartik';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -71,7 +71,7 @@ class PanelizerDefaultsTest extends BrowserTestBase {
       // default, they aren't.
       $this->drupalGet('node/add/page');
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertSession()->fieldValueNotEquals("panelizer['{$i}][default]", '');
+      $this->assertSession()->fieldNotExists("panelizer['{$i}][default]");
       // Allow user to select panelized modes in UI.
       $this->panelize('page', $view_mode_name, [
         'panelizer[custom]' => TRUE,

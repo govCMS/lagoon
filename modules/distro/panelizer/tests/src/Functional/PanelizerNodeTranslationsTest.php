@@ -174,7 +174,7 @@ class PanelizerNodeTranslationsTest extends ContentTranslationTestBase {
     ]);
     $out = $this->drupalGet('node/' . $node->id());
     $this->assertSession()->statusCodeEquals(200);
-    $this->verbose($out);
+    dump($out);
     $elements = $this->xpath('//*[@id="panels-ipe-content"]');
     if (is_array($elements)) {
       $this->assertSame(count($elements), 1);

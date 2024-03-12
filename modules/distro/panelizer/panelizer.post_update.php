@@ -19,7 +19,7 @@
  * default layouts.
  */
 function panelizer_post_update_rename_layout_machine_names(&$sandbox) {
-  module_load_install('panels');
+  \Drupal::moduleHandler()->loadInclude('panels', 'install');
 
   /** @var \Drupal\panelizer\Plugin\PanelizerEntityManager $panelizer_manager */
   $panelizer_manager = \Drupal::service('plugin.manager.panelizer_entity');
@@ -31,6 +31,7 @@ function panelizer_post_update_rename_layout_machine_names(&$sandbox) {
       $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
       $ids = $storage->getQuery()
         ->condition('panelizer', serialize([]), '<>')
+        ->accessCheck(FALSE)
         ->execute();
 
       foreach ($storage->loadMultiple($ids) as $entity_id => $entity) {

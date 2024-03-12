@@ -343,7 +343,7 @@ function template_preprocess_panelizer_wizard_tree(&$variables) {
   /** @var $wizard \Drupal\ctools\Wizard\FormWizardInterface|\Drupal\ctools\Wizard\EntityFormWizardInterface */
   $wizard = $variables['wizard'];
   $cached_values = $variables['cached_values'];
-  $tree = $variables['tree'];
+  $tree = $variables['tree'] ?: [];
   $variables['step'] = $wizard->getStep($cached_values);
 
   foreach ($wizard->getOperations($cached_values) as $step => $operation) {

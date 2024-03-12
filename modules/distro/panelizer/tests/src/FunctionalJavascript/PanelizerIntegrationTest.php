@@ -52,10 +52,9 @@ class PanelizerIntegrationTest extends WebDriverTestBase {
       'access content',
       'access panels in-place editing',
       'administer blocks',
-      'administer content types',
-      'administer nodes',
       'administer node display',
       'administer panelizer',
+      'bypass node access',
     ]);
     $this->drupalLogin($admin_user);
 

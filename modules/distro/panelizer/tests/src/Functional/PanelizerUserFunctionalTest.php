@@ -97,7 +97,7 @@ class PanelizerUserFunctionalTest extends BrowserTestBase {
     // Check the user entity page.
     $out = $this->drupalGet('user/' . $account->id());
     $this->assertSession()->statusCodeEquals(200);
-    $this->verbose($out);
+    dump($out);
 
     // Verify that
     $elements = $this->xpath('//*[@id="panels-ipe-content"]');
