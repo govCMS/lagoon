@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\panelizer\Functional;
 
+use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 
 /**
@@ -74,24 +75,27 @@ trait PanelizerTestTrait {
    *   (optional) Additional form values.
    */
   protected function panelize($content_type = 'page', $display = NULL, array $values = []) {
+    /** @var \Drupal\Tests\WebAssert $assert_sesion */
+    $assert_session = $this->assertSession();
+
     $this->drupalGet("admin/structure/types");
-    $this->assertResponse(200);
+    $assert_session->statusCodeEquals(200);
 
     $this->drupalGet("admin/structure/types/manage/{$content_type}");
-    $this->assertResponse(200);
+    $assert_session->statusCodeEquals(200);
 
     $path = "admin/structure/types/manage/{$content_type}/display";
     if (!empty($display)) {
       $path .= '/' . $display;
     }
     $this->drupalGet($path);
-    $this->assertResponse(200);
+    $assert_session->statusCodeEquals(200);
 
     $edit = [
       'panelizer[enable]' => TRUE,
     ] + $values;
-    $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->submitForm($edit, t('Save'));
+    $assert_session->statusCodeEquals(200);
 
     \Drupal::service('entity_display.repository')->getFormDisplay('node', $content_type, 'default')
       ->setComponent('panelizer', [
@@ -114,14 +118,17 @@ trait PanelizerTestTrait {
    *   (optional) Additional form values.
    */
   protected function unpanelize($content_type = 'page', $display = NULL, array $values = []) {
+    /** @var \Drupal\Tests\WebAssert $assert_sesion */
+    $assert_session = $this->assertSession();
+
     $this->drupalGet("admin/structure/types/manage/{$content_type}/display/{$display}");
-    $this->assertResponse(200);
+    $assert_session->statusCodeEquals(200);
 
     $edit = [
       'panelizer[enable]' => FALSE,
     ] + $values;
-    $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->submitForm($edit, t('Save'));
+    $assert_session->statusCodeEquals(200);
 
     \Drupal::service('entity_display.repository')->getFormDisplay('node', $content_type, 'default')
       ->removeComponent('panelizer')
@@ -136,6 +143,9 @@ trait PanelizerTestTrait {
    *  'page'.
    */
   protected function addPanelizerDefault($content_type = 'page', $display = 'default') {
+    /** @var \Drupal\Tests\WebAssert $assert_sesion */
+    $assert_session = $this->assertSession();
+
     $label = $this->getRandomGenerator()->word(16);
     $id = strtolower($label);
     $default_id = "node__{$content_type}__{$display}__{$id}";
@@ -149,7 +159,7 @@ trait PanelizerTestTrait {
       $path .= '/' . $display;
     }
     $this->drupalGet($path);
-    $this->assertResponse(200);
+    $assert_session->statusCodeEquals(200);
     $this->clickLink('Add a new Panelizer default display');
 
     // Step 1: Enter the default's label and ID.
@@ -157,18 +167,19 @@ trait PanelizerTestTrait {
       'id' => $id,
       'label' => $label,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Next'));
-    $this->assertResponse(200);
+    $this->submitForm($edit, t('Next'));
+    $assert_session->statusCodeEquals(200);
 
     // Step 2: Define contexts.
-    $this->assertUrl("admin/structure/panelizer/add/{$default_id}/contexts", $options);
-    $this->drupalPostForm(NULL, [], t('Next'));
-    $this->assertResponse(200);
+
+    $assert_session->addressEquals(Url::fromUserInput("/admin/structure/panelizer/add/{$default_id}/contexts", $options)->toString());
+    $this->submitForm([], t('Next'));
+    $assert_session->statusCodeEquals(200);
 
     // Step 3: Select layout.
-    $this->assertUrl("admin/structure/panelizer/add/{$default_id}/layout", $options);
-    $this->drupalPostForm(NULL, [], t('Next'));
-    $this->assertResponse(200);
+    $assert_session->addressEquals(Url::fromUserInput("/admin/structure/panelizer/add/{$default_id}/layout", $options)->toString());
+    $this->submitForm([], t('Next'));
+    $assert_session->statusCodeEquals(200);
 
     // Step 4: If the layout has settings (new since Drupal 8.8), accept the
     // defaults.
@@ -180,9 +191,9 @@ trait PanelizerTestTrait {
     }
 
     // Step 5: Select content.
-    $this->assertUrl("admin/structure/panelizer/add/{$default_id}/content", $options);
-    $this->drupalPostForm(NULL, [], t('Finish'));
-    $this->assertResponse(200);
+    $assert_session->addressEquals(Url::fromUserInput("/admin/structure/panelizer/add/{$default_id}/content", $options)->toString());
+    $this->submitForm([], t('Finish'));
+    $assert_session->statusCodeEquals(200);
 
     return $id;
   }
@@ -199,10 +210,13 @@ trait PanelizerTestTrait {
    *   (optional) The default ID.
    */
   protected function deletePanelizerDefault($content_type = 'page', $display = 'default', $id = 'default') {
+    /** @var \Drupal\Tests\WebAssert $assert_sesion */
+    $assert_session = $this->assertSession();
+
     $this->drupalGet("admin/structure/panelizer/delete/node__{$content_type}__{$display}__{$id}");
-    $this->assertResponse(200);
-    $this->drupalPostForm(NULL, [], t('Confirm'));
-    $this->assertResponse(200);
+    $assert_session->statusCodeEquals(200);
+    $this->submitForm([], t('Confirm'));
+    $assert_session->statusCodeEquals(200);
   }
 
   /**

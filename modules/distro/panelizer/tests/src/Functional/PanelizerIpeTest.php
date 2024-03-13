@@ -86,7 +86,7 @@ class PanelizerIpeTest extends BrowserTestBase {
       // From Panels.
       'access panels in-place editing',
     ];
-    $this->verbose('<pre>' . print_r($perms, TRUE) . '</pre>');
+    dump('<pre>' . print_r($perms, TRUE) . '</pre>');
     return $this->drupalCreateUser($perms);
   }
 
@@ -111,7 +111,7 @@ class PanelizerIpeTest extends BrowserTestBase {
     $matches = [];
     if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $this->getSession()->getPage()->getContent(), $matches)) {
       $drupalSettings = Json::decode($matches[1]);
-      $this->verbose('<pre>' . print_r($drupalSettings, TRUE) . '</pre>');
+      dump('<pre>' . print_r($drupalSettings, TRUE) . '</pre>');
     }
     $this->assertNotNull($drupalSettings);
     if (!empty($drupalSettings)) {
@@ -158,7 +158,7 @@ class PanelizerIpeTest extends BrowserTestBase {
     $matches = [];
     if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $this->getSession()->getPage()->getContent(), $matches)) {
       $drupalSettings = Json::decode($matches[1]);
-      $this->verbose('<pre>' . print_r($drupalSettings, TRUE) . '</pre>');
+      dump('<pre>' . print_r($drupalSettings, TRUE) . '</pre>');
     }
     $this->assertNotNull($drupalSettings);
     if (!empty($drupalSettings)) {
@@ -375,7 +375,7 @@ class PanelizerIpeTest extends BrowserTestBase {
     $matches = [];
     if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $this->getSession()->getPage()->getContent(), $matches)) {
       $drupalSettings = Json::decode($matches[1]);
-      $this->verbose('<pre>' . print_r($drupalSettings, TRUE) . '</pre>');
+      dump('<pre>' . print_r($drupalSettings, TRUE) . '</pre>');
     }
     return $drupalSettings;
   }

@@ -2,11 +2,14 @@
  * @file
  * Javascript for the Panelizer defaults page.
  */
-(function ($) {
+(function ($, once) {
   Drupal.behaviors.panelizer_default_form = {
     attach: function (context, settings) {
-      var $panelizer_checkbox = $(':input[name="panelizer[enable]"]');
+      var $panelizer_checkbox = $(once('panelizer-default-form', 'input[name="panelizer[enable]"]', context));
 
+      if (!$panelizer_checkbox.length) {
+        return;
+      }
       function update_form() {
         var $core_form = $('#field-display-overview-wrapper');
         if ($panelizer_checkbox.is(':checked')) {
@@ -17,8 +20,8 @@
         }
       }
 
-      $panelizer_checkbox.once('panelizer-default-form').click(update_form);
+      $panelizer_checkbox.click(update_form);
       update_form();
     }
   };
-})(jQuery);
+})(jQuery, once);

@@ -1,3 +1,10 @@
+Panelizer 8.x-4.5, 2023-10-10
+-----------------------------
+#3288958 by Project Update Bot, DamienMcKenna: Drupal 10 compatibility fixes.
+#3352704 by sker101, codebymikey, hamzadwaya, Mingsong, joseph.olstad, jan
+  kellermann, DamienMcKenna: Additional Drupal 10 compatibility fixes.
+
+
 Panelizer 8.x-4.x-dev, xxxx-xx-xx
 ---------------------------------
 #2889815 by samuel.mortenson: Fix tests for Panelizer 8.x.
@@ -9,7 +16,6 @@ Panelizer 8.x-4.x-dev, xxxx-xx-xx
 #2912622 by gaydabura: Panelizer field should only show enabled view modes.
 #2878095 by zuernBernhard: Panelizer Post Update fails in combination with
   search_api index tracking.
-#3288958 by Project Update Bot, DamienMcKenna: Drupal 10 compatibility fixes.
 
 
 Panelizer 8.x-4.0, 2017-04-28

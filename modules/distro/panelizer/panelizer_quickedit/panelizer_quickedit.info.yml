@@ -8,7 +8,7 @@ dependencies:
   - panelizer:panelizer
   - drupal:quickedit
 
-# Information added by Drupal.org packaging script on 2022-08-23
-version: '8.x-4.4+2-dev'
+# Information added by Drupal.org packaging script on 2023-10-10
+version: '8.x-4.5'
 project: 'panelizer'
-datestamp: 1661286213
+datestamp: 1696975733
