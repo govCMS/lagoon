@@ -9,18 +9,6 @@
             "url": "https://packages.drupal.org/8"
         },
         {
-            "type": "package",
-            "package": {
-                "name": "dropzone/dropzone",
-                "version": "v5.7.2",
-                "type": "drupal-library",
-                "dist": {
-                    "type": "zip",
-                    "url": "https://github.com/dropzone/dropzone/archive/refs/tags/v5.7.2.zip"
-                }
-            }
-        },
-        {
             "type": "path",
             "url": "custom/composer"
         }
