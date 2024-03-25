@@ -83,6 +83,9 @@ workflow:
     - export $(grep -v '^#' .env | xargs)
     - docker network prune -f && docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - composer config github-oauth.github.com "$GITHUB_TOKEN"
+    - docker swarm init
+    - docker secret create composer-auth auth.json
     - ahoy build y
     - docker image list
 
