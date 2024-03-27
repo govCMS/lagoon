@@ -16,7 +16,6 @@
     "require": {
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
-        "drupal/bartik": "^1.0",
         "govcms/govcms": "3.x-develop-dev",
         "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "5.2.1",
