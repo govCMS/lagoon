@@ -19,7 +19,7 @@
         "drupal/bartik": "^1.0",
         "govcms/govcms": "3.x-develop-dev",
         "govcms/govcms-custom": "*",
-        "govcms/scaffold-tooling": "5.3.0",
+        "govcms/scaffold-tooling": "5.4.0",
         "webmozart/path-util": "^2.3"
     },
     "require-dev": {

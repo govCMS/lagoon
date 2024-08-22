@@ -67,7 +67,7 @@ workflow:
     - |
       if [ ! -z "$USE_LATEST_RELEASE_BRANCH" ]; then
         echo "Determining latest release branch in use at govcms/govcms"
-        LATEST=$(curl -H "Authorization: token $GITHUB_TOKEN" -s https://api.github.com/repos/govCMS/GovCMS/branches | jq -r '.[].name' | grep release | sort -r | head -n 1)
+        LATEST=$(curl -H "Authorization: token $GITHUB_TOKEN" -s 'https://api.github.com/repos/govCMS/GovCMS/branches?per_page=100' | jq -r '.[].name' | grep release | sort -r | head -n 1)
         sed -i -e "s#^GOVCMS_PROJECT_VERSION.*#GOVCMS_PROJECT_VERSION=dev-$LATEST#" .env
       fi
     - cat .env
@@ -107,7 +107,7 @@ deploy:multiarch:
     - |
       if [ ! -z "$USE_LATEST_RELEASE_BRANCH" ]; then
         echo "Determining latest release branch in use at govcms/govcms"
-        LATEST=$(curl -H "Authorization: token $GITHUB_TOKEN" -s https://api.github.com/repos/govCMS/GovCMS/branches | jq -r '.[].name' | grep release | sort -r | head -n 1)
+        LATEST=$(curl -H "Authorization: token $GITHUB_TOKEN" -s 'https://api.github.com/repos/govCMS/GovCMS/branches?per_page=100' | jq -r '.[].name' | grep release | sort -r | head -n 1)
         sed -i -e "s#^GOVCMS_PROJECT_VERSION.*#GOVCMS_PROJECT_VERSION=dev-$LATEST#" .env
       fi
     - cat .env
