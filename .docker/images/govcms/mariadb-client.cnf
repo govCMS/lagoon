@@ -1,2 +1,6 @@
 [client]
 max_allowed_packet=256M
+default-character-set=utf8mb4
+
+[mysql]
+default-character-set=utf8mb4
