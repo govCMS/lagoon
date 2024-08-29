@@ -1,5 +1,5 @@
 ARG LAGOON_IMAGE_VERSION
-FROM uselagoon/php-8.1-cli-drupal:${LAGOON_IMAGE_VERSION}
+FROM uselagoon/php-8.3-cli-drupal:${LAGOON_IMAGE_VERSION}
 
 COPY --from=ghcr.io/salsadigitalauorg/shipshape:0.2.2 /usr/local/bin/shipshape /usr/local/bin/shipshape
 
