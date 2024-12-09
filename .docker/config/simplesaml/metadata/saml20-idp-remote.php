@@ -78,7 +78,7 @@ $metadata[$idpEntityId] = [
   'keys' => [
     [
       'encryption' => !empty(getenv('SIMPLESAMLPHP_IDP_CERT_ENCRYPT')),
-      'signing' => empty(getenv('SIMPLESAMLPHP_IDP_CERT_SIGNING')),
+      'signing' => !empty(getenv('SIMPLESAMLPHP_IDP_CERT_SIGNING')),
       'type' => getenv('SIMPLESAMLPHP_IDP_CERT_TYPE') ?: 'X509Certificate',
       'X509Certificate' => getenv('SIMPLESAMLPHP_IDP_CERT'),
     ],
