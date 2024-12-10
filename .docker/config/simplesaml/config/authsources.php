@@ -77,13 +77,13 @@ $config = [
         /*
          * Whether logout requests and logout responses sent to this SP should be signed. The default is FALSE .
          */
-        'redirect.sign' => TRUE,
+        'redirect.sign' => getenv('SIMPLESAMLPHP_SP_SIGN_AUTH') ?: true,
 
         /* 
          * Whether authentication requests, logout requests and logout responses received from this SP should be validated.
          * The default is FALSE 
          */
-        'redirect.validate' => TRUE,
+        'redirect.validate' => getenv('SIMPLESAMLPHP_SP_VALIDATE_AUTH') ?: true,
 
         /*
          * Whether we require signatures on authentication requests sent from this SP. Set it to:
