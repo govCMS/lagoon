@@ -19,7 +19,7 @@
         "drupal/bartik": "^1.0",
         "govcms/govcms": "3.x-develop-dev",
         "govcms/govcms-custom": "*",
-        "govcms/scaffold-tooling": "5.4.0"
+        "govcms/scaffold-tooling": "5.4.1"
     },
     "require-dev": {
         "drupal/core-dev": "^10.0",
