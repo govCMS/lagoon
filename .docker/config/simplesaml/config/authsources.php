@@ -83,7 +83,7 @@ $config = [
          * Whether authentication requests, logout requests and logout responses received from this SP should be validated.
          * The default is FALSE 
          */
-        'redirect.validate' => filter_var(getenv('SIMPLESAMLPHP_SP_VALIDATE_AUTH'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true
+        'redirect.validate' => filter_var(getenv('SIMPLESAMLPHP_SP_VALIDATE_AUTH'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true,
 
         /*
          * Whether we require signatures on authentication requests sent from this SP. Set it to:
