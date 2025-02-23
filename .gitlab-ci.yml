@@ -16,6 +16,17 @@ stages:
 # ---
 workflow:
   rules:
+    ## D11
+    - if: $CI_COMMIT_REF_NAME == "4.x-develop"
+      variables:
+        DEPLOY_TAG: "11.x-edge"
+    - if: $CI_COMMIT_REF_NAME == "4.x-master"
+      variables:
+        DEPLOY_TAG: "11.x-latest"
+    - if: $CI_COMMIT_REF_NAME =~ /^release\/4.x\//
+      variables:
+        DEPLOY_TAG: "11.x-beta"
+
     ## D10
     - if: $CI_COMMIT_REF_NAME == "3.x-develop"
       variables:
