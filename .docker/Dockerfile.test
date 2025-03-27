@@ -8,6 +8,15 @@ FROM ${CLI_IMAGE} as cli
 # Second stage: Build on top of the CLI image
 FROM uselagoon/php-8.3-cli-drupal:${LAGOON_IMAGE_VERSION}
 
+# Set an environment variable for Dockerize version
+ENV DOCKERIZE_VERSION v0.6.1
+
+# @TODO - Remove this after https://github.com/govCMS/scaffold/pull/117/ is merged and released.
+# Download Dockerize, extract, and install it
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
 # Copy executable scripts to /usr/bin/ and make them executable
 COPY .docker/scripts/ /usr/bin/
 RUN chmod +x /usr/bin/lint-govcms \
@@ -23,7 +32,7 @@ COPY .docker/images/govcms/mariadb-client.cnf /etc/my.cnf.d
 COPY --from=cli /app /app
 
 # Copy PHPUnit configuration and test files
-COPY --from=govcmstesting/tests:3.2.0 /tests /app/tests
+COPY --from=govcmstesting/tests:3.2.1 /tests /app/tests
 
 # Set an environment variable for the webroot path
 ENV WEBROOT=web
