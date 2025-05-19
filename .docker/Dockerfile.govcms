@@ -1,7 +1,11 @@
+ARG SHIPSHAPE_VERSION
 ARG LAGOON_IMAGE_VERSION
+
+FROM ghcr.io/salsadigitalauorg/shipshape:${SHIPSHAPE_VERSION} AS shipshape
+
 FROM uselagoon/php-8.3-cli-drupal:${LAGOON_IMAGE_VERSION}
 
-COPY --from=ghcr.io/salsadigitalauorg/shipshape:0.2.2 /usr/local/bin/shipshape /usr/local/bin/shipshape
+COPY --from=shipshape /usr/local/bin/shipshape /usr/local/bin/shipshape
 
 ARG GOVCMS_PROJECT_VERSION
 

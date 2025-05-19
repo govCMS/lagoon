@@ -4,38 +4,46 @@ $idpBaseURL = getenv('SIMPLESAMLPHP_IDP_BASE_URL');
 $idpEntityId = getenv('SIMPLESAMLPHP_IDP_ENTITYID') ?: $idpBaseURL;
 $fallbackBinding = getenv('SIMPLESAMLPHP_IDP_DEFAULT_BINDING');
 
-$bindings = [
-    'SIMPLESAMLPHP_IDP_HTTP_POST_BINDING' => $fallbackBinding,
-    'SIMPLESAMLPHP_IDP_HTTP_REDIRECT_BINDING' => $fallbackBinding,
-    'SIMPLESAMLPHP_IDP_SOAP_BINDING' => $fallbackBinding,
-    'SIMPLESAMLPHP_IDP_HTTP_ARTIFACT' => $fallbackBinding,
-    'SIMPLESAMLPHP_IDP_LOGOUT_HTTP_POST_BINDING' => $fallbackBinding,
-    'SIMPLESAMLPHP_IDP_LOGOUT_HTTP_REDIRECT_BINDING' => $fallbackBinding,
-    'SIMPLESAMLPHP_IDP_LOGOUT_SOAP_BINDING' => $fallbackBinding,
-    'SIMPLESAMLPHP_IDP_LOGOUT_HTTP_ARTIFACT' => $fallbackBinding
+$bindingKeys = [
+    'SIMPLESAMLPHP_IDP_HTTP_POST_BINDING',
+    'SIMPLESAMLPHP_IDP_HTTP_REDIRECT_BINDING',
+    'SIMPLESAMLPHP_IDP_SOAP_BINDING',
+    'SIMPLESAMLPHP_IDP_HTTP_ARTIFACT',
+    'SIMPLESAMLPHP_IDP_LOGOUT_HTTP_POST_BINDING',
+    'SIMPLESAMLPHP_IDP_LOGOUT_HTTP_REDIRECT_BINDING',
+    'SIMPLESAMLPHP_IDP_LOGOUT_SOAP_BINDING',
+    'SIMPLESAMLPHP_IDP_LOGOUT_HTTP_ARTIFACT',
 ];
 
-// Override fallback binding if env variable value is present.
-foreach ($bindings as $binding => $fallback) {
-    $envVar = getenv($binding);
+// Initialise bindings.
+$bindings = [];
 
-    // Apply special logic for logout bindings.
-    if (strpos($binding, 'LOGOUT') !== false) {
-        if (empty($envVar)) {
-            // Try fallback to the corresponding non-logout binding first.
-            $envVar = getenv(str_replace('LOGOUT', '', $binding)) ?: $fallback;
-        }
+// Set bindings based on env variable or otherwise use fallback.
+foreach ($bindingKeys as $key) {
+    $envVar = getenv($key);
+
+    // Special logic for logout bindings:
+    // If no environment variable is set for a logout binding,
+    // fall back to the corresponding non-logout binding value instead.
+    if (str_contains($key, 'LOGOUT') && empty($envVar)) {
+        $nonLogoutKey = str_replace('LOGOUT_', '', $key);
+        $envVar = getenv($nonLogoutKey) ?: $fallbackBinding;
     }
 
-    // Fallback to the base URL if needed.
-    $bindings[$binding] = str_starts_with($envVar, 'http') ? $envVar : $idpBaseURL . $envVar;
+    // Apply a default fallback binding if environment variable is not set.
+    $envVar = $envVar ?: $fallbackBinding;
+
+    // Prepend base URL if binding is not a full URL.
+    $bindings[$key] = str_starts_with($envVar, 'http') ? $envVar : $idpBaseURL . $envVar;
 }
+
+
 
 $metadata[$idpEntityId] = [
   'entityid' => $idpEntityId,
   'contacts' => [],
   'metadata-set' => 'saml20-idp-remote',
-  'sign.authnrequest' => !empty(getenv('SIMPLESAMLPHP_IDP_SIGN_AUTH')),
+  'sign.authnrequest' => filter_var(getenv('SIMPLESAMLPHP_IDP_SIGN_AUTH'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true,
   'SingleSignOnService' => [
     [
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
@@ -88,8 +96,8 @@ $metadata[$idpEntityId] = [
   'signature.algorithm' => getenv('SIMPLESAMLPHP_IDP_SIGNATURE_ALGORITHM') ?: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
   'keys' => [
     [
-      'encryption' => !empty(getenv('SIMPLESAMLPHP_IDP_CERT_ENCRYPT')),
-      'signing' => !empty(getenv('SIMPLESAMLPHP_IDP_CERT_SIGNING')),
+      'encryption' => filter_var(getenv('SIMPLESAMLPHP_IDP_CERT_ENCRYPT'), FILTER_VALIDATE_BOOLEAN),
+      'signing' => filter_var(getenv('SIMPLESAMLPHP_IDP_CERT_SIGNING'), FILTER_VALIDATE_BOOLEAN),
       'type' => getenv('SIMPLESAMLPHP_IDP_CERT_TYPE') ?: 'X509Certificate',
       'X509Certificate' => getenv('SIMPLESAMLPHP_IDP_CERT'),
     ],
