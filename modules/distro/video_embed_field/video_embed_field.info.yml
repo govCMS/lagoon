@@ -1,9 +1,7 @@
-name: Video Embed Field [OBSOLETE - DO NOT USE]
+name: Video Embed Field [DEPRECATED - DO NOT USE]
 type: module
 description: 'Provides a field type for displaying videos from 3rd party providers such as YouTube and Vimeo.'
 package: Video Embed Field
-lifecycle: obsolete
-lifecycle_link: 'https://github.com/GovCMS/GovCMS'
 core_version_requirement: ^9.2 || ^10
 dependencies:
   - drupal:field
