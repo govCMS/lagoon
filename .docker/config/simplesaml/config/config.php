@@ -495,7 +495,7 @@ $config = [
     /*
      * (Optional) Driver options
      */
-    'database.driver_options' => [],
+    'database.driver_options' => [\PDO::MYSQL_ATTR_INIT_COMMAND => "SET collation_connection = utf8mb4_general_ci"],
 
     /*
      * True or false if you would like a persistent database connection
