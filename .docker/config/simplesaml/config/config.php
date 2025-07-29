@@ -127,7 +127,7 @@ $config = [
      * also as the technical contact in generated metadata.
      */
     'technicalcontact_name' => 'Administrator',
-    'technicalcontact_email' => 'govhosting@finance.gov.au',
+    'technicalcontact_email' => getenv('GOVCMS_SIMPLESAML_CONTACT') ?: 'govhosting@finance.gov.au',
 
     /*
      * (Optional) The method by which email is delivered.  Defaults to mail which utilizes the
