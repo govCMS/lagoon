@@ -1,7 +1,9 @@
-name: Video Embed Media - Migrate to core oEmbed
+name: Video Embed Media - Migrate to core oEmbed [OBSOLETE - DO NOT USE]
 type: module
 description: 'Provides a drush command to migrate to cores oEmbed'
 package: Video Embed Field
+lifecycle: obsolete
+lifecycle_link: 'https://github.com/GovCMS/GovCMS'
 core_version_requirement: ^9.2 || ^10
 dependencies:
   - drupal:media (>= 8.6)

@@ -1,7 +1,9 @@
-name: Video Embed WYSIWYG
+name: Video Embed WYSIWYG [OBSOLETE - DO NOT USE]
 type: module
 description: 'Integrates video_embed_field directly into ckeditor. Useful for websites not using the media suite of modules that need WYSIWYG support.'
 package: Video Embed Field
+lifecycle: obsolete
+lifecycle_link: 'https://github.com/GovCMS/GovCMS'
 core_version_requirement: ^9.2 || ^10
 dependencies:
   - drupal:field
