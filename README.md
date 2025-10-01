@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This project is used to create the images required by Lagoon, using the GovCMS distribution - it is only intended to
+This project is used to create the images required by Lagoon, using the GovCMS distribution - it is only intended to 
 be used by distribution/platform maintainers.
 
 Images are published to the [govcms](https://hub.docker.com/u/govcms) namespace on Docker Hub.

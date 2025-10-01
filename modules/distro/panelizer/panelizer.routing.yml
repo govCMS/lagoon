@@ -11,6 +11,7 @@ panelizer.panels_ipe.revert_to_default:
     _method: 'POST'
     _permission: 'access panels in-place editing'
     _custom_access: '\Drupal\panelizer\Controller\PanelizerPanelsIPEController::accessRevertToDefault'
+    _csrf_token: 'TRUE'
 
 # Wizard
 panelizer.wizard.add:
@@ -22,7 +23,7 @@ panelizer.wizard.add:
   requirements:
     _panelizer_default_access: 'TRUE'
     _permission: 'administer panelizer'
-
+    _csrf_token: 'TRUE'
 panelizer.wizard.add.step:
   path: '/admin/structure/panelizer/add/{machine_name}/{step}'
   defaults:
@@ -31,6 +32,7 @@ panelizer.wizard.add.step:
     tempstore_id: 'panelizer.wizard'
   requirements:
     _permission: 'administer panelizer'
+    _csrf_token: 'TRUE'
 
 panelizer.wizard.edit:
   path: '/admin/structure/panelizer/edit/{machine_name}/{step}'
@@ -41,6 +43,7 @@ panelizer.wizard.edit:
     step: 'general'
   requirements:
     _permission: 'administer panelizer'
+    _csrf_token: 'TRUE'
 
 panelizer.default.delete:
   path: '/admin/structure/panelizer/delete/{machine_name}'
@@ -50,6 +53,7 @@ panelizer.default.delete:
   requirements:
     _panelizer_field_ui_view_mode_access: 'TRUE'
     _custom_access: '\Drupal\panelizer\Access\PanelizerDefaultsDisplayAccess::isNotDefaultDisplay'
+    _csrf_token: 'TRUE'
 
 panelizer.default.select:
   path: '/admin/structure/panelizer/set_default/{machine_name}'
@@ -59,6 +63,7 @@ panelizer.default.select:
   requirements:
     _panelizer_field_ui_view_mode_access: 'TRUE'
     _custom_access: '\Drupal\panelizer\Access\PanelizerDefaultsDisplayAccess::isNotDefaultDisplay'
+    _csrf_token: 'TRUE'
 
 # Contexts
 panelizer.wizard.step.context.add:
@@ -69,6 +74,7 @@ panelizer.wizard.step.context.add:
     tempstore_id: 'panelizer.wizard'
   requirements:
     _permission: 'administer panelizer'
+    _csrf_token: 'TRUE'
 
 panelizer.wizard.step.context.edit:
   path: '/admin/panelizer/wizard/{machine_name}/contexts/edit/{context_id}'
@@ -78,6 +84,7 @@ panelizer.wizard.step.context.edit:
     tempstore_id: 'panelizer.wizard'
   requirements:
     _permission: 'administer panelizer'
+    _csrf_token: 'TRUE'
 
 panelizer.wizard.step.context.delete:
   path: '/admin/panelizer/wizard/{machine_name}/context/delete/{context_id}'
@@ -87,3 +94,4 @@ panelizer.wizard.step.context.delete:
     tempstore_id: 'panelizer.wizard'
   requirements:
     _permission: 'administer panelizer'
+    _csrf_token: 'TRUE'
