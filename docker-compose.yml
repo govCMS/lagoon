@@ -9,6 +9,7 @@ services:
       context: .
       dockerfile: $PWD/.docker/Dockerfile.govcms
       args:
+        SHIPSHAPE_VERSION: ${SHIPSHAPE_VERSION:-1.0.0-alpha.1.5.0}
         GOVCMS_PROJECT_VERSION: ${GOVCMS_PROJECT_VERSION:-2.x-dev}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
         COMPOSER_AUTH: ${COMPOSER_AUTH:-}

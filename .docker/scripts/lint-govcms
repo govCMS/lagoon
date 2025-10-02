@@ -4,14 +4,24 @@
 APP_DIR=${APP_DIR:-/app}
 PROFILE_DIR=${PROFILE_DIR:-${APP_DIR}/web/profiles/govcms}
 
+# Array of files and directories to be linted.
+DIR_ARRAY=(
+    "${PROFILE_DIR}/themes/govcms"
+    "${PROFILE_DIR}/govcms.info"
+    "${PROFILE_DIR}/govcms.install"
+    "${PROFILE_DIR}/govcms.profile"
+    "${APP_DIR}/tests"
+)
+# Ensure the module/custom directory exists, otherwise ignore from linting.
+if [ -d "${PROFILE_DIR}/modules/custom" ]; then
+    DIR_ARRAY+=("${PROFILE_DIR}/modules/custom")
+fi
+
 # Lint code.
-${APP_DIR}/tests/vendor/bin/parallel-lint --exclude ${APP_DIR}/tests/vendor -e php,inc,module,theme,install,profile,test \
-        ${PROFILE_DIR}/modules/custom \
-        ${PROFILE_DIR}/themes/govcms \
-        ${PROFILE_DIR}/govcms.info \
-        ${PROFILE_DIR}/govcms.install \
-        ${PROFILE_DIR}/govcms.profile \
-        ${APP_DIR}/tests
+${APP_DIR}/tests/vendor/bin/parallel-lint \
+    --exclude ${APP_DIR}/tests/vendor \
+    -e php,inc,module,theme,install,profile,test \
+    "${DIR_ARRAY[@]}"
 
 # Validate makefile.
 cd ${PROFILE_DIR} && drush verify-makefile

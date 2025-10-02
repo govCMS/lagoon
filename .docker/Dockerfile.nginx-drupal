@@ -33,3 +33,6 @@ RUN echo 'env JS_SBOM_REPLACE;' >> /etc/nginx/nginx.conf
 
 # Define where the Drupal Root is located
 ENV WEBROOT=web
+
+# Add default for resty resolver.
+ENV RESTY_RESOLVER=${RESTY_RESOLVER:-8.8.8.8}

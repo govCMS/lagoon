@@ -31,7 +31,7 @@ COPY .docker/images/govcms/mariadb-client.cnf /etc/my.cnf.d
 COPY --from=cli /app /app
 
 # Copy PHPUnit configuration and test files
-COPY --from=govcmstesting/tests:3.2.0 /tests /app/tests
+COPY --from=govcmstesting/tests:3.2.3-php8.3 /tests /app/tests
 
 # Set an environment variable for the webroot path
 ENV WEBROOT=web
