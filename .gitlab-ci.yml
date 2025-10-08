@@ -65,7 +65,7 @@ workflow:
   before_script:
     - if [ -z "$DEPLOY_TAG" ]; then echo "DEPLOY_TAG must be set for an actionable build."; exit 1; fi
     # Latest tags need a confirmation var (provided manually: DEPLOY_LATEST)
-    - if [[ "$DEPLOY_TAG" == "10.x-latest" ]] && [ -z "$DEPLOY_LATEST" ]; then echo "DEPLOY_LATEST must be set to progress with 'latest' tags."; exit 1; fi
+    - if [[ "$DEPLOY_TAG" == "10.x-latest" || "$DEPLOY_TAG" == "11.x-latest" ]] && [ -z "$DEPLOY_LATEST" ]; then echo "DEPLOY_LATEST must be set to progress with 'latest' tags."; exit 1; fi
     # Install ahoy into the runner image.
     - |
       os=$(uname -s | tr [:upper:] [:lower:]) && architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
