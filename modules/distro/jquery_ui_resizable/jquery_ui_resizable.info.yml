@@ -1,5 +1,0 @@
-name: jquery_ui_resizable
-type: module
-core_version_requirement: ^9 || ^10
-lifecycle: obsolete
-lifecycle_link: 'https://github.com/GovCMS/GovCMS'
