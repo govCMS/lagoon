@@ -3,7 +3,7 @@ description: Provide dependent modules and platform configuration for GovCMS on 
 package: Lagoon
 version: 1.0.0
 type: module
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^10 || ^11
 
 dependencies:
   - redis:redis
