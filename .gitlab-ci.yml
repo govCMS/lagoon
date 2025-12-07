@@ -136,6 +136,7 @@ deploy:multiarch:
     - 1.x-master
     - 2.x-master
     - 3.x-master
+    - 4.x-master
     - /^release\/2.x\//
     - /^release\/3.x\//
     - tags
