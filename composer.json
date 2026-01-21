@@ -16,7 +16,7 @@
     "require": {
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
-        "govcms/govcms": "4.0.0-beta",
+        "govcms/govcms": "4.1.0",
         "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "6.0.0"
     },
