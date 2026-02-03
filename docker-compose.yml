@@ -90,6 +90,8 @@ services:
         CLI_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms}/${GOVCMS_CLI_IMAGE_NAME:-govcms}:${GOVCMS_RELEASE_TAG:-latest}
         LAGOON_IMAGE_VERSION: ${LAGOON_IMAGE_VERSION:-latest}
     image: ${DOCKERHUB_NAMESPACE:-govcms}/solr:${GOVCMS_RELEASE_TAG:-latest}
+    environment:
+      SOLR_MODULES: ${SOLR_MODULES:-extraction,langid,ltr,analysis-extras}
     ports:
       - "8983" # Find port on host with `docker compose port solr 8983`
 

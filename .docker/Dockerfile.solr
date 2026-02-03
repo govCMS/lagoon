@@ -1,20 +1,27 @@
 ##
-# Solr 8
+# Solr 9
 ##
 
 # Use the specified CLI image for building
 ARG CLI_IMAGE
+ARG LAGOON_IMAGE_VERSION
 FROM ${CLI_IMAGE} as cli
 
-# Use the uselagoon/solr-8 as the base image
-FROM uselagoon/solr-8
+# Use the uselagoon/solr-9 as the base image
+FROM uselagoon/solr-9:${LAGOON_IMAGE_VERSION:-latest}
 
 # Copy the jump-start configuration sets for Solr from the CLI image to the Solr image
-COPY --from=cli /app/web/modules/contrib/search_api_solr/jump-start/solr8/config-set/ /opt/solr/server/solr/configsets/drupal/conf
+COPY --from=cli /app/web/modules/contrib/search_api_solr/jump-start/solr9/config-set/ /opt/solr/server/solr/configsets/drupal/conf
+
+# The <lib/> directives are deprecated and will be removed in Solr 10.0
+# hence the jump-start configset has them disabled by default.
+# We need to load the libs via the newer env var SOLR_MODULES.
+ENV SOLR_MODULES=${SOLR_MODULES:-"extraction,langid,ltr,analysis-extras"}
 
 # Switch to the 'solr' user
 USER solr
 
+COPY .docker/images/solr/890-migrate-solr9-config.sh /lagoon/entrypoints/
 COPY .docker/images/solr/900-prepare-index.sh /lagoon/entrypoints/
 
 # Run solr in the foreground.
