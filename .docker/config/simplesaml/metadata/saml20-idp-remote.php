@@ -47,6 +47,7 @@ foreach ($bindingKeys as $key) {
 $metadata[$idpEntityId] = [
   'entityid' => $idpEntityId,
   'contacts' => [],
+  'errorURL' => getenv('SIMPLESAMLPHP_SP_ERROR_URL') ?: null,
   'metadata-set' => 'saml20-idp-remote',
   'sign.authnrequest' => filter_var(getenv('SIMPLESAMLPHP_IDP_SIGN_AUTH'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true,
   'SingleSignOnService' => [],
