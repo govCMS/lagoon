@@ -1,6 +1,6 @@
 ---
 command:
-  solr version:
+  solr version 2>&1 | cat:
     exit-status: 0
     stdout:
-      - 9.9.0
+      - 9.10.1
