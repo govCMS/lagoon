@@ -43,6 +43,11 @@
             "tbachert/spi": true,
             "simplesamlphp/composer-module-installer": false,
             "simplesamlphp/composer-xmlprovider-installer": false
+        },
+        "audit": {
+	        "ignore": [
+	            "SA-CONTRIB-2026-015"
+	        ]
         }
     },
     "autoload": {
