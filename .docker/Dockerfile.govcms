@@ -27,6 +27,7 @@ RUN sed -i -e "/govcms\/govcms/ s!3.x-develop-dev!${GOVCMS_PROJECT_VERSION}!" /a
 COPY scripts/composer/ScriptHandler.php /app/scripts/composer/ScriptHandler.php
 
 ENV COMPOSER_MEMORY_LIMIT=-1
+ENV COMPOSER_NO_SECURITY_BLOCKING=0
 
 RUN --mount=type=secret,id=composer-auth,dst=/app/auth.json /usr/local/bin/composer validate
 RUN --mount=type=secret,id=composer-auth,dst=/app/auth.json /usr/local/bin/composer update --no-dev -d /app
