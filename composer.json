@@ -59,10 +59,12 @@
         ],
         "post-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+            "DrupalProject\\composer\\ScriptHandler::installSimpleSamlAssets"
         ],
         "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "DrupalProject\\composer\\ScriptHandler::installSimpleSamlAssets"
         ]
     },
     "extra": {
