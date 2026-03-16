@@ -46,7 +46,7 @@ $config = [
         'NameIDPolicy' => [],
 
         // Force authentication allows you to force re-authentication of users even if the user has a SSO session at the IdP.    
-        'ForceAuthn' => filter_var(getenv('SIMPLESAMLPHP_SP_FORCE_AUTH'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true,
+        'ForceAuthn' => filter_var(getenv('SIMPLESAMLPHP_SP_FORCE_AUTH'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false,
 
         // The URL to the discovery service.
         // Can be NULL/unset, in which case a builtin discovery service will be used.
