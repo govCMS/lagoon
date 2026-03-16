@@ -2,6 +2,7 @@
 
 $idpBaseURL = getenv('SIMPLESAMLPHP_IDP_BASE_URL');
 $idpEntityId = getenv('SIMPLESAMLPHP_IDP_ENTITYID') ?: $idpBaseURL;
+$singleLogOut = getenv('SIMPLESAMLPHP_SP_SLO') ?: false;
 $fallbackBinding = getenv('SIMPLESAMLPHP_IDP_DEFAULT_BINDING');
 
 $bindingKeys = [
@@ -23,7 +24,7 @@ foreach ($bindingKeys as $key) {
     $envVar = getenv($key);
 
     // Special for LOGOUT: fallback to non-logout sibling if present.
-    if (str_contains($key, 'LOGOUT') && empty($envVar)) {
+    if (str_contains($key, 'LOGOUT') && empty($envVar) && $singleLogOut) {
         $nonLogoutKey = str_replace('LOGOUT_', '', $key);
         $envVar = getenv($nonLogoutKey);
     }
