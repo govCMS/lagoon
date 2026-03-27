@@ -41,9 +41,11 @@ jobs:
           cd /tmp/scaffold
           ahoy init govcms saas 11
 
-      - name: Point scaffold to locally built images
+      - name: Configure scaffold for CI
         working-directory: /tmp/scaffold
-        run: sed -i 's/GOVCMS_IMAGE_VERSION=.*/GOVCMS_IMAGE_VERSION=ci-test/' .env
+        run: |
+          sed -i 's/GOVCMS_IMAGE_VERSION=.*/GOVCMS_IMAGE_VERSION=ci-test/' .env
+          sed -i '/volumes_from:/d; /amazeeio-ssh-agent/d' docker-compose.yml
 
       - name: Build scaffold
         working-directory: /tmp/scaffold
