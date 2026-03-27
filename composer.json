@@ -7,17 +7,12 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
-        },
-        {
-            "type": "path",
-            "url": "custom/composer"
         }
     ],
     "require": {
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
         "govcms/govcms": "dev-4.x-develop",
-        "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "6.0.5"
     },
     "require-dev": {
@@ -57,8 +52,7 @@
             "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
         ],
         "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
         ],
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
@@ -69,7 +63,6 @@
             "drupal/core": "-p2"
         },
         "enable-patching": true,
-        "patches-file": "custom/composer/patches.json",
         "installer-types": [],
         "drupal-scaffold": {
             "locations": {
