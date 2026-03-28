@@ -1,6 +1,7 @@
 {
     "name": "govcms/govcms-custom",
-    "description": "Provides additional packages over the GovCMS base distribution.",
+    "description": "Provides additional packages over the GovCMS base distribution for SaaS+ sites.",
     "require": {
+        "drupal/webform_openfisca": "^1.1"
     }
 }

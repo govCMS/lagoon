@@ -7,17 +7,12 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
-        },
-        {
-            "type": "path",
-            "url": "custom/composer"
         }
     ],
     "require": {
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
         "govcms/govcms": "dev-4.x-develop",
-        "govcms/govcms-custom": "*",
         "govcms/scaffold-tooling": "6.0.5"
     },
     "require-dev": {
