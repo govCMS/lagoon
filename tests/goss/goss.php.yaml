@@ -1,9 +1,0 @@
----
-gossfile:
-  sanitise.yaml: {}
-
-command:
-  php -r "echo ini_get('upload_max_filesize');":
-    exit-status: 0
-    stdout:
-      - "256M"

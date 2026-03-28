@@ -1,6 +1,0 @@
----
-command:
-  /opt/solr/bin/solr --version:
-    exit-status: 0
-    stdout:
-      - "9.10.1"
