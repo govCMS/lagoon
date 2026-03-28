@@ -1,9 +1,14 @@
 group "default" {
-    targets = ["cli", "test", "nginx", "php", "mariadb", "redis", "solr", "varnish"]
+    targets = ["cli", "cli-saasplus", "test", "nginx", "php", "mariadb", "redis", "solr", "varnish"]
 }
 
 target "cli" {
     dockerfile = ".docker/Dockerfile.govcms"
+    platforms = ["linux/amd64", "linux/arm64"]
+}
+
+target "cli-saasplus" {
+    dockerfile = ".docker/Dockerfile.govcms-saasplus"
     platforms = ["linux/amd64", "linux/arm64"]
 }
 
