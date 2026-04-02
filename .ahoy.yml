@@ -15,6 +15,7 @@ commands:
   build:
     usage: Build project locally (single-local architecture only).
     cmd: |
+      set -e
       cat .env | grep -v "#" | grep -v -e '^$'
       if [ "$1" == "y" ]; then
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache cli --load
@@ -105,7 +106,7 @@ commands:
 
   test-phpunit:
     usage: Run PHPUnit tests.
-    cmd: docker compose exec cli phpunit --testsuite govcms
+    cmd: docker compose exec test phpunit --testsuite govcms
 
   test-redis:
     usage: Verify redis can accept connections.

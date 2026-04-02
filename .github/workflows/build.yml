@@ -1,0 +1,67 @@
+name: Build
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker
+
+      - name: Install Ahoy
+        run: |
+          sudo wget -q https://github.com/ahoy-cli/ahoy/releases/download/v2.1.1/ahoy-bin-linux-amd64 -O /usr/local/bin/ahoy
+          sudo chmod +x /usr/local/bin/ahoy
+
+      - name: Create Docker network
+        run: docker network create amazeeio-network || true
+
+      - name: Build
+        env:
+          COMPOSER_AUTH: ""
+          DOCKER_BUILDKIT: 1
+        run: |
+          cp .env.default .env
+          sed -i 's/GOVCMS_RELEASE_TAG=.*/GOVCMS_RELEASE_TAG=ci-test/' .env
+          ahoy build y
+
+      - name: Stop lagoon containers
+        run: docker compose down -v --remove-orphans
+
+      - name: Clone and init scaffold
+        run: |
+          git clone --depth 1 -b develop https://github.com/govCMS/scaffold.git /tmp/scaffold
+          cd /tmp/scaffold
+          ahoy init govcms saas 11
+
+      - name: Configure scaffold for CI
+        working-directory: /tmp/scaffold
+        run: |
+          sed -i 's/GOVCMS_IMAGE_VERSION=.*/GOVCMS_IMAGE_VERSION=ci-test/' .env
+          sed -i '/volumes_from:/d; /amazeeio-ssh-agent/d' docker-compose.yml
+
+      - name: Build scaffold
+        working-directory: /tmp/scaffold
+        run: ahoy build
+
+      - name: Install site
+        working-directory: /tmp/scaffold
+        run: docker compose exec -T cli drush si -y govcms --account-pass=admin
+
+      - name: Check homepage
+        working-directory: /tmp/scaffold
+        run: |
+          STATUS=$(docker compose exec -T test curl -s -o /dev/null -w "%{http_code}" http://nginx:8080)
+          echo "Homepage returned HTTP ${STATUS}"
+          if [ "${STATUS}" != "200" ]; then
+            echo "::error::Homepage returned HTTP ${STATUS}, expected 200"
+            docker compose exec -T test curl -s http://nginx:8080 | head -50
+            exit 1
+          fi
