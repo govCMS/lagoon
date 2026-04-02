@@ -1,5 +1,5 @@
 group "default" {
-    targets = ["cli", "test", "nginx", "php", "mariadb", "redis", "solr", "varnish"]
+    targets = ["cli", "test", "playwright", "nginx", "php", "mariadb", "redis", "solr", "varnish"]
 }
 
 target "cli" {
@@ -35,6 +35,11 @@ target "redis" {
 target "solr" {
     dockerfile = ".docker/Dockerfile.solr"
     platforms = ["linux/amd64", "linux/arm64"]
+}
+
+target "playwright" {
+    dockerfile = ".docker/Dockerfile.playwright"
+    platforms = ["linux/amd64"]
 }
 
 target "varnish" {

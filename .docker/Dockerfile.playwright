@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/playwright:v1.50.0-noble
+
+WORKDIR /app
+
+# Install Playwright test runner with pinned version matching the base image.
+RUN npm init -y && npm install @playwright/test@1.50.0
+
+# Copy example tests and config.
+COPY tests/playwright /app/tests/playwright
+
+EXPOSE 3000
+
+# Run Playwright server, listening on all interfaces.
+CMD ["npx", "playwright", "run-server", "--host", "0.0.0.0", "--port", "3000"]

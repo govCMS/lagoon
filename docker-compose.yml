@@ -108,11 +108,11 @@ services:
       - amazeeio-network
       - default
 
-  chrome:
+  playwright:
     build:
       context: .
-      dockerfile: $PWD/.docker/Dockerfile.chrome
-    image: selenium/standalone-chrome
+      dockerfile: $PWD/.docker/Dockerfile.playwright
+    image: ${DOCKERHUB_NAMESPACE:-govcms}/playwright:${GOVCMS_RELEASE_TAG:-latest}
     shm_size: '1gb'
     depends_on:
       - test

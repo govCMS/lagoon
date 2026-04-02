@@ -97,15 +97,15 @@ commands:
     usage: Run all tests.
     cmd: |
       ahoy test-phpunit
-      ahoy test-behat
-
-  test-behat:
-    usage: Run Behat tests.
-    cmd: docker compose exec cli behat "$@"
+      ahoy test-playwright
 
   test-phpunit:
     usage: Run PHPUnit tests.
     cmd: docker compose exec cli phpunit --testsuite govcms
+
+  test-playwright:
+    usage: Run Playwright tests.
+    cmd: docker compose exec -T playwright npx playwright test --config /app/tests/playwright/playwright.config.ts "$@"
 
   test-redis:
     usage: Verify redis can accept connections.
@@ -118,14 +118,6 @@ commands:
       else
         echo "Redis success: Redis contains $redisKeys keys."
       fi
-  test-goss:
-    usage: Validate images with dgoss.
-    cmd: |
-      curl -L https://github.com/goss-org/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
-      chmod +rx /usr/local/bin/goss
-      curl -L https://github.com/goss-org/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
-      chmod +rx /usr/local/bin/dgoss
-      ./tests/goss/run_all.sh
 
   test-install:
     usage: Test a blank install.
