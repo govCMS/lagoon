@@ -19,6 +19,16 @@ services:
       LAGOON_ROUTE: ${LOCALDEV_URL:-http://govcmslagoon.docker.amazee.io}
     << : *default-volumes
 
+  cli-saasplus:
+    build:
+      context: .
+      dockerfile: $PWD/.docker/Dockerfile.govcms-saasplus
+      args:
+        GOVCMS_IMAGE: ${DOCKERHUB_NAMESPACE:-govcms}/${GOVCMS_CLI_IMAGE_NAME:-govcms}:${GOVCMS_RELEASE_TAG:-latest}
+        COMPOSER_AUTH: ${COMPOSER_AUTH:-}
+    image: ${DOCKERHUB_NAMESPACE:-govcms}/govcms-saasplus:${GOVCMS_RELEASE_TAG:-latest}
+    depends_on:
+      - cli
 
   test:
     build:

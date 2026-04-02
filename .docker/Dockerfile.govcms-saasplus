@@ -1,0 +1,12 @@
+ARG GOVCMS_IMAGE
+
+FROM ${GOVCMS_IMAGE}
+
+ENV COMPOSER_MEMORY_LIMIT=-1
+
+# Add the custom packages repository and install SaaS+ modules.
+COPY custom /app/custom
+RUN --mount=type=secret,id=composer-auth,dst=/app/auth.json \
+    /usr/local/bin/composer config repositories.custom path custom/composer -d /app \
+    && /usr/local/bin/composer require --no-interaction --update-no-dev -d /app govcms/govcms-custom \
+    && /usr/local/bin/composer clearcache
