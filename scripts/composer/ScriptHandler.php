@@ -89,4 +89,56 @@ class ScriptHandler {
     }
   }
 
+  /**
+   * Installs SimpleSAMLphp assets-base to public/assets/base/.
+   *
+   * The simplesamlphp/composer-module-installer plugin is
+   * intentionally disabled in this project to prevent automatic
+   * installation of all SimpleSAMLphp modules. This method
+   * manually copies only the simplesamlphp-assets-base package,
+   * which provides the JavaScript (post.js) required for
+   * HTTP-POST binding auto-submit.
+   *
+   * @param \Composer\Script\Event $event
+   *   The Composer event.
+   */
+  public static function installSimpleSamlAssets(Event $event) {
+    $fs = new Filesystem();
+    $vendorDir = $event->getComposer()->getConfig()
+      ->get('vendor-dir');
+    $source = $vendorDir
+      . '/simplesamlphp/simplesamlphp-assets-base';
+    $dest = $vendorDir
+      . '/simplesamlphp/simplesamlphp/public/assets/base';
+
+    if (!$fs->exists($source)) {
+      $event->getIO()->write(
+        '<warning>SimpleSAMLphp assets-base package '
+        . 'not found, skipping.</warning>'
+      );
+      return;
+    }
+
+    // Only copy web asset directories, ignoring files
+    // like .gitignore, .gitattributes, composer.json.
+    $assetDirs = ['css', 'js', 'icons', 'webfonts'];
+
+    foreach ($assetDirs as $dir) {
+      $dirSource = $source . '/' . $dir;
+      $dirDest = $dest . '/' . $dir;
+      if (!$fs->exists($dirSource)) {
+        continue;
+      }
+      if ($fs->exists($dirDest)) {
+        $fs->remove($dirDest);
+      }
+      $fs->mirror($dirSource, $dirDest);
+    }
+
+    $event->getIO()->write(
+      'SimpleSAMLphp assets-base installed '
+      . 'to public/assets/base/'
+    );
+  }
+
 }
