@@ -18,7 +18,7 @@
         "cweagans/composer-patches": "^1.7",
         "govcms/govcms": "dev-4.x-develop",
         "govcms/govcms-custom": "*",
-        "govcms/scaffold-tooling": "6.0.5"
+        "govcms/scaffold-tooling": "6.0.7"
     },
     "require-dev": {
         "drupal/core-dev": "^11.0",
