@@ -89,6 +89,20 @@ $config = [
         'redirect.validate' => filter_var(getenv('SIMPLESAMLPHP_SP_VALIDATE_AUTH'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true,
 
         /*
+         * Whether assertions received by this SP must be encrypted.
+         * If set to true, unencrypted assertions will be rejected.
+         * This option can be overridden for a specific IdP in saml20-idp-remote.
+         */
+        'assertion.encryption' => filter_var(getenv('SIMPLESAMLPHP_SP_ASSERTION_ENCRYPTION'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false,
+
+        /*
+         * Whether assertions received by this SP must be signed.
+         * The value is also used to set the WantAssertionsSigned attribute
+         * of the SPSSODescriptor element in the exported SAML 2.0 metadata.
+         */
+        'WantAssertionsSigned' => filter_var(getenv('SIMPLESAMLPHP_SP_WANT_ASSERTIONS_SIGNED'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false,
+
+        /*
          * Whether we require signatures on authentication requests sent from this SP. Set it to:
          *   - true: authnrequest must be signed (and signature will be validated)
          *   - null: authnrequest may be signed, if it is, signature will be validated
