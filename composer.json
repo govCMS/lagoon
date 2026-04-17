@@ -16,9 +16,9 @@
     "require": {
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
-        "govcms/govcms": "4.2.0",
+        "govcms/govcms": "dev-4.x-develop",
         "govcms/govcms-custom": "*",
-        "govcms/scaffold-tooling": "6.0.5"
+        "govcms/scaffold-tooling": "6.0.7"
     },
     "require-dev": {
         "drupal/core-dev": "^11.0",
@@ -58,10 +58,12 @@
         ],
         "post-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+            "DrupalProject\\composer\\ScriptHandler::installSimpleSamlAssets"
         ],
         "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "DrupalProject\\composer\\ScriptHandler::installSimpleSamlAssets"
         ]
     },
     "extra": {

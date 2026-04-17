@@ -45,6 +45,9 @@ $config = [
         // the SP sets the AllowCreate attribute on the NameIDPolicy element to 'true”.
         'NameIDPolicy' => [],
 
+        // Force authentication allows you to force re-authentication of users even if the user has a SSO session at the IdP.    
+        'ForceAuthn' => filter_var(getenv('SIMPLESAMLPHP_SP_FORCE_AUTH'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false,
+
         // The URL to the discovery service.
         // Can be NULL/unset, in which case a builtin discovery service will be used.
         'discoURL' => null,
@@ -84,6 +87,20 @@ $config = [
          * The default is FALSE 
          */
         'redirect.validate' => filter_var(getenv('SIMPLESAMLPHP_SP_VALIDATE_AUTH'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true,
+
+        /*
+         * Whether assertions received by this SP must be encrypted.
+         * If set to true, unencrypted assertions will be rejected.
+         * This option can be overridden for a specific IdP in saml20-idp-remote.
+         */
+        'assertion.encryption' => filter_var(getenv('SIMPLESAMLPHP_SP_ASSERTION_ENCRYPTION'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false,
+
+        /*
+         * Whether assertions received by this SP must be signed.
+         * The value is also used to set the WantAssertionsSigned attribute
+         * of the SPSSODescriptor element in the exported SAML 2.0 metadata.
+         */
+        'WantAssertionsSigned' => filter_var(getenv('SIMPLESAMLPHP_SP_WANT_ASSERTIONS_SIGNED'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false,
 
         /*
          * Whether we require signatures on authentication requests sent from this SP. Set it to:
