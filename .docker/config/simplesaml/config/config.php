@@ -6,6 +6,22 @@
 
 $httpUtils = new \SimpleSAML\Utils\HTTP();
 
+$simplesaml_debug = filter_var(getenv('GOVCMS_SIMPLESAML_DEBUG'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false;
+$simplesaml_log_level = strtoupper((string) (getenv('GOVCMS_SIMPLESAML_LOG_LEVEL') ?: 'WARNING'));
+$simplesaml_logging_levels = [
+    'EMERG' => \SimpleSAML\Logger::EMERG,
+    'ALERT' => \SimpleSAML\Logger::ALERT,
+    'CRIT' => \SimpleSAML\Logger::CRIT,
+    'ERR' => \SimpleSAML\Logger::ERR,
+    'ERROR' => \SimpleSAML\Logger::ERR,
+    'WARNING' => \SimpleSAML\Logger::WARNING,
+    'NOTICE' => \SimpleSAML\Logger::NOTICE,
+    'INFO' => \SimpleSAML\Logger::INFO,
+    'DEBUG' => \SimpleSAML\Logger::DEBUG,
+];
+// Default to WARNING level if the log level is not set or invalid.
+$simplesaml_logging_level = $simplesaml_logging_levels[$simplesaml_log_level] ?? \SimpleSAML\Logger::WARNING;
+
 $config = [
 
     /*******************************
@@ -187,8 +203,11 @@ $config = [
      *
      * A possible way to generate a random salt is by running the following command from a unix shell:
      * LC_ALL=C tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo
+     *
+     * When GOVCMS_SIMPLESAML_SALT is unset, the salt is derived from LAGOON_PROJECT (deterministic; fine for
+     * local development only). Production must set GOVCMS_SIMPLESAML_SALT to a secret value.
      */
-    'secretsalt' => getenv('GOVCMS_SIMPLESAML_SALT') ?: 'Yy)IUE:O*mNNACtJZIWKagjnUgqk@apz#7nB*b*20YH1eIOQ9z_gfCcR6OVZ1KgF',
+    'secretsalt' => getenv('GOVCMS_SIMPLESAML_SALT') ?: '',
 
     /*
      * This password must be kept secret, and modified from the default value 123.
@@ -201,7 +220,7 @@ $config = [
     /*
      * Set this option to true if you want to require administrator password to access the metadata.
      */
-    'admin.protectmetadata' => false,
+    'admin.protectmetadata' => filter_var(getenv('GOVCMS_SIMPLESAML_PROTECT_METADATA'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true,
 
     /*
      * Set this option to false if you don't want SimpleSAMLphp to check for new stable releases when
@@ -320,9 +339,9 @@ $config = [
      * empty array.
      */
     'debug' => [
-        'saml' => true,
-        'backtraces' => true,
-        'validatexml' => true,
+        'saml' => $simplesaml_debug,
+        'backtraces' => $simplesaml_debug,
+        'validatexml' => $simplesaml_debug,
     ],
 
     /*
@@ -356,6 +375,8 @@ $config = [
      * - SimpleSAML\Logger::INFO    Verbose logs
      * - SimpleSAML\Logger::DEBUG   Full debug logs - not recommended for production
      *
+     * Level is read from GOVCMS_SIMPLESAML_LOG_LEVEL (default WARNING); unknown values use WARNING.
+     *
      * Choose logging handler.
      *
      * Options: [syslog,file,errorlog,stderr]
@@ -364,7 +385,7 @@ $config = [
      * must exist and be writable for SimpleSAMLphp. If set to something else, set
      * loggingdir above to 'null'.
      */
-    'logging.level' => SimpleSAML\Logger::DEBUG,
+    'logging.level' => $simplesaml_logging_level,
     'logging.handler' => 'errorlog',
 
     /*
@@ -478,7 +499,7 @@ $config = [
      * Ensure that you have the required PDO database driver installed
      * for your connection string.
      */
-    'database.dsn' => 'mysql:host=' . getenv('MARIADB_HOST') ?: 'mariadb' . ';dbname=' . getenv('MARIADB_DATABASE') ?: 'drupal',
+    'database.dsn' => 'mysql:host=' . (getenv('MARIADB_HOST') ?: 'mariadb') . ';dbname=' . (getenv('MARIADB_DATABASE') ?: 'drupal'),
 
     /*
      * SQL database credentials
@@ -588,7 +609,7 @@ $config = [
     /*
      * Option to override the default settings for the session cookie name
      */
-    'session.cookie.name' => (getenv('GOVCMS_SIMPLESAML_SESSION_ID') ?: 'dofdirectory-d10') . '_saml_session_id',
+    'session.cookie.name' => (getenv('GOVCMS_SIMPLESAML_SESSION_ID') ?: getenv('LAGOON_PROJECT') ?: 'ssp') . '_saml_session_id',
 
     /*
      * Expiration time for the session cookie, in seconds.
@@ -658,7 +679,7 @@ $config = [
     /*
      * Option to override the default settings for the auth token cookie
      */
-    'session.authtoken.cookiename' => (getenv('GOVCMS_SIMPLESAML_AUTH_TOKEN') ?: 'dofdirectory-d10') . '_saml_auth_token',
+    'session.authtoken.cookiename' => (getenv('GOVCMS_SIMPLESAML_AUTH_TOKEN') ?: getenv('LAGOON_PROJECT') ?: 'ssp') . '_saml_auth_token',
 
     /*
      * Options for remember me feature for IdP sessions. Remember me feature
