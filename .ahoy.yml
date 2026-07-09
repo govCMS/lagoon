@@ -15,6 +15,7 @@ commands:
   build:
     usage: Build project locally (single-local architecture only).
     cmd: |
+      set -e
       cat .env | grep -v "#" | grep -v -e '^$'
       if [ "$1" == "y" ]; then
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache cli --load

@@ -1,0 +1,39 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker
+
+      - name: Install Ahoy
+        run: |
+          sudo wget -q https://github.com/ahoy-cli/ahoy/releases/download/v2.5.0/ahoy-bin-linux-amd64 -O /usr/local/bin/ahoy
+          echo "47ec181c3a07308022695fa7a727cf7ea168fc7a229c0716a8c1571ee125f2e1 /usr/local/bin/ahoy" | sha256sum --check
+          sudo chmod +x /usr/local/bin/ahoy
+
+      - name: Create Docker network
+        run: |
+          docker network create amazeeio-network 2>/dev/null || docker network inspect amazeeio-network > /dev/null
+
+      - name: Create .env from defaults
+        run: cp .env.default .env
+
+      - name: Build
+        run: ahoy build y
+        timeout-minutes: 10
+        env:
+          COMPOSER_AUTH: ""
+          DOCKER_BUILDKIT: 1
