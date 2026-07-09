@@ -33,6 +33,14 @@ RUN --mount=type=secret,id=composer-auth,dst=/app/auth.json /usr/local/bin/compo
 RUN --mount=type=secret,id=composer-auth,dst=/app/auth.json /usr/local/bin/composer update --no-dev -d /app
 RUN --mount=type=secret,id=composer-auth,dst=/app/auth.json /usr/local/bin/composer clearcache
 
+# Set an environment variable for Dockerize version
+ENV DOCKERIZE_VERSION v0.6.1
+
+# Download Dockerize, extract, and install it
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
 # Add bash aliases to assist with full path executables.
 COPY .docker/images/govcms/entrypoints /lagoon/entrypoints/
 

@@ -6,7 +6,7 @@ commands:
     usage: Build project.
     cmd: |
       docker compose up -d "$@" &&
-      docker compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m;
+      docker compose exec -T cli dockerize -wait tcp://mariadb:3306 -timeout 2m;
 
   down:
     usage: Delete project.
@@ -20,14 +20,14 @@ commands:
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache cli --load
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --load
         docker compose up -d
-        docker compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m
+        docker compose exec -T cli dockerize -wait tcp://mariadb:3306 -timeout 2m
       else
         ahoy confirm "Are you sure environment variables are correct? Update .env if not." &&
         # Run this if confirm returns true
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --no-cache cli --load &&
         env $(cat .env | grep -v "#" | xargs) docker buildx bake -f docker-compose.yml --load &&
           docker compose up -d "$@" &&
-          docker compose exec -T test dockerize -wait tcp://mariadb:3306 -timeout 2m ||
+          docker compose exec -T cli dockerize -wait tcp://mariadb:3306 -timeout 2m ||
         # Run this if confirm returns false
         echo "OK, nothing to do."
       fi
@@ -136,7 +136,7 @@ commands:
     cmd: |
       apk update && apk add --no-cache php php-phar php-json php-openssl php-mbstring php-dom php-tokenizer php-xml php-xmlwriter
       curl -sS https://getcomposer.org/installer -o composer-setup.php && php composer-setup.php --install-dir=/usr/local/bin --filename=composer && rm composer-setup.php
-      docker compose exec -T test dockerize -wait tcp://nginx:8080 -timeout 1m
+      docker compose exec -T cli dockerize -wait tcp://nginx:8080 -timeout 1m
       docker compose exec -T nginx nginx -t
       composer validate --strict -d .docker/images/nginx/tests
       composer install -d .docker/images/nginx/tests

@@ -11,6 +11,7 @@ FROM uselagoon/php-8.3-cli-drupal:${LAGOON_IMAGE_VERSION}
 # Set an environment variable for Dockerize version
 ENV DOCKERIZE_VERSION v0.6.1
 
+# @TODO - Remove this after https://github.com/govCMS/scaffold/pull/117/ is merged and released.
 # Download Dockerize, extract, and install it
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
