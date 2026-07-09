@@ -1,1 +1,1 @@
-FROM uselagoon/mariadb-10.6-drupal
+FROM uselagoon/mysql-8.0:${LAGOON_IMAGE_VERSION}
