@@ -2,7 +2,7 @@
 
 $idpBaseURL = getenv('SIMPLESAMLPHP_IDP_BASE_URL');
 $idpEntityId = getenv('SIMPLESAMLPHP_IDP_ENTITYID') ?: $idpBaseURL;
-$singleLogOut = getenv('SIMPLESAMLPHP_SP_SLO') ?: false;
+$singleLogOut = getenv('SIMPLESAMLPHP_SP_SLO') ?: true;
 $fallbackBinding = getenv('SIMPLESAMLPHP_IDP_DEFAULT_BINDING');
 
 $bindingKeys = [
