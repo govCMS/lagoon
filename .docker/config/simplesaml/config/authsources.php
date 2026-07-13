@@ -100,7 +100,7 @@ $config = [
          * The value is also used to set the WantAssertionsSigned attribute
          * of the SPSSODescriptor element in the exported SAML 2.0 metadata.
          */
-        'WantAssertionsSigned' => filter_var(getenv('SIMPLESAMLPHP_SP_WANT_ASSERTIONS_SIGNED'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true,
+        'WantAssertionsSigned' => filter_var(getenv('SIMPLESAMLPHP_SP_WANT_ASSERTIONS_SIGNED'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false,
 
         /*
          * Whether we require signatures on authentication requests sent from this SP. Set it to:
