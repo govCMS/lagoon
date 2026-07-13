@@ -18,7 +18,7 @@
         "cweagans/composer-patches": "^1.7",
         "govcms/govcms": "dev-4.x-develop",
         "govcms/govcms-custom": "*",
-        "govcms/scaffold-tooling": "6.0.7"
+        "govcms/scaffold-tooling": "6.0.8"
     },
     "require-dev": {
         "drupal/core-dev": "^11.0",
@@ -76,6 +76,15 @@
         "drupal-scaffold": {
             "locations": {
                 "web-root": "web/"
+            },
+            "file-mapping": {
+                "[project-root]/recipes/README.txt": false,
+                "[web-root]/INSTALL.txt": false,
+                "[web-root]/modules/README.txt": false,
+                "[web-root]/profiles/README.txt": false,
+                "[web-root]/robots.txt": false,
+                "[web-root]/sites/README.txt": false,
+                "[web-root]/themes/README.txt": false
             }
         },
         "installer-paths": {
