@@ -121,7 +121,8 @@ commands:
   test-goss:
     usage: Validate images with dgoss.
     cmd: |
-      curl -L https://github.com/goss-org/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
+      curl -L https://github.com/goss-org/goss/releases/download/v0.4.10/goss_0.4.10_linux_x86_64.tar.gz -o /tmp/goss.tar.gz
+      tar -xzf /tmp/goss.tar.gz -C /usr/local/bin goss
       chmod +rx /usr/local/bin/goss
       curl -L https://github.com/goss-org/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
       chmod +rx /usr/local/bin/dgoss
