@@ -1,0 +1,6 @@
+# The synonyms defined in this file will be appended to the default list from Search API Solr jumpstart config-set.
+# Exact line repeats, duplicate or overlapping entries do not typically crash the engine,
+# but they can bloat memory or cause unexpected token expansion behaviour. They will also clutter Solr logs.
+# Please always check the default synonyms from Search API Solr and ensure that you don't add duplicate or overlapping entries.
+# See https://git.drupalcode.org/project/search_api_solr/-/blob/4.4.x/jump-start/solr9/config-set/synonyms_en.txt
+# See https://solr.apache.org/guide/6_6/managed-resources.html#ManagedResources-Stopwords

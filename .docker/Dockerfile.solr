@@ -22,7 +22,12 @@ ENV SOLR_MODULES=${SOLR_MODULES:-"extraction,langid,ltr,analysis-extras"}
 USER solr
 
 COPY .docker/images/solr/890-migrate-solr9-config.sh /lagoon/entrypoints/
+COPY .docker/images/solr/895-prepare-custom-synonyms.sh /lagoon/entrypoints/
+COPY .docker/images/solr/895-prepare-custom-stopwords.sh /lagoon/entrypoints/
 COPY .docker/images/solr/900-prepare-index.sh /lagoon/entrypoints/
+
+COPY custom/solr/custom_stopwords_en.txt /lagoon/solr/custom/custom_stopwords_en.txt
+COPY custom/solr/custom_synonyms_en.txt /lagoon/solr/custom/custom_synonyms_en.txt
 
 # Run solr in the foreground.
 CMD ["solr-foreground"]
