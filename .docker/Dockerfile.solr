@@ -5,7 +5,7 @@
 # Use the specified CLI image for building
 ARG CLI_IMAGE
 ARG LAGOON_IMAGE_VERSION
-FROM ${CLI_IMAGE} as cli
+FROM ${CLI_IMAGE} AS cli
 
 # Use the uselagoon/solr-9 as the base image
 FROM uselagoon/solr-9:${LAGOON_IMAGE_VERSION:-latest}
@@ -21,13 +21,15 @@ ENV SOLR_MODULES=${SOLR_MODULES:-"extraction,langid,ltr,analysis-extras"}
 # Switch to the 'solr' user
 USER solr
 
-COPY .docker/images/solr/890-migrate-solr9-config.sh /lagoon/entrypoints/
-COPY .docker/images/solr/895-prepare-custom-synonyms.sh /lagoon/entrypoints/
-COPY .docker/images/solr/895-prepare-custom-stopwords.sh /lagoon/entrypoints/
-COPY .docker/images/solr/900-prepare-index.sh /lagoon/entrypoints/
+# Custom Solr entrypoint scripts.
+COPY .docker/images/solr/entrypoints/890-migrate-solr9-config.sh /lagoon/entrypoints/
+COPY .docker/images/solr/entrypoints/895-prepare-custom-synonyms.sh /lagoon/entrypoints/
+COPY .docker/images/solr/entrypoints/895-prepare-custom-stopwords.sh /lagoon/entrypoints/
 
+# Custom Solr synonyms and stopwords.
 COPY custom/solr/custom_stopwords_en.txt /lagoon/solr/custom/custom_stopwords_en.txt
 COPY custom/solr/custom_synonyms_en.txt /lagoon/solr/custom/custom_synonyms_en.txt
 
-# Run solr in the foreground.
-CMD ["solr-foreground"]
+# Initialise Solr core and index.
+COPY .docker/images/solr/scripts/prepare-index.sh /lagoon/solr/scripts/
+CMD ["/lagoon/solr/scripts/prepare-index.sh"]

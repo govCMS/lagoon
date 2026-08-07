@@ -1,7 +1,5 @@
 #!/usr/bin/bash
 
-set -eu
-
 # Prepare the custom synonyms.
 # As the synonym filter is used in the query analyser,
 # we do not need to recreate the Solr core and reindex data.
@@ -24,12 +22,11 @@ fi
 
 # Check if Solr active config exists.
 if [ ! -f "${MERGED_FILE}" ]; then
-  echo "Solr core active config does not exist. Skipped merging synonyms files."
   echo "Synonyms files will be merged after Solr core is created and Solr service is restarted."
 fi
 
 # Prepare the merged synonyms file.
 if [ -f "${CUSTOM_FILE}" ] && [ -f "${DEFAULT_FILE}" ] && [ -f "${MERGED_FILE}" ]; then
-  echo "Merging synonyms files."
+  echo "Merging synonyms files${DEFAULT_FILE} ${CUSTOM_FILE} > ${MERGED_FILE}."
   cat "${DEFAULT_FILE}" "${CUSTOM_FILE}" > "${MERGED_FILE}"
 fi
