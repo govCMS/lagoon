@@ -1,0 +1,5 @@
+# The stopwords defined in this file will be appended to the default list from Search API Solr jumpstart config-set.
+# Duplicate entries do not break functionality or cause errors, however they could clutter Solr logs with warnings.
+# Please always check the default stopwrods from Search API Solr and ensure that you don't add duplicate entries.
+# See https://git.drupalcode.org/project/search_api_solr/-/blob/4.4.x/jump-start/solr9/config-set/stopwords_en.txt?ref_type=heads
+# See https://solr.apache.org/guide/6_6/filter-descriptions.html#FilterDescriptions-StopFilter
