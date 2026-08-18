@@ -1,7 +1,5 @@
 #!/usr/bin/bash
 
-set -eu
-
 # Prepare the index.
 #
 # If the release requires a configset update then an
