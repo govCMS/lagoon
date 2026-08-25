@@ -21,6 +21,9 @@ COPY .docker/scripts/ /usr/bin/
 RUN chmod +x /usr/bin/lint-govcms \
     && chmod +x /usr/bin/lint-theme
 
+# Disable opcache huge code pages. See 02-govcms-opcache.ini.
+COPY .docker/images/php/02-govcms-opcache.ini /usr/local/etc/php/conf.d/
+
 # Don't restrict the memory limit for the test image.
 RUN echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/99-memory-limit.ini
 
