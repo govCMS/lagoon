@@ -3,12 +3,12 @@ ARG LAGOON_IMAGE_VERSION
 
 FROM ghcr.io/salsadigitalauorg/shipshape:${SHIPSHAPE_VERSION} AS shipshape
 
-FROM uselagoon/php-8.5-cli-drupal:${LAGOON_IMAGE_VERSION}
+FROM uselagoon/php-8.4-cli-drupal:${LAGOON_IMAGE_VERSION}
 
 COPY --from=shipshape /usr/local/bin/shipshape /usr/local/bin/shipshape
 
 # Disable opcache huge code pages. Huge pages are unavailable in Lagoon
-# containers and PHP 8.5 warns on every invocation, which corrupts the
+# containers and PHP warns on every invocation, which corrupts the
 # output that the deploy scripts parse.
 COPY .docker/images/php/02-govcms-opcache.ini /usr/local/etc/php/conf.d/
 
