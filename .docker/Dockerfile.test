@@ -6,7 +6,7 @@ ARG LAGOON_IMAGE_VERSION
 FROM ${CLI_IMAGE} as cli
 
 # Second stage: Build on top of the CLI image
-FROM uselagoon/php-8.3-cli-drupal:${LAGOON_IMAGE_VERSION}
+FROM uselagoon/php-8.5-cli-drupal:${LAGOON_IMAGE_VERSION}
 
 # Set an environment variable for Dockerize version
 ENV DOCKERIZE_VERSION v0.6.1
@@ -20,6 +20,9 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 COPY .docker/scripts/ /usr/bin/
 RUN chmod +x /usr/bin/lint-govcms \
     && chmod +x /usr/bin/lint-theme
+
+# Disable opcache huge code pages. See 02-govcms-opcache.ini.
+COPY .docker/images/php/02-govcms-opcache.ini /usr/local/etc/php/conf.d/
 
 # Don't restrict the memory limit for the test image.
 RUN echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/99-memory-limit.ini

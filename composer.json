@@ -41,7 +41,8 @@
             "php-http/discovery": true,
             "tbachert/spi": true,
             "simplesamlphp/composer-module-installer": false,
-            "simplesamlphp/composer-xmlprovider-installer": false
+            "simplesamlphp/composer-xmlprovider-installer": false,
+            "symfony/runtime": true
         }
     },
     "autoload": {
