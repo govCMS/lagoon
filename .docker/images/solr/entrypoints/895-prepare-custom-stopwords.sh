@@ -3,6 +3,16 @@
 # Prepare the custom stopwords.
 # As the stop filter is used in the query analyser,
 # we do not need to recreate the Solr core and reindex data.
+#
+# The custom stopwords file should be placed at the path
+# custom/solr/custom_stopwords_en.txt and be copied to Docker
+# image using the following command:
+#
+# COPY custom/solr/custom_stopwords_en.txt /lagoon/solr/custom/custom_stopwords_en.txt
+#
+# The final custom stopwords file will not be generated if the
+# custom file is missing. Solr will use the default file from
+# the configset instead.
 
 INDEX="${INDEX:-drupal}"
 CONFIGSET="${CONFIGSET:-/opt/solr/server/solr/configsets/$INDEX}"
