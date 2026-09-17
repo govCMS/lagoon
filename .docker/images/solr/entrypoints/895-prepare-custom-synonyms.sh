@@ -3,6 +3,16 @@
 # Prepare the custom synonyms.
 # As the synonym filter is used in the query analyser,
 # we do not need to recreate the Solr core and reindex data.
+#
+# The custom synonyms file should be placed at the path
+# custom/solr/custom_synonyms_en.txt and be copied to Docker
+# image using the following command:
+#
+# COPY custom/solr/custom_synonyms_en.txt /lagoon/solr/custom/custom_synonyms_en.txt
+#
+# The final custom synonyms file will not be generated if the
+# custom file is missing. Solr will use the default file from
+# the configset instead.
 
 INDEX="${INDEX:-drupal}"
 CONFIGSET="${CONFIGSET:-/opt/solr/server/solr/configsets/$INDEX}"
