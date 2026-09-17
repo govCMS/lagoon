@@ -23,6 +23,8 @@ USER solr
 
 # Custom Solr entrypoint scripts.
 COPY .docker/images/solr/entrypoints/890-migrate-solr9-config.sh /lagoon/entrypoints/
+COPY .docker/images/solr/entrypoints/895-prepare-custom-synonyms.sh /lagoon/entrypoints/
+COPY .docker/images/solr/entrypoints/895-prepare-custom-stopwords.sh /lagoon/entrypoints/
 
 # Initialise Solr core and index.
 COPY .docker/images/solr/scripts/prepare-index.sh /lagoon/solr/scripts/
