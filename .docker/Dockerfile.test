@@ -30,8 +30,11 @@ COPY .docker/images/govcms/mariadb-client.cnf /etc/my.cnf.d
 # Copy application files from the 'cli' stage to the current stage
 COPY --from=cli /app /app
 
+# Install dev dependencies (e.g. PHPUnit) excluded from the CLI image.
+RUN composer install --dev
+
 # Copy PHPUnit configuration and test files
-COPY --from=govcmstesting/tests:3.2.3-php8.3 /tests /app/tests
+COPY tests /app/tests
 
 # Set an environment variable for the webroot path
 ENV WEBROOT=web
