@@ -18,6 +18,21 @@ COPY --from=cli /app/web/modules/contrib/search_api_solr/jump-start/solr9/config
 # We need to load the libs via the newer env var SOLR_MODULES.
 ENV SOLR_MODULES=${SOLR_MODULES:-"extraction,langid,ltr,analysis-extras"}
 
+# Remove eMudhra CA certs from JDK for CVE-2026-91403.
+USER root
+RUN set -x; \
+  # See https://ops.java/emudhra
+  # See https://openjdk.org/emudhra
+  keytool -delete -cacerts -storepass changeit -alias "emsignrootcag1 [jdk]" || true; \
+  keytool -delete -cacerts -storepass changeit -alias "emsignrootcag2 [jdk]" || true; \
+  keytool -delete -cacerts -storepass changeit -alias "emsigneccrootcag3 [jdk]" || true; \
+  keytool -delete -cacerts -storepass changeit -alias "comodoaaaca [jdk]" || true; \
+  # See https://prosysopc.com/blog/security-advisory-emudhra-ca-compromise-cve-2026-91403-in-prosys-opc-ua-forge
+  keytool -delete -cacerts -storepass changeit -alias "cn_emsign_ecc_root_ca__c3,o_emudhra_inc,ou_emsign_pki,c_us [jdk]" || true; \
+  keytool -delete -cacerts -storepass changeit -alias "cn_emsign_ecc_root_ca__g3,o_emudhra_technologies_limited,ou_emsign_pki,c_in [jdk]" || true; \
+  keytool -delete -cacerts -storepass changeit -alias "cn_emsign_root_ca__c1,o_emudhra_inc,ou_emsign_pki,c_us [jdk]" || true; \
+  keytool -delete -cacerts -storepass changeit -alias "cn_emsign_root_ca__g1,o_emudhra_technologies_limited,ou_emsign_pki,c_in [jdk]" || true
+
 # Switch to the 'solr' user
 USER solr
 
