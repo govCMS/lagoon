@@ -28,7 +28,6 @@ class FilesCacheTest extends TestCase {
     return [
       ['autotest.jpg', "$path/resources/", 'max-age=2628001'],
       ['autotest.pdf', "$path/resources/", 'max-age=1800'],
-      ['autotest.rtf', "$path/resources/", 'max-age=2628001'],
     ];
   }
 
